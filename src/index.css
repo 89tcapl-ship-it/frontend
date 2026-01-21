@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 210 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 25% 15%;
+
+    /* Navy Blue from logo as primary */
+    --primary: 210 38% 29%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Forest Green from logo as secondary */
+    --secondary: 156 39% 30%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 210 12% 46%;
+
+    --accent: 210 20% 96%;
+    --accent-foreground: 210 25% 15%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 15% 91%;
+    --input: 210 15% 91%;
+    --ring: 210 38% 29%;
+
+    --radius: 0.5rem;
+
+    /* Custom tokens */
+    --surface: 210 25% 98%;
+    --surface-elevated: 0 0% 100%;
+    --text-primary: 210 25% 15%;
+    --text-secondary: 210 15% 26%;
+    --text-muted: 210 12% 42%;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 210 15% 26%;
+    --sidebar-primary: 210 38% 29%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 210 20% 95%;
+    --sidebar-accent-foreground: 210 25% 15%;
+    --sidebar-border: 210 15% 91%;
+    --sidebar-ring: 210 38% 29%;
+  }
+
+  .dark {
+    --background: 220 13% 7%;
+    --foreground: 0 0% 98%;
+
+    --card: 220 13% 10%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 220 13% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 22 90% 54%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 96 49% 49%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 13% 15%;
+    --muted-foreground: 220 9% 65%;
+
+    --accent: 220 13% 15%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 13% 20%;
+    --input: 220 13% 20%;
+    --ring: 22 90% 54%;
+
+    --surface: 220 13% 10%;
+    --surface-elevated: 220 13% 12%;
+    --text-primary: 0 0% 98%;
+    --text-secondary: 220 9% 75%;
+    --text-muted: 220 9% 55%;
+
+    --sidebar-background: 220 13% 10%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 22 90% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 13% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 220 13% 20%;
+    --sidebar-ring: 22 90% 54%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight text-foreground;
+  }
+}
+
+@layer utilities {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+
+  .card-elevated {
+    @apply bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(22 90% 54%) 0%, hsl(22 90% 45%) 100%);
+  }
+
+  .gradient-secondary {
+    background: linear-gradient(135deg, hsl(96 49% 49%) 0%, hsl(96 49% 40%) 100%);
+  }
+}

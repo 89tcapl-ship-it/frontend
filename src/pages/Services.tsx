@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "@/lib/api";
 import { SEO } from "@/hooks/useSEO";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Service {
   _id: string;
@@ -62,13 +63,13 @@ const Services = () => {
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="p-6 md:p-8 rounded-xl border border-border bg-card">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 rounded-lg bg-muted animate-pulse" />
-                    <div className="h-8 w-48 bg-muted animate-pulse rounded" />
+                    <Skeleton className="w-12 h-12 rounded-lg" />
+                    <Skeleton className="h-8 w-48" />
                   </div>
                   <div className="space-y-3">
-                    <div className="h-4 w-full bg-muted animate-pulse rounded" />
-                    <div className="h-4 w-full bg-muted animate-pulse rounded" />
-                    <div className="h-4 w-3/4 bg-muted animate-pulse rounded" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
                   </div>
                 </div>
               ))}

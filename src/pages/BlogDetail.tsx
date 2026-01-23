@@ -10,6 +10,7 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import api from '@/lib/api';
 import { format } from 'date-fns';
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface BlogPost {
     _id: string;
@@ -58,14 +59,14 @@ const BlogDetail = () => {
             <Layout>
                 <div className="container-custom section-padding">
                     <div className="max-w-4xl mx-auto">
-                        <div className="h-8 w-32 bg-muted animate-pulse rounded mb-8" />
-                        <div className="h-12 w-3/4 bg-muted animate-pulse rounded mb-4" />
-                        <div className="h-6 w-1/2 bg-muted animate-pulse rounded mb-8" />
-                        <div className="h-96 w-full bg-muted animate-pulse rounded mb-8" />
+                        <Skeleton className="h-8 w-32 mb-8" />
+                        <Skeleton className="h-12 w-3/4 mb-4" />
+                        <Skeleton className="h-6 w-1/2 mb-8" />
+                        <Skeleton className="h-96 w-full mb-8" />
                         <div className="space-y-4">
-                            <div className="h-4 w-full bg-muted animate-pulse rounded" />
-                            <div className="h-4 w-full bg-muted animate-pulse rounded" />
-                            <div className="h-4 w-3/4 bg-muted animate-pulse rounded" />
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-3/4" />
                         </div>
                     </div>
                 </div>

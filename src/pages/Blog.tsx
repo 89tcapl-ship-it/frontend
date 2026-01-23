@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, User, ArrowRight } from "lucide-react";
 import api from '@/lib/api';
 import { format } from 'date-fns';
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface BlogPost {
   _id: string;
@@ -90,12 +91,12 @@ const Blog = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="rounded-xl border border-border bg-card overflow-hidden">
-                  <div className="aspect-video bg-muted animate-pulse" />
+                  <Skeleton className="aspect-video rounded-none" />
                   <div className="p-6 space-y-4">
-                    <div className="h-4 w-24 bg-muted animate-pulse rounded" />
-                    <div className="h-6 w-full bg-muted animate-pulse rounded" />
-                    <div className="h-4 w-full bg-muted animate-pulse rounded" />
-                    <div className="h-4 w-3/4 bg-muted animate-pulse rounded" />
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
                   </div>
                 </div>
               ))}

@@ -1,4 +1,4 @@
-import { Layout } from "@/components/layout/Layout";
+﻿import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
 import { Banknote, ClipboardList, PiggyBank, ShieldCheck } from "lucide-react";
 
@@ -56,7 +56,7 @@ const Funding = () => {
             <h1 className="text-4xl font-semibold text-foreground md:text-5xl">
               Funding
             </h1>
-            <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
+            <p className="mt-4 text-base text-muted-foreground text-justify text-justify md:text-lg">
               Funding support to help you grow your business
             </p>
           </div>
@@ -74,7 +74,7 @@ const Funding = () => {
                 <p className="mt-4 text-sm font-semibold text-foreground">
                   {item.title}
                 </p>
-                <p className="mt-2 text-sm text-muted-foreground text-justify">
+                <p className="mt-2 text-sm text-muted-foreground text-justify text-justify">
                   {item.description}
                 </p>
                 <span className="mt-3 inline-flex text-sm font-semibold text-primary">
@@ -90,3 +90,4 @@ const Funding = () => {
 };
 
 export default Funding;
+

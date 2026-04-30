@@ -1,4 +1,4 @@
-import { Layout } from "@/components/layout/Layout";
+﻿import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
 import { Briefcase, ClipboardList, FileText, Users } from "lucide-react";
 
@@ -59,7 +59,7 @@ const SupportServices = () => {
             <h1 className="text-4xl font-semibold text-foreground md:text-5xl">
               Support Services
             </h1>
-            <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
+            <p className="mt-4 text-base text-muted-foreground text-justify text-justify md:text-lg">
               Efficient solutions to manage your business operations
             </p>
           </div>
@@ -81,7 +81,7 @@ const SupportServices = () => {
                         <p className="text-sm font-semibold text-foreground">
                           {item.title}
                         </p>
-                        <p className="mt-1 text-sm text-muted-foreground text-justify">
+                        <p className="mt-1 text-sm text-muted-foreground text-justify text-justify">
                           {item.description}
                         </p>
                         <span className="mt-2 inline-flex text-sm font-semibold text-primary">
@@ -101,3 +101,4 @@ const SupportServices = () => {
 };
 
 export default SupportServices;
+

@@ -269,7 +269,7 @@ const Services = () => {
             <h1 className="text-4xl font-semibold text-foreground md:text-5xl">
               Our Services
             </h1>
-            <p className="mt-4 text-base text-muted-foreground md:text-lg">
+            <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
               Comprehensive solutions for your business needs
             </p>
           </div>
@@ -290,7 +290,7 @@ const Services = () => {
                       <h2 className="mt-2 text-2xl font-semibold text-foreground">
                         {section.title}
                       </h2>
-                      <p className="mt-2 text-sm text-muted-foreground text-justify">
+                      <p className="mt-2 text-sm text-muted-foreground text-justify text-justify">
                         {section.description}
                       </p>
                     </div>
@@ -307,7 +307,7 @@ const Services = () => {
                                 <p className="text-sm font-semibold text-foreground">
                                   {item.label}
                                 </p>
-                                <p className="mt-1 text-sm text-muted-foreground text-justify">
+                                <p className="mt-1 text-sm text-muted-foreground text-justify text-justify">
                                   {item.description}
                                 </p>
                               </div>
@@ -327,7 +327,7 @@ const Services = () => {
                                 <p className="text-sm font-semibold text-foreground">
                                   {item.label}
                                 </p>
-                                <p className="mt-1 text-sm text-muted-foreground text-justify">
+                                <p className="mt-1 text-sm text-muted-foreground text-justify text-justify">
                                   {item.description}
                                 </p>
                               </div>
@@ -344,7 +344,7 @@ const Services = () => {
                       <h2 className="mt-2 text-2xl font-semibold text-foreground">
                         {section.title}
                       </h2>
-                      <p className="mt-2 text-sm text-muted-foreground text-justify">
+                      <p className="mt-2 text-sm text-muted-foreground text-justify text-justify">
                         {section.description}
                       </p>
                     </div>
@@ -358,7 +358,7 @@ const Services = () => {
                             <p className="text-sm font-semibold text-foreground">
                               {item.label}
                             </p>
-                            <p className="mt-1 text-sm text-muted-foreground text-justify">
+                            <p className="mt-1 text-sm text-muted-foreground text-justify text-justify">
                               {item.description}
                             </p>
                           </div>
@@ -373,7 +373,7 @@ const Services = () => {
                             <p className="text-sm font-semibold text-foreground">
                               {item.label}
                             </p>
-                            <p className="mt-1 text-sm text-muted-foreground text-justify">
+                            <p className="mt-1 text-sm text-muted-foreground text-justify text-justify">
                               {item.description}
                             </p>
                           </div>
@@ -418,4 +418,5 @@ const Services = () => {
 };
 
 export default Services;
+
 

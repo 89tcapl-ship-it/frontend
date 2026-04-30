@@ -522,7 +522,7 @@ const ServiceDetail = () => {
               {service.title}
             </h1>
             <p
-              className="mt-4 max-w-3xl text-xs leading-6 text-muted-foreground md:text-sm"
+              className="mt-4 max-w-3xl text-xs leading-6 text-muted-foreground text-justify md:text-sm"
               style={
                 expandedDescription
                   ? undefined
@@ -552,7 +552,7 @@ const ServiceDetail = () => {
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="card-soft p-6 sm:p-8">
               <h2 className="text-2xl font-semibold text-foreground">What We Offer</h2>
-              <ul className="mt-4 list-disc space-y-3 pl-5 text-sm text-muted-foreground">
+              <ul className="mt-4 list-disc space-y-3 pl-5 text-sm text-muted-foreground text-justify">
                 {service.offers.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
@@ -561,7 +561,7 @@ const ServiceDetail = () => {
 
             <div className="card-soft p-6 sm:p-8">
               <h2 className="text-2xl font-semibold text-foreground">Why Choose Us</h2>
-              <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
+              <ul className="mt-4 space-y-3 text-sm text-muted-foreground text-justify">
                 <li>Experience</li>
                 <li>Expertise</li>
                 <li>Compliance-focused approach</li>
@@ -570,7 +570,7 @@ const ServiceDetail = () => {
                 <p className="text-sm font-semibold text-foreground">
                   Get Consultation
                 </p>
-                <p className="mt-2 text-sm text-muted-foreground">
+                <p className="mt-2 text-sm text-muted-foreground text-justify">
                   Talk to our experts about your specific service requirements.
                 </p>
                 <Link
@@ -589,5 +589,6 @@ const ServiceDetail = () => {
 };
 
 export default ServiceDetail;
+
 
 

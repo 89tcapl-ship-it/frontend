@@ -1,4 +1,4 @@
-import { Layout } from "@/components/layout/Layout";
+﻿import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
 import { Link } from "react-router-dom";
 import {
@@ -154,7 +154,7 @@ const StartingBusiness = () => {
             <h1 className="text-4xl font-semibold text-foreground md:text-5xl">
               Starting a Business
             </h1>
-            <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
+            <p className="mt-4 text-base text-muted-foreground text-justify text-justify md:text-lg">
               Complete support to start and register your business in India
             </p>
           </div>
@@ -177,7 +177,7 @@ const StartingBusiness = () => {
                     <p className="mt-4 text-sm font-semibold text-foreground">
                       {item.title}
                     </p>
-                    <p className="mt-2 text-sm text-muted-foreground text-justify">
+                    <p className="mt-2 text-sm text-muted-foreground text-justify text-justify">
                       {item.description}
                     </p>
                     <span className="mt-3 inline-flex text-sm font-semibold text-primary">
@@ -207,7 +207,7 @@ const StartingBusiness = () => {
                         {item.title}
                       </p>
                     </div>
-                    <p className="mt-2 text-sm text-muted-foreground text-justify">
+                    <p className="mt-2 text-sm text-muted-foreground text-justify text-justify">
                       {item.description}
                     </p>
                     <span className="mt-3 inline-flex text-sm font-semibold text-primary">
@@ -225,6 +225,7 @@ const StartingBusiness = () => {
 };
 
 export default StartingBusiness;
+
 
 
 

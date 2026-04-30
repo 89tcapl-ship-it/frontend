@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 
@@ -76,12 +76,25 @@ const auditsMenu = [
   "Income Tax Audit",
   "Internal Audits",
   "Transfer Pricing Audits",
-  "Bank Audits",
+  "Investigation Audit",
   "Compliance Health Check",
 ];
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const desktopNavRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!desktopNavRef.current?.contains(event.target as Node)) {
+        setOpenMenu(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -95,23 +108,34 @@ export function Header() {
             />
           </Link>
 
-          <div className="hidden lg:flex items-center gap-6">
-            <div className="relative group">
-              <Link
-                to="/starting-business"
+          <div ref={desktopNavRef} className="hidden lg:flex items-center gap-6">
+            <div className="relative">
+              <button
+                type="button"
                 className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                onClick={() =>
+                  setOpenMenu((current) => (current === "starting-business" ? null : "starting-business"))
+                }
+                aria-expanded={openMenu === "starting-business"}
+                aria-controls="starting-business-menu"
               >
                 Starting a Business
-                <ChevronDown className="h-4 w-4 text-muted-foreground/70 transition-transform group-hover:rotate-180" />
-              </Link>
-              <div className="pointer-events-none absolute left-1/2 top-full z-40 hidden -translate-x-1/2 pt-4 group-hover:block group-focus-within:block">
-                <div className="pointer-events-auto w-[min(90vw,48rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
+                <ChevronDown
+                  className={`h-4 w-4 text-muted-foreground/70 transition-transform ${
+                    openMenu === "starting-business" ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <div
+                id="starting-business-menu"
+                className={`absolute left-0 top-full z-40 pt-4 ${
+                  openMenu === "starting-business" ? "block" : "hidden"
+                }`}
+              >
+                <div className="pointer-events-auto w-[min(92vw,56rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
                   <div className="grid gap-8 sm:grid-cols-2">
                     {startingBusinessMenu.map((section) => (
                       <div key={section.heading} className="space-y-3">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">
-                          {section.heading}
-                        </p>
                         <ul className="space-y-2.5 text-sm text-muted-foreground">
                           {section.items.map((item) => (
                             <li key={item}>
@@ -139,21 +163,32 @@ export function Header() {
               </div>
             </div>
 
-            <div className="relative group">
-              <Link
-                to="/support-services"
+            <div className="relative">
+              <button
+                type="button"
                 className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                onClick={() =>
+                  setOpenMenu((current) => (current === "support-services" ? null : "support-services"))
+                }
+                aria-expanded={openMenu === "support-services"}
+                aria-controls="support-services-menu"
               >
                 Support Services
-                <ChevronDown className="h-4 w-4 text-muted-foreground/70 transition-transform group-hover:rotate-180" />
-              </Link>
-              <div className="pointer-events-none absolute left-1/2 top-full z-40 hidden -translate-x-1/2 pt-4 group-hover:block group-focus-within:block">
+                <ChevronDown
+                  className={`h-4 w-4 text-muted-foreground/70 transition-transform ${
+                    openMenu === "support-services" ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <div
+                id="support-services-menu"
+                className={`absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4 ${
+                  openMenu === "support-services" ? "block" : "hidden"
+                }`}
+              >
                 <div className="pointer-events-auto w-[min(90vw,48rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
                   <div className="space-y-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">
-                      Support Services
-                    </p>
-                    <ul className="grid gap-2.5 text-sm text-muted-foreground sm:grid-cols-2">
+                    <ul className="flex flex-wrap gap-x-5 gap-y-3 text-sm text-muted-foreground">
                       {supportServicesMenu.map((item) => (
                         <li key={item}>
                           <Link
@@ -170,23 +205,34 @@ export function Header() {
               </div>
             </div>
 
-            <div className="relative group">
-              <Link
-                to="/compliances"
+            <div className="relative">
+              <button
+                type="button"
                 className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                onClick={() =>
+                  setOpenMenu((current) => (current === "compliances" ? null : "compliances"))
+                }
+                aria-expanded={openMenu === "compliances"}
+                aria-controls="compliances-menu"
               >
                 Compliances
-                <ChevronDown className="h-4 w-4 text-muted-foreground/70 transition-transform group-hover:rotate-180" />
-              </Link>
-              <div className="pointer-events-none absolute left-1/2 top-full z-40 hidden -translate-x-1/2 pt-4 group-hover:block group-focus-within:block">
-                <div className="pointer-events-auto w-[min(90vw,48rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
+                <ChevronDown
+                  className={`h-4 w-4 text-muted-foreground/70 transition-transform ${
+                    openMenu === "compliances" ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <div
+                id="compliances-menu"
+                className={`absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4 ${
+                  openMenu === "compliances" ? "block" : "hidden"
+                }`}
+              >
+                <div className="pointer-events-auto w-fit max-w-[92vw] rounded-2xl border border-border bg-white px-5 py-4 shadow-lg">
                   <div className="space-y-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">
-                      Compliances
-                    </p>
-                    <ul className="grid gap-2.5 text-sm text-muted-foreground sm:grid-cols-2">
+                    <ul className="flex flex-nowrap items-center gap-5 overflow-x-auto pb-1 text-sm text-muted-foreground whitespace-nowrap">
                       {compliancesMenu.map((item) => (
-                        <li key={item}>
+                        <li key={item} className="shrink-0">
                           <Link
                             to={`/services/${toSlug(item)}`}
                             className="transition-colors hover:text-primary hover:underline"
@@ -201,21 +247,30 @@ export function Header() {
               </div>
             </div>
 
-            <div className="relative group">
-              <Link
-                to="/funding"
+            <div className="relative">
+              <button
+                type="button"
                 className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                onClick={() => setOpenMenu((current) => (current === "funding" ? null : "funding"))}
+                aria-expanded={openMenu === "funding"}
+                aria-controls="funding-menu"
               >
                 Funding
-                <ChevronDown className="h-4 w-4 text-muted-foreground/70 transition-transform group-hover:rotate-180" />
-              </Link>
-              <div className="pointer-events-none absolute left-1/2 top-full z-40 hidden -translate-x-1/2 pt-4 group-hover:block group-focus-within:block">
-                <div className="pointer-events-auto w-[min(90vw,48rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
+                <ChevronDown
+                  className={`h-4 w-4 text-muted-foreground/70 transition-transform ${
+                    openMenu === "funding" ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <div
+                id="funding-menu"
+                className={`absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4 ${
+                  openMenu === "funding" ? "block" : "hidden"
+                }`}
+              >
+                <div className="pointer-events-auto w-[min(92vw,56rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
                   <div className="space-y-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">
-                      Funding
-                    </p>
-                    <ul className="grid gap-2.5 text-sm text-muted-foreground sm:grid-cols-2">
+                    <ul className="flex flex-wrap gap-x-5 gap-y-3 text-sm text-muted-foreground">
                       {fundingMenu.map((item) => (
                         <li key={item}>
                           <Link
@@ -232,23 +287,32 @@ export function Header() {
               </div>
             </div>
 
-            <div className="relative group">
-              <Link
-                to="/audits"
+            <div className="relative">
+              <button
+                type="button"
                 className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                onClick={() => setOpenMenu((current) => (current === "audits" ? null : "audits"))}
+                aria-expanded={openMenu === "audits"}
+                aria-controls="audits-menu"
               >
                 Audits
-                <ChevronDown className="h-4 w-4 text-muted-foreground/70 transition-transform group-hover:rotate-180" />
-              </Link>
-              <div className="pointer-events-none absolute left-1/2 top-full z-40 hidden -translate-x-1/2 pt-4 group-hover:block group-focus-within:block">
-                <div className="pointer-events-auto w-[min(90vw,48rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
+                <ChevronDown
+                  className={`h-4 w-4 text-muted-foreground/70 transition-transform ${
+                    openMenu === "audits" ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <div
+                id="audits-menu"
+                className={`absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4 ${
+                  openMenu === "audits" ? "block" : "hidden"
+                }`}
+              >
+                <div className="pointer-events-auto w-[min(92vw,64rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
                   <div className="space-y-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">
-                      Audits
-                    </p>
-                    <ul className="grid gap-2.5 text-sm text-muted-foreground sm:grid-cols-2">
+                    <ul className="flex flex-nowrap items-center gap-5 text-sm text-muted-foreground whitespace-nowrap">
                       {auditsMenu.map((item) => (
-                        <li key={item}>
+                        <li key={item} className="shrink-0">
                           <Link
                             to={`/services/${toSlug(item)}`}
                             className="transition-colors hover:text-primary hover:underline"
@@ -310,9 +374,6 @@ export function Header() {
               <div className="space-y-4">
                 {startingBusinessMenu.map((section) => (
                   <div key={section.heading} className="space-y-2">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">
-                      {section.heading}
-                    </p>
                     <ul className="space-y-2">
                       {section.items.map((item) => (
                         <li key={item}>
@@ -381,4 +442,5 @@ export function Header() {
     </header>
   );
 }
+
 

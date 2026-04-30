@@ -1,22 +1,5 @@
 ﻿import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-
-const footerLinks = {
-  company: [
-    { label: "Starting a Business", target: "/starting-business" },
-    { label: "Support Services", target: "/support-services" },
-    { label: "Compliances", target: "/compliances" },
-    { label: "Funding", target: "/funding" },
-    { label: "Audits", target: "/audits" },
-  ],
-  services: [
-    { label: "Company Registration", target: "/starting-business" },
-    { label: "MCA Compliance", target: "/compliances" },
-    { label: "GST Services", target: "/services/gst" },
-    { label: "Income Tax Filing", target: "/services/itr-and-tds" },
-  ],
-};
 
 interface Settings {
   siteName: string;
@@ -24,12 +7,6 @@ interface Settings {
   address: string;
   contactEmail: string;
   contactPhone: string;
-  socialLinks: {
-    facebook: string;
-    twitter: string;
-    linkedin: string;
-    instagram: string;
-  };
 }
 
 export function Footer() {
@@ -38,42 +15,41 @@ export function Footer() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const api = (await import('@/lib/api')).default;
-        const response: any = await api.get('/settings');
+        const api = (await import("@/lib/api")).default;
+        const response: any = await api.get("/settings");
         setSettings(response.data);
       } catch (error) {
-        console.error('Failed to fetch settings:', error);
+        console.error("Failed to fetch settings:", error);
       }
     };
 
     fetchSettings();
   }, []);
 
-  const socialIcons = [
-    { name: 'facebook', icon: Facebook, url: settings?.socialLinks?.facebook },
-    { name: 'twitter', icon: Twitter, url: settings?.socialLinks?.twitter },
-    { name: 'linkedin', icon: Linkedin, url: settings?.socialLinks?.linkedin },
-    { name: 'instagram', icon: Instagram, url: settings?.socialLinks?.instagram },
-  ];
-
   return (
     <footer className="bg-foreground text-background">
       <div className="container-custom section-padding">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_0.6fr_0.6fr] lg:gap-12">
-          <div>
-            <Link to="/" className="inline-block mb-5">
+        <div className="mx-auto max-w-[600px] text-center">
+          <div className="flex flex-col items-center">
+            <Link to="/" className="mb-4 inline-block">
               <img
                 src="/logo.png"
-                alt="89T Corporate Advisors"
+                alt="89T CORPORATE ADVISORS PRIVATE LIMITED"
                 className="h-12 w-auto"
               />
             </Link>
-            <p className="text-background/70 text-sm max-w-md">
-              {settings?.siteDescription ||
-                'A compliance-focused corporate advisory firm supporting startups and growing businesses with registration, taxation, and business advisory services.'}
+            <p className="mb-2 text-lg font-semibold tracking-wide text-background/95 md:text-xl">
+              89T CORPORATE ADVISORS PRIVATE LIMITED
             </p>
-            <div className="text-sm text-background/60 mt-6">
-              <p className="font-medium text-background/80 mb-2">Registered Office:</p>
+            <p className="mb-4 text-sm italic font-semibold text-slate-400 md:text-[15px]">
+              A Compliant Business is a Confident Business
+            </p>
+            <p className="mb-5 text-sm leading-7 text-slate-300">
+              {settings?.siteDescription ||
+                "A compliance-focused corporate advisory firm supporting startups and growing businesses with registration, taxation, and business advisory services."}
+            </p>
+            <div className="space-y-2 text-sm text-slate-300">
+              <p className="font-medium text-background/80">Registered Office:</p>
               {settings?.address ? (
                 <div className="whitespace-pre-line">{settings.address}</div>
               ) : (
@@ -84,62 +60,35 @@ export function Footer() {
               )}
             </div>
 
-            <div className="text-sm text-background/70 mt-5 space-y-2">
+            <div className="space-y-2 text-sm text-background/70">
               <p>
-                <span className="text-background/80 font-medium">Email: </span>
-                <a href="mailto:89tcapl@gmail.com" className="hover:text-background transition-colors">
-                  89tcapl@gmail.com
+                <span className="font-medium text-background/80">Email: </span>
+                <a href="mailto:hr@89TCA.in" className="transition-colors hover:text-background">
+                  hr@89TCA.in
                 </a>
               </p>
               <p>
-                <span className="text-background/80 font-medium">Phone: </span>
-                <a href="tel:+919398857595" className="hover:text-background transition-colors">
-                  +91 93988 57595
+                <span className="font-medium text-background/80">Phone: </span>
+                <a href="tel:+917019557994" className="transition-colors hover:text-background">
+                  +91 70195 57994
                 </a>
               </p>
             </div>
           </div>
-
-          <div>
-            <h3 className="text-sm font-semibold tracking-wide text-background/80 mb-4">Company</h3>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.target}>
-                  <Link
-                    to={link.target}
-                    className="text-sm text-background/70 hover:text-background transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold tracking-wide text-background/80 mb-4">Services</h3>
-            <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    to={link.target}
-                    className="text-sm text-background/70 hover:text-background transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
 
-        <div className="border-t border-background/10 mt-12 pt-6 text-center text-sm text-background/60">
-          <p>© {new Date().getFullYear()} {settings?.siteName || '89T Corporate Advisors'}. All rights reserved.</p>
+        <div className="mt-8 border-t border-white/10 pt-8 text-center text-sm text-slate-300">
+          <p>
+            © 2026 {settings?.siteName || "89T Corporate Advisors Private Limited"}.
+            All rights reserved.
+          </p>
           <p className="mt-2">
-            <span className="text-background/40">Disclaimer:</span> This website is for informational purposes only and does not constitute legal or financial advice.
+            <span className="text-background/40">Disclaimer:</span> This website is for
+            informational purposes only and does not constitute legal or financial advice.
           </p>
         </div>
       </div>
     </footer>
   );
 }
+

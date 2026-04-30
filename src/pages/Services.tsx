@@ -241,8 +241,8 @@ const sections = [
         icon: FileCheck,
       },
       {
-        label: "Bank Audits",
-        description: "Bank audit coordination and reporting.",
+        label: "Investigation Audit",
+        description: "Investigation audit coordination and reporting.",
         icon: ShieldCheck,
       },
       {
@@ -290,7 +290,7 @@ const Services = () => {
                       <h2 className="mt-2 text-2xl font-semibold text-foreground">
                         {section.title}
                       </h2>
-                      <p className="mt-2 text-sm text-muted-foreground">
+                      <p className="mt-2 text-sm text-muted-foreground text-justify">
                         {section.description}
                       </p>
                     </div>
@@ -307,7 +307,7 @@ const Services = () => {
                                 <p className="text-sm font-semibold text-foreground">
                                   {item.label}
                                 </p>
-                                <p className="mt-1 text-sm text-muted-foreground">
+                                <p className="mt-1 text-sm text-muted-foreground text-justify">
                                   {item.description}
                                 </p>
                               </div>
@@ -327,7 +327,7 @@ const Services = () => {
                                 <p className="text-sm font-semibold text-foreground">
                                   {item.label}
                                 </p>
-                                <p className="mt-1 text-sm text-muted-foreground">
+                                <p className="mt-1 text-sm text-muted-foreground text-justify">
                                   {item.description}
                                 </p>
                               </div>
@@ -344,7 +344,7 @@ const Services = () => {
                       <h2 className="mt-2 text-2xl font-semibold text-foreground">
                         {section.title}
                       </h2>
-                      <p className="mt-2 text-sm text-muted-foreground">
+                      <p className="mt-2 text-sm text-muted-foreground text-justify">
                         {section.description}
                       </p>
                     </div>
@@ -358,7 +358,7 @@ const Services = () => {
                             <p className="text-sm font-semibold text-foreground">
                               {item.label}
                             </p>
-                            <p className="mt-1 text-sm text-muted-foreground">
+                            <p className="mt-1 text-sm text-muted-foreground text-justify">
                               {item.description}
                             </p>
                           </div>
@@ -373,7 +373,7 @@ const Services = () => {
                             <p className="text-sm font-semibold text-foreground">
                               {item.label}
                             </p>
-                            <p className="mt-1 text-sm text-muted-foreground">
+                            <p className="mt-1 text-sm text-muted-foreground text-justify">
                               {item.description}
                             </p>
                           </div>
@@ -399,7 +399,7 @@ const Services = () => {
                           <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
                             {item.label}
                           </p>
-                          <p className="mt-1 text-xs text-muted-foreground">
+                          <p className="mt-1 text-xs text-muted-foreground text-justify">
                             {item.description}
                           </p>
                         </Link>
@@ -418,3 +418,4 @@ const Services = () => {
 };
 
 export default Services;
+

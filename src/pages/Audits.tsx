@@ -1,4 +1,4 @@
-import { Layout } from "@/components/layout/Layout";
+﻿import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
 import { CheckCircle2, ClipboardCheck, FileText, ShieldCheck } from "lucide-react";
 
@@ -28,10 +28,10 @@ const auditServices = [
     slug: "transfer-pricing-audits",
   },
   {
-    title: "Bank Audits",
-    description: "Bank audit coordination and reporting.",
+    title: "Investigation Audit",
+    description: "Investigation audit coordination and reporting.",
     icon: ShieldCheck,
-    slug: "bank-audits",
+    slug: "investigation-audit",
   },
   {
     title: "Compliance Health Check",
@@ -47,7 +47,7 @@ const Audits = () => {
       <SEO
         title="Audits | 89TCA"
         description="Audit support to keep your business compliant"
-        keywords="audits, statutory audit, internal audit, bank audit"
+        keywords="audits, statutory audit, internal audit, investigation audit"
       />
 
       <section className="section-padding">
@@ -56,7 +56,7 @@ const Audits = () => {
             <h1 className="text-4xl font-semibold text-foreground md:text-5xl">
               Audits
             </h1>
-            <p className="mt-4 text-base text-muted-foreground md:text-lg">
+            <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
               Audit support to keep your business compliant
             </p>
           </div>
@@ -74,7 +74,7 @@ const Audits = () => {
                 <p className="mt-4 text-sm font-semibold text-foreground">
                   {item.title}
                 </p>
-                <p className="mt-2 text-sm text-muted-foreground">
+                <p className="mt-2 text-sm text-muted-foreground text-justify">
                   {item.description}
                 </p>
                 <span className="mt-3 inline-flex text-sm font-semibold text-primary">
@@ -90,6 +90,7 @@ const Audits = () => {
 };
 
 export default Audits;
+
 
 
 

@@ -1,4 +1,4 @@
-﻿import { useMemo } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
@@ -319,10 +319,10 @@ const serviceData: Record<
       "Cross-border compliance guidance",
     ],
   },
-  "bank-audits": {
-    title: "Bank Audits",
+  "investigation-audit": {
+    title: "Investigation Audit",
     description:
-      "A bank audit is conducted to examine financial records, loan accounts, security documents, and compliance related to banking transactions. It is often required by lenders to verify the health of a borrower's accounts and adherence to loan conditions. Bank audits help protect both the lender and borrower by identifying irregularities early. If not done properly, the business may face loan covenant issues, delayed financing, or disputes over account status. Accurate bank audit support improves financing transparency and lender confidence.",
+      "An investigation audit is conducted to examine financial records, loan accounts, security documents, and compliance related to banking transactions. It is often required by lenders to verify the health of a borrower's accounts and adherence to loan conditions. Investigation audits help protect both the lender and borrower by identifying irregularities early. If not done properly, the business may face loan covenant issues, delayed financing, or disputes over account status. Accurate investigation audit support improves financing transparency and lender confidence.",
     offers: [
       "Loan account review support",
       "Documentation and compliance checks",
@@ -489,6 +489,7 @@ const defaultService = {
 
 const ServiceDetail = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [expandedDescription, setExpandedDescription] = useState(false);
 
   const service = useMemo(() => {
     if (!slug) return defaultService;
@@ -499,6 +500,10 @@ const ServiceDetail = () => {
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" "),
     };
+  }, [slug]);
+
+  useEffect(() => {
+    setExpandedDescription(false);
   }, [slug]);
 
   return (
@@ -516,9 +521,28 @@ const ServiceDetail = () => {
             <h1 className="mt-3 text-4xl font-semibold text-foreground md:text-5xl">
               {service.title}
             </h1>
-            <p className="mt-4 text-base text-muted-foreground md:text-lg">
+            <p
+              className="mt-4 max-w-3xl text-xs leading-6 text-muted-foreground md:text-sm"
+              style={
+                expandedDescription
+                  ? undefined
+                  : {
+                      display: "-webkit-box",
+                      WebkitBoxOrient: "vertical",
+                      WebkitLineClamp: 2,
+                      overflow: "hidden",
+                    }
+              }
+            >
               {service.description}
             </p>
+            <button
+              type="button"
+              className="mt-2 text-sm font-semibold text-primary hover:underline"
+              onClick={() => setExpandedDescription((current) => !current)}
+            >
+              {expandedDescription ? "Read less" : "Read more"}
+            </button>
           </div>
         </div>
       </section>
@@ -565,3 +589,5 @@ const ServiceDetail = () => {
 };
 
 export default ServiceDetail;
+
+

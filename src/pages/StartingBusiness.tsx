@@ -1,5 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
+import { Link } from "react-router-dom";
 import {
   Building2,
   Briefcase,
@@ -153,7 +154,7 @@ const StartingBusiness = () => {
             <h1 className="text-4xl font-semibold text-foreground md:text-5xl">
               Starting a Business
             </h1>
-            <p className="mt-4 text-base text-muted-foreground md:text-lg">
+            <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
               Complete support to start and register your business in India
             </p>
           </div>
@@ -165,10 +166,10 @@ const StartingBusiness = () => {
               </h2>
               <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {entityFormation.map((item) => (
-                  <a
+                  <Link
                     key={item.title}
-                    href={`/services/${item.slug}`}
-                    className="card-hover group block p-5"
+                    to={`/services/${item.slug}`}
+                    className="card-hover group block cursor-pointer p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   >
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
                       <item.icon className="h-5 w-5 text-primary" />
@@ -176,13 +177,13 @@ const StartingBusiness = () => {
                     <p className="mt-4 text-sm font-semibold text-foreground">
                       {item.title}
                     </p>
-                    <p className="mt-2 text-sm text-muted-foreground">
+                    <p className="mt-2 text-sm text-muted-foreground text-justify">
                       {item.description}
                     </p>
                     <span className="mt-3 inline-flex text-sm font-semibold text-primary">
                       Learn More &rarr;
                     </span>
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -193,10 +194,10 @@ const StartingBusiness = () => {
               </h2>
               <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {alliedRegistrations.map((item) => (
-                  <a
+                  <Link
                     key={item.title}
-                    href={`/services/${item.slug}`}
-                    className="group block rounded-xl border border-border bg-white px-4 py-4 transition-shadow hover:shadow-sm"
+                    to={`/services/${item.slug}`}
+                    className="group block cursor-pointer rounded-xl border border-border bg-white px-4 py-4 transition-shadow hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   >
                     <div className="flex items-center gap-3">
                       <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
@@ -206,13 +207,13 @@ const StartingBusiness = () => {
                         {item.title}
                       </p>
                     </div>
-                    <p className="mt-2 text-sm text-muted-foreground">
+                    <p className="mt-2 text-sm text-muted-foreground text-justify">
                       {item.description}
                     </p>
                     <span className="mt-3 inline-flex text-sm font-semibold text-primary">
                       Learn More &rarr;
                     </span>
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>

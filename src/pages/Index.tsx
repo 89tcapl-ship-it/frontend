@@ -104,65 +104,37 @@ const Index = () => {
         keywords="chartered accountant, compliance, GST, audits, business advisory"
       />
 
-      <section className="section-padding">
-        <div className="container-custom">
-          <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
-            <div className="max-w-2xl lg:pr-4">
-              <p className="text-xs font-semibold text-muted-foreground">
-                Trusted Chartered Accountants & Advisors
-              </p>
-              <h1 className="mt-4 text-4xl font-semibold text-foreground md:text-5xl">
-                Professional Tax & Compliance Services
+      <section className="bg-white">
+        <div className="container-custom px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
+          <div className="mx-auto max-w-[1200px] text-center">
+            <div className="mx-auto max-w-[1100px] pt-4 sm:pt-6 lg:pt-8">
+              <h1 className="mx-auto max-w-[980px] text-3xl font-bold leading-[1.08] tracking-tight text-foreground md:text-4xl lg:text-[2.75rem] xl:text-[2.9rem]">
+                <span className="block">End-to-End Finance, Compliance</span>
+                <span className="block">Support for Growing Businesses</span>
               </h1>
-              <p className="mt-5 text-base text-muted-foreground md:text-lg">
-                Helping businesses stay compliant and grow with confidence.
+              <p className="mx-auto mt-6 max-w-[980px] text-base leading-[1.6] text-muted-foreground md:text-lg">
+                With a team of seasoned Chartered Accountants, 89TCA delivers structured finance and compliance solutions to help businesses operate efficiently and grow with confidence.
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+
+              <div className="mx-auto mt-7 max-w-[1400px] rounded-full border border-slate-200 bg-[#f8fafc] px-6 py-4 text-center shadow-[0_1px_5px_rgba(15,23,42,0.04)]">
+                <p className="text-sm font-medium text-slate-700 md:text-base lg:text-[1.02rem]">
+                  Trusted Chartered Accountants • 8+ Years Experience • Serving Startups, SMEs &amp; Enterprises Across India
+                </p>
+              </div>
+
+              <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-4">
                 <Link
                   to="/contact"
-                  className="btn-primary text-center"
+                  className="btn-primary h-12 min-w-[168px] inline-flex items-center justify-center text-center transition-transform hover:-translate-y-0.5"
                 >
                   Get Started
                 </Link>
                 <Link
                   to="/contact"
-                  className="btn-outline text-center"
+                  className="btn-outline h-12 min-w-[168px] inline-flex items-center justify-center text-center transition-transform hover:-translate-y-0.5"
                 >
                   Contact Us
                 </Link>
-              </div>
-              <p className="mt-4 text-xs text-muted-foreground">
-                Serving startups, SMEs & enterprises across India
-              </p>
-            </div>
-
-            <div className="relative lg:pl-2">
-              <div className="absolute -right-6 top-10 h-28 w-28 rounded-full bg-primary/10 blur-2xl" />
-              <div className="absolute -left-4 bottom-6 h-24 w-24 rounded-full bg-primary/15 blur-2xl" />
-              <div className="card-soft p-8">
-                <div className="space-y-6">
-                  <div className="rounded-2xl border border-border bg-secondary/30 p-5">
-                    <p className="text-xs font-semibold text-primary">Filings</p>
-                    <p className="mt-2 text-lg font-semibold text-foreground">GST & TDS Filings</p>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Accurate filings, reconciliations, and on-time compliance.
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-border bg-secondary/30 p-5">
-                    <p className="text-xs font-semibold text-primary">Advisory</p>
-                    <p className="mt-2 text-lg font-semibold text-foreground">Business Advisory</p>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Practical guidance for growth, structure, and decisions.
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-border bg-secondary/30 p-5">
-                    <p className="text-xs font-semibold text-primary">Assurance</p>
-                    <p className="mt-2 text-lg font-semibold text-foreground">Audit & Compliance</p>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Audit-ready records and governance support.
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -172,7 +144,6 @@ const Index = () => {
       <section className="section-padding bg-secondary/30">
         <div className="container-custom">
           <div>
-            <p className="text-sm font-semibold text-primary">Our Services</p>
             <h2 className="mt-3 text-3xl font-semibold text-foreground">Our Services</h2>
             <p className="mt-3 text-muted-foreground">
               Explore tailored services across incorporation, compliance, and business support.
@@ -331,3 +302,4 @@ const Index = () => {
 };
 
 export default Index;
+

@@ -859,6 +859,14 @@ serviceDetailData["epf-and-esi"] = serviceDetailData["epf-esi"];
 serviceDetailData["epf"] = serviceDetailData["epf-compliance"];
 serviceDetailData["esi"] = serviceDetailData["esi-compliance"];
 serviceDetailData["itr-and-tds"] = serviceDetailData["itr-and-tds-compliance"];
+serviceDetailData["income-tax-filing"] = serviceDetailData["itr-and-tds-compliance"];
+serviceDetailData["tds-filing"] = serviceDetailData["itr-and-tds-compliance"];
 serviceDetailData["mca"] = serviceDetailData["mca-compliance"];
+serviceDetailData["opc"] = serviceDetailData["opc-registration"];
+serviceDetailData["one-person-company"] = serviceDetailData["opc-registration"];
+serviceDetailData["trademark"] = serviceDetailData["dpiit-startup-india"];
+serviceDetailData["trade-mark"] = serviceDetailData["dpiit-startup-india"];
+serviceDetailData["llp-registration"] = serviceDetailData["llp"];
+serviceDetailData["shops-and-establishments-labour"] = serviceDetailData["shops-establishments"];
 
 export default serviceDetailData;

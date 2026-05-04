@@ -13,6 +13,15 @@ const toSlug = (label: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
+const getServiceSlug = (label: string) => {
+  const overrides: Record<string, string> = {
+    "Shops & Establishments (Labour)": "shops-establishments",
+    "Trade Mark": "dpiit-startup-india",
+  };
+
+  return overrides[label] ?? toSlug(label);
+};
+
 const startingBusinessMenu = [
   {
     heading: "Entity Formation",
@@ -39,7 +48,7 @@ const startingBusinessMenu = [
       "FSSAI",
       "IEC",
       "MSME/UDYAM",
-      "Trade Mark",
+      "DPIIT / StartUp India Registration",
     ],
   },
 ];
@@ -140,7 +149,7 @@ export function Header() {
                           {section.items.map((item) => (
                             <li key={item}>
                               <Link
-                                to={`/services/${toSlug(item)}`}
+                                to={`/services/${getServiceSlug(item)}`}
                                 className="transition-colors hover:text-primary hover:underline"
                               >
                                 {item}
@@ -192,7 +201,7 @@ export function Header() {
                       {supportServicesMenu.map((item) => (
                         <li key={item}>
                           <Link
-                            to={`/services/${toSlug(item)}`}
+                            to={`/services/${getServiceSlug(item)}`}
                             className="transition-colors hover:text-primary hover:underline"
                           >
                             {item}
@@ -234,7 +243,7 @@ export function Header() {
                       {compliancesMenu.map((item) => (
                         <li key={item} className="shrink-0">
                           <Link
-                            to={`/services/${toSlug(item)}`}
+                            to={`/services/${getServiceSlug(item)}`}
                             className="transition-colors hover:text-primary hover:underline"
                           >
                             {item}
@@ -274,7 +283,7 @@ export function Header() {
                       {fundingMenu.map((item) => (
                         <li key={item}>
                           <Link
-                            to={`/services/${toSlug(item)}`}
+                            to={`/services/${getServiceSlug(item)}`}
                             className="transition-colors hover:text-primary hover:underline"
                           >
                             {item}

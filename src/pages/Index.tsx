@@ -95,6 +95,20 @@ const whyChooseUs = [
   },
 ];
 
+const serviceSlugs: Record<string, string> = {
+  "Private Limited Company": "private-limited-company",
+  "LLP Registration": "llp",
+  "Partnership Firm": "partnership",
+  "OPC Registration": "opc-registration",
+  "Income Tax Filing": "itr-and-tds-compliance",
+  "TDS Filing": "itr-and-tds-compliance",
+  "GST": "gst",
+  "MCA Compliance": "mca-compliance",
+  "Book Keeping": "book-keeping",
+  "Payroll": "payroll",
+  "Virtual CFO": "virtual-cfo",
+};
+
 const Index = () => {
   return (
     <Layout>
@@ -157,7 +171,7 @@ const Index = () => {
                 {startingBusiness.map((item) => (
                   <Link
                     key={item.title}
-                    to={`/services/${item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
+                    to={`/services/${serviceSlugs[item.title] ?? item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
                     className="card-hover group p-4"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
@@ -180,7 +194,7 @@ const Index = () => {
                 {taxCompliance.map((item) => (
                   <Link
                     key={item.title}
-                    to={`/services/${item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
+                    to={`/services/${serviceSlugs[item.title] ?? item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
                     className="card-hover group p-4"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
@@ -203,7 +217,7 @@ const Index = () => {
                 {businessSupport.map((item) => (
                   <Link
                     key={item.title}
-                    to={`/services/${item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
+                    to={`/services/${serviceSlugs[item.title] ?? item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
                     className="card-hover group p-4"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">

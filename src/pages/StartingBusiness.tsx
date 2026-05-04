@@ -132,10 +132,11 @@ const alliedRegistrations = [
     slug: "msme-udyam",
   },
   {
-    title: "Trademark",
-    description: "Brand name and logo protection.",
+    title: "DPIIT / StartUp India Registration",
+    description:
+      "Recognition under the Startup India initiative for eligible startups with tax, regulatory, and funding benefits.",
     icon: BadgeCheck,
-    slug: "trademark",
+    slug: "dpiit-startup-india",
   },
 ];
 

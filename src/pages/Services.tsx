@@ -12,7 +12,6 @@ import {
   Calculator,
   PiggyBank,
   ShieldCheck,
-  CheckCircle2,
 } from "lucide-react";
 
 const toSlug = (label: string) =>
@@ -22,50 +21,21 @@ const toSlug = (label: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
-const detailSlugMap: Record<string, string[]> = {
-  "Starting a Business::Private Limited Company": ["private-limited-company"],
-  "Starting a Business::Partnership": ["partnership"],
-  "Starting a Business::LLP": ["llp"],
-  "Starting a Business::OPC Registration": ["opc-registration"],
-  "Starting a Business::Sole Proprietor": ["sole-proprietor"],
-  "Starting a Business::Foreign Company Subsidiary": ["foreign-company-subsidiary"],
-  "Starting a Business::NBFC": ["nbfc"],
-  "Starting a Business::Trust/Societies": ["trust-societies"],
-  "Starting a Business::Apartment Association": ["apartment-association"],
-  "Compliances::GST": ["gst-compliance", "gst"],
-  "Compliances::EPF & ESI": ["epf-compliance", "esi-compliance", "epf-esi"],
-  "Compliances::PT": ["pt-compliance", "pt"],
-  "Compliances::ITR & TDS": ["itr-and-tds-compliance"],
-  "Compliances::MCA": ["mca-compliance"],
-  "Compliances::ESI": ["esi-compliance"],
-  "Funding::Due Diligence": ["due-diligence"],
-  "Funding::Valuation": ["valuation"],
-  "Funding::Startup Funding": ["startup-funding"],
-  "Funding::FDI Compliance": ["fdi-compliance"],
-  "Funding::Bank Finance": ["bank-finance"],
-  "Funding::Project Reports": ["project-reports"],
-  "Audits::Statutory Audits": ["statutory-audits"],
-  "Audits::Income Tax Audit": ["income-tax-audit"],
-  "Audits::Internal Audits": ["internal-audits"],
-  "Audits::Transfer Pricing Audits": ["transfer-pricing-audits"],
-  "Audits::Investigation Audit": ["investigation-audit"],
-  "Audits::Compliance Health Check": ["compliance-health-check"],
-};
-
-const hasNonCompliance = (sectionTitle: string, label: string) => {
-  const slugs = detailSlugMap[`${sectionTitle}::${label}`] ?? [toSlug(label)];
-  return slugs.some(
-    (slug) =>
-      (serviceDetailData as Record<string, { nonComplianceRisks?: string[] }>)[slug]?.nonComplianceRisks?.length
-  );
-};
-
 const sectionIds: Record<string, string> = {
   "Starting a Business": "starting-business",
   "Support Services": "support-services",
   Compliances: "compliances",
   Funding: "funding",
   Audits: "audits",
+};
+
+const serviceCardClass =
+  "card-hover group flex h-full flex-col p-5 transition-all duration-200 hover:-translate-y-0.5";
+const lineClampStyle = {
+  display: "-webkit-box",
+  WebkitBoxOrient: "vertical" as const,
+  WebkitLineClamp: 2,
+  overflow: "hidden",
 };
 
 const sections = [
@@ -97,7 +67,7 @@ const sections = [
       {
         label: "Sole Proprietor",
         description:
-          "A Sole Proprietorship is the simplest and most common form of business in India, ideal for individual entrepreneurs who want full control over their operations. The business and the owner are legally the same entity — the owner personally owns all assets and is personally liable for all debts and obligations. No separate legal entity registration is required; however, registrations such as GST, trade licence, or Shops & Establishments are typically needed to establish business identity. Sole proprietorships are easy to set up, have minimal compliance requirements, and offer complete decision-making authority to the owner. Well-suited for freelancers, small traders, home-based businesses, and service providers who are starting out. Business income is treated as the personal income of the proprietor and taxed at individual slab rates, making returns simpler to file.",
+          "Simple setup for individual-owned businesses with full control and minimal formalities.",
         icon: Users,
       },
       {
@@ -326,119 +296,23 @@ const Services = () => {
                   className="scroll-mt-24"
                 >
                 {section.title === "Compliances" ? (
-                  <div className="rounded-2xl border border-border bg-white/80 p-6 shadow-sm sm:p-8">
-                    <div>
-                      <p className="text-sm font-semibold text-primary">Compliances</p>
-                      <h2 className="mt-2 text-2xl font-semibold text-foreground">
-                        {section.title}
-                      </h2>
-                      <p className="mt-2 text-sm text-muted-foreground text-justify">
-                        {section.description}
-                      </p>
-                    </div>
-                    <div className="mt-6 grid gap-6 lg:grid-cols-2">
-                      <div className="rounded-xl border border-border bg-background/60 p-5">
-                        <p className="text-sm font-semibold text-foreground">
-                          Tax Compliances
-                        </p>
-                        <div className="mt-4 space-y-4">
-                          {section.taxItems?.map((item) => (
-                            <div key={item.label} className="flex items-start gap-3">
-                              <span className="mt-0.5 h-2 w-2 rounded-full bg-primary" />
-                              <div>
-                                <p className="text-sm font-semibold text-foreground">
-                                  {item.label}
-                                </p>
-                                <p className="mt-1 text-sm text-muted-foreground text-justify">
-                                  {item.description}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="rounded-xl border border-border bg-background/60 p-5">
-                        <p className="text-sm font-semibold text-foreground">
-                          Regulatory Compliances
-                        </p>
-                        <div className="mt-4 space-y-4">
-                          {section.regulatoryItems?.map((item) => (
-                            <div key={item.label} className="flex items-start gap-3">
-                              <span className="mt-0.5 h-2 w-2 rounded-full bg-primary" />
-                              <div>
-                                <p className="text-sm font-semibold text-foreground">
-                                  {item.label}
-                                </p>
-                                <p className="mt-1 text-sm text-muted-foreground text-justify">
-                                  {item.description}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : section.title === "Support Services" ? (
-                  <div className="rounded-2xl border border-border bg-white/80 p-6 shadow-sm sm:p-8">
-                    <div>
-                      <p className="text-sm font-semibold text-primary">Support Services</p>
-                      <h2 className="mt-2 text-2xl font-semibold text-foreground">
-                        {section.title}
-                      </h2>
-                      <p className="mt-2 text-sm text-muted-foreground text-justify">
-                        {section.description}
-                      </p>
-                    </div>
-                    <div className="mt-8 grid gap-8 lg:grid-cols-2">
-                      <div className="space-y-5">
-                        {section.items.slice(0, 3).map((item, index) => (
-                          <div
-                            key={item.label}
-                            className={index === 2 ? "pb-0" : "border-b border-border pb-5"}
-                          >
-                            <p className="text-sm font-semibold text-foreground">
-                              {item.label}
-                            </p>
-                            <p className="mt-1 text-sm text-muted-foreground text-justify">
-                              {item.description}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="space-y-5">
-                        {section.items.slice(3).map((item, index) => (
-                          <div
-                            key={item.label}
-                            className={index === 2 ? "pb-0" : "border-b border-border pb-5"}
-                          >
-                            <p className="text-sm font-semibold text-foreground">
-                              {item.label}
-                            </p>
-                            <p className="mt-1 text-sm text-muted-foreground text-justify">
-                              {item.description}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ) : (
                   <div>
-                    <h2 className="text-xl font-semibold text-foreground">
-                      {section.title}
-                    </h2>
-                    {section.description ? (
-                      <p className="mt-2 max-w-3xl text-sm text-muted-foreground text-justify">
-                        {section.description}
-                      </p>
-                    ) : null}
-                    <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="flex items-end justify-between gap-4">
+                      <div>
+                        <h2 className="text-2xl font-semibold text-foreground">
+                          {section.title}
+                        </h2>
+                        <p className="mt-2 max-w-3xl text-sm text-muted-foreground text-justify">
+                          {section.description}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-5 grid gap-4 sm:grid-cols-2">
                       {section.items.map((item) => (
                         <Link
                           key={item.label}
                           to={`/services/${toSlug(item.label)}`}
-                          className="card-hover group p-4"
+                          className={serviceCardClass}
                         >
                           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                             <item.icon className="h-5 w-5 text-primary" />
@@ -446,14 +320,71 @@ const Services = () => {
                           <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
                             {item.label}
                           </p>
-                          <p className="mt-1 text-xs text-muted-foreground text-justify">
+                          <p className="mt-1 text-xs text-muted-foreground text-justify" style={lineClampStyle}>
                             {item.description}
                           </p>
-                          {hasNonCompliance(section.title, item.label) ? (
-                            <span className="mt-3 inline-flex rounded-full bg-rose-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-rose-700">
-                              Non-Compliance Included
-                            </span>
-                          ) : null}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : section.title === "Support Services" ? (
+                  <div>
+                    <div className="flex items-end justify-between gap-4">
+                      <div>
+                        <h2 className="text-2xl font-semibold text-foreground">
+                          {section.title}
+                        </h2>
+                        <p className="mt-2 max-w-3xl text-sm text-muted-foreground text-justify">
+                          {section.description}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                      {section.items.map((item) => (
+                        <Link
+                          key={item.label}
+                          to={`/services/${toSlug(item.label)}`}
+                          className={serviceCardClass}
+                        >
+                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                            <item.icon className="h-5 w-5 text-primary" />
+                          </div>
+                          <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
+                            {item.label}
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground text-justify" style={lineClampStyle}>
+                            {item.description}
+                          </p>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <h2 className="text-2xl font-semibold text-foreground">
+                      {section.title}
+                    </h2>
+                    {section.description ? (
+                      <p className="mt-2 max-w-3xl text-sm text-muted-foreground text-justify">
+                        {section.description}
+                      </p>
+                    ) : null}
+                    <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                      {section.items.map((item) => (
+                        <Link
+                          key={item.label}
+                          to={`/services/${toSlug(item.label)}`}
+                          className={serviceCardClass}
+                        >
+                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                            <item.icon className="h-5 w-5 text-primary" />
+                          </div>
+                          <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
+                            {item.label}
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground text-justify" style={lineClampStyle}>
+                            {item.description}
+                          </p>
                         </Link>
                       ))}
                     </div>

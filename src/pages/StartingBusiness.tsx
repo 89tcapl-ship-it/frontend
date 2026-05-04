@@ -48,7 +48,7 @@ const entityFormation = [
   {
     title: "Sole Proprietor",
     description:
-      "Simple setup for individual-owned businesses with minimal formalities.",
+      "Simple setup for individual-owned businesses with full control and minimal formalities.",
     icon: Users,
     slug: "sole-proprietor",
   },
@@ -171,7 +171,7 @@ const StartingBusiness = () => {
               <h2 className="text-2xl font-semibold text-foreground">
                 Entity Formation
               </h2>
-              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-6 grid gap-5 sm:grid-cols-2">
                 {entityFormation.map((item) => (
                   <Link
                     key={item.title}
@@ -184,7 +184,15 @@ const StartingBusiness = () => {
                     <p className="mt-4 text-sm font-semibold text-foreground">
                       {item.title}
                     </p>
-                    <p className="mt-2 text-sm text-muted-foreground text-justify">
+                    <p
+                      className="mt-2 text-sm text-muted-foreground"
+                      style={{
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 3,
+                        overflow: "hidden",
+                      }}
+                    >
                       {item.description}
                     </p>
                     <span className="mt-3 inline-flex text-sm font-semibold text-primary">
@@ -199,7 +207,7 @@ const StartingBusiness = () => {
               <h2 className="text-2xl font-semibold text-foreground">
                 Allied Registrations
               </h2>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 {alliedRegistrations.map((item) => (
                   <Link
                     key={item.title}
@@ -214,7 +222,15 @@ const StartingBusiness = () => {
                         {item.title}
                       </p>
                     </div>
-                    <p className="mt-2 text-sm text-muted-foreground text-justify">
+                    <p
+                      className="mt-2 text-sm text-muted-foreground"
+                      style={{
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 2,
+                        overflow: "hidden",
+                      }}
+                    >
                       {item.description}
                     </p>
                     <span className="mt-3 inline-flex text-sm font-semibold text-primary">

@@ -109,16 +109,16 @@ const Index = () => {
           <div className="mx-auto max-w-[1200px] text-center">
             <div className="mx-auto max-w-[1100px] pt-4 sm:pt-6 lg:pt-8">
               <h1 className="mx-auto max-w-[980px] text-3xl font-bold leading-[1.08] tracking-tight text-foreground md:text-4xl lg:text-[2.75rem] xl:text-[2.9rem]">
-                <span className="block">End-to-End Finance, Compliance</span>
+                <span className="block">End-to-End Finance and Compliance</span>
                 <span className="block">Support for Growing Businesses</span>
               </h1>
               <p className="mx-auto mt-6 max-w-[980px] text-base leading-[1.6] text-muted-foreground md:text-lg">
-                With a team of seasoned Chartered Accountants, 89TCA delivers structured finance and compliance solutions to help businesses operate efficiently and grow with confidence.
+                Led by seasoned Chartered Accountants, 89TCA delivers structured solutions that empower businesses to operate efficiently and scale with confidence.
               </p>
 
               <div className="mx-auto mt-7 max-w-[1400px] rounded-full border border-slate-200 bg-[#f8fafc] px-6 py-4 text-center shadow-[0_1px_5px_rgba(15,23,42,0.04)]">
                 <p className="text-sm font-medium text-slate-700 md:text-base lg:text-[1.02rem]">
-                  Trusted Chartered Accountants • 8+ Years Experience • Serving Startups, SMEs &amp; Enterprises Across India
+                  Trusted Chartered Accountants • 10 Years Experience • Serving Startups, SMEs &amp; Enterprises Across India
                 </p>
               </div>
 

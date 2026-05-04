@@ -1,6 +1,7 @@
 ﻿import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
+import serviceDetailData from "@/data/serviceDetailData";
 import {
   Building2,
   Briefcase,
@@ -21,6 +22,44 @@ const toSlug = (label: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
+const detailSlugMap: Record<string, string[]> = {
+  "Starting a Business::Private Limited Company": ["private-limited-company"],
+  "Starting a Business::Partnership": ["partnership"],
+  "Starting a Business::LLP": ["llp"],
+  "Starting a Business::OPC Registration": ["opc-registration"],
+  "Starting a Business::Sole Proprietor": ["sole-proprietor"],
+  "Starting a Business::Foreign Company Subsidiary": ["foreign-company-subsidiary"],
+  "Starting a Business::NBFC": ["nbfc"],
+  "Starting a Business::Trust/Societies": ["trust-societies"],
+  "Starting a Business::Apartment Association": ["apartment-association"],
+  "Compliances::GST": ["gst-compliance", "gst"],
+  "Compliances::EPF & ESI": ["epf-compliance", "esi-compliance", "epf-esi"],
+  "Compliances::PT": ["pt-compliance", "pt"],
+  "Compliances::ITR & TDS": ["itr-and-tds-compliance"],
+  "Compliances::MCA": ["mca-compliance"],
+  "Compliances::ESI": ["esi-compliance"],
+  "Funding::Due Diligence": ["due-diligence"],
+  "Funding::Valuation": ["valuation"],
+  "Funding::Startup Funding": ["startup-funding"],
+  "Funding::FDI Compliance": ["fdi-compliance"],
+  "Funding::Bank Finance": ["bank-finance"],
+  "Funding::Project Reports": ["project-reports"],
+  "Audits::Statutory Audits": ["statutory-audits"],
+  "Audits::Income Tax Audit": ["income-tax-audit"],
+  "Audits::Internal Audits": ["internal-audits"],
+  "Audits::Transfer Pricing Audits": ["transfer-pricing-audits"],
+  "Audits::Investigation Audit": ["investigation-audit"],
+  "Audits::Compliance Health Check": ["compliance-health-check"],
+};
+
+const hasNonCompliance = (sectionTitle: string, label: string) => {
+  const slugs = detailSlugMap[`${sectionTitle}::${label}`] ?? [toSlug(label)];
+  return slugs.some(
+    (slug) =>
+      (serviceDetailData as Record<string, { nonComplianceRisks?: string[] }>)[slug]?.nonComplianceRisks?.length
+  );
+};
+
 const sectionIds: Record<string, string> = {
   "Starting a Business": "starting-business",
   "Support Services": "support-services",
@@ -32,6 +71,8 @@ const sectionIds: Record<string, string> = {
 const sections = [
   {
     title: "Starting a Business",
+    description:
+      "Starting a business is one of the most significant decisions in an entrepreneur's life. India offers a robust legal framework with multiple entity types to suit every scale and nature of business. Choosing the right structure from day one ensures legal protection, tax efficiency, investor readiness, and long-term sustainability. At 89T Corporate Advisors, we guide you through every step of business formation and allied registrations.",
     items: [
       {
         label: "Private Limited Company",
@@ -55,7 +96,8 @@ const sections = [
       },
       {
         label: "Sole Proprietor",
-        description: "Quick setup for individual-owned businesses.",
+        description:
+          "A Sole Proprietorship is the simplest and most common form of business in India, ideal for individual entrepreneurs who want full control over their operations. The business and the owner are legally the same entity — the owner personally owns all assets and is personally liable for all debts and obligations. No separate legal entity registration is required; however, registrations such as GST, trade licence, or Shops & Establishments are typically needed to establish business identity. Sole proprietorships are easy to set up, have minimal compliance requirements, and offer complete decision-making authority to the owner. Well-suited for freelancers, small traders, home-based businesses, and service providers who are starting out. Business income is treated as the personal income of the proprietor and taxed at individual slab rates, making returns simpler to file.",
         icon: Users,
       },
       {
@@ -290,7 +332,7 @@ const Services = () => {
                       <h2 className="mt-2 text-2xl font-semibold text-foreground">
                         {section.title}
                       </h2>
-                      <p className="mt-2 text-sm text-muted-foreground text-justify text-justify">
+                      <p className="mt-2 text-sm text-muted-foreground text-justify">
                         {section.description}
                       </p>
                     </div>
@@ -307,7 +349,7 @@ const Services = () => {
                                 <p className="text-sm font-semibold text-foreground">
                                   {item.label}
                                 </p>
-                                <p className="mt-1 text-sm text-muted-foreground text-justify text-justify">
+                                <p className="mt-1 text-sm text-muted-foreground text-justify">
                                   {item.description}
                                 </p>
                               </div>
@@ -327,7 +369,7 @@ const Services = () => {
                                 <p className="text-sm font-semibold text-foreground">
                                   {item.label}
                                 </p>
-                                <p className="mt-1 text-sm text-muted-foreground text-justify text-justify">
+                                <p className="mt-1 text-sm text-muted-foreground text-justify">
                                   {item.description}
                                 </p>
                               </div>
@@ -344,7 +386,7 @@ const Services = () => {
                       <h2 className="mt-2 text-2xl font-semibold text-foreground">
                         {section.title}
                       </h2>
-                      <p className="mt-2 text-sm text-muted-foreground text-justify text-justify">
+                      <p className="mt-2 text-sm text-muted-foreground text-justify">
                         {section.description}
                       </p>
                     </div>
@@ -358,7 +400,7 @@ const Services = () => {
                             <p className="text-sm font-semibold text-foreground">
                               {item.label}
                             </p>
-                            <p className="mt-1 text-sm text-muted-foreground text-justify text-justify">
+                            <p className="mt-1 text-sm text-muted-foreground text-justify">
                               {item.description}
                             </p>
                           </div>
@@ -373,7 +415,7 @@ const Services = () => {
                             <p className="text-sm font-semibold text-foreground">
                               {item.label}
                             </p>
-                            <p className="mt-1 text-sm text-muted-foreground text-justify text-justify">
+                            <p className="mt-1 text-sm text-muted-foreground text-justify">
                               {item.description}
                             </p>
                           </div>
@@ -386,6 +428,11 @@ const Services = () => {
                     <h2 className="text-xl font-semibold text-foreground">
                       {section.title}
                     </h2>
+                    {section.description ? (
+                      <p className="mt-2 max-w-3xl text-sm text-muted-foreground text-justify">
+                        {section.description}
+                      </p>
+                    ) : null}
                     <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {section.items.map((item) => (
                         <Link
@@ -402,6 +449,11 @@ const Services = () => {
                           <p className="mt-1 text-xs text-muted-foreground text-justify">
                             {item.description}
                           </p>
+                          {hasNonCompliance(section.title, item.label) ? (
+                            <span className="mt-3 inline-flex rounded-full bg-rose-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-rose-700">
+                              Non-Compliance Included
+                            </span>
+                          ) : null}
                         </Link>
                       ))}
                     </div>

@@ -154,8 +154,14 @@ const StartingBusiness = () => {
             <h1 className="text-4xl font-semibold text-foreground md:text-5xl">
               Starting a Business
             </h1>
-            <p className="mt-4 text-base text-muted-foreground text-justify text-justify md:text-lg">
-              Complete support to start and register your business in India
+            <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
+              Starting a business is one of the most significant decisions in an
+              entrepreneur's life. India offers a robust legal framework with multiple
+              entity types to suit every scale and nature of business. Choosing the
+              right structure from day one ensures legal protection, tax efficiency,
+              investor readiness, and long-term sustainability. At 89T Corporate
+              Advisors, we guide you through every step of business formation and
+              allied registrations.
             </p>
           </div>
 
@@ -177,7 +183,7 @@ const StartingBusiness = () => {
                     <p className="mt-4 text-sm font-semibold text-foreground">
                       {item.title}
                     </p>
-                    <p className="mt-2 text-sm text-muted-foreground text-justify text-justify">
+                    <p className="mt-2 text-sm text-muted-foreground text-justify">
                       {item.description}
                     </p>
                     <span className="mt-3 inline-flex text-sm font-semibold text-primary">
@@ -207,7 +213,7 @@ const StartingBusiness = () => {
                         {item.title}
                       </p>
                     </div>
-                    <p className="mt-2 text-sm text-muted-foreground text-justify text-justify">
+                    <p className="mt-2 text-sm text-muted-foreground text-justify">
                       {item.description}
                     </p>
                     <span className="mt-3 inline-flex text-sm font-semibold text-primary">

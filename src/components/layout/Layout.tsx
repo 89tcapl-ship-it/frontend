@@ -5,16 +5,18 @@ import { WhatsAppWidget } from "@/components/shared/WhatsAppWidget";
 
 interface LayoutProps {
   children: React.ReactNode;
+  showConsultationWidget?: boolean;
+  showWhatsAppWidget?: boolean;
 }
 
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children, showConsultationWidget = true, showWhatsAppWidget = true }: LayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
-      <WhatsAppWidget />
-      <ConsultationWidget />
+      {showWhatsAppWidget ? <WhatsAppWidget /> : null}
+      {showConsultationWidget ? <ConsultationWidget /> : null}
     </div>
   );
 }

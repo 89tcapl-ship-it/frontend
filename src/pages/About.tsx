@@ -44,7 +44,7 @@ const About = () => {
         keywords="about 89TCA, chartered accountants, advisory, audit, taxation, compliance"
       />
 
-      <section className="section-padding bg-gradient-to-b from-secondary/40 to-white">
+      <section className="pt-8 pb-4 md:pt-10 md:pb-6 bg-gradient-to-b from-secondary/40 to-white">
         <div className="container-custom">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
@@ -66,16 +66,16 @@ const About = () => {
         </div>
       </section>
 
-      <section className="section-padding">
+      <section className="pt-4 pb-6 md:pt-6 md:pb-8">
         <div className="container-custom">
           <div className="mx-auto max-w-4xl">
             <div>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+              <h2 className="mt-0 text-3xl font-semibold tracking-tight text-foreground">
                 Founders' Background
               </h2>
             </div>
 
-            <div className="mt-8 space-y-6">
+            <div className="mt-4 space-y-6">
               {founders.map((founder) => (
                 <div
                   key={founder.name}
@@ -103,14 +103,14 @@ const About = () => {
         </div>
       </section>
 
-      <section className="section-padding bg-secondary/30">
+      <section className="pt-4 pb-10 md:pt-6 md:pb-12 bg-secondary/30">
         <div className="container-custom">
           <div className="mx-auto max-w-4xl">
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+            <h2 className="mt-0 text-3xl font-semibold tracking-tight text-foreground">
               Our Approach
             </h2>
 
-            <div className="mt-6 rounded-[30px] border border-border bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.06)] sm:p-8">
+            <div className="mt-4 rounded-[30px] border border-border bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.06)] sm:p-8">
               <p className="text-sm font-semibold text-foreground">We combine:</p>
               <ul className="mt-4 space-y-4">
                 {approachPoints.map((point) => (
@@ -122,7 +122,7 @@ const About = () => {
               </ul>
             </div>
 
-            <p className="mt-6 text-justify text-base leading-7 text-muted-foreground md:text-lg">
+            <p className="mt-4 text-justify text-base leading-7 text-muted-foreground md:text-lg">
               The firm is driven by the belief that sound financial structuring and
               proactive compliance are critical to sustainable growth. Every engagement
               is led with accountability, technical depth, and long-term perspective.

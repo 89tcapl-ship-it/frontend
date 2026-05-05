@@ -17,7 +17,7 @@ const defaultService: ServiceDetailData = {
 };
 
 const sectionCardStyles =
-  "relative overflow-hidden rounded-[28px] border border-border/70 bg-white/90 p-6 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur-sm transition-transform duration-200 hover:-translate-y-0.5 sm:p-8";
+  "relative overflow-hidden rounded-[28px] border border-border/70 bg-white/90 p-5 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur-sm transition-transform duration-200 hover:-translate-y-0.5 sm:p-6";
 
 const renderBullets = (items: string[], emptyMessage: string) => {
   if (items.length === 0) {
@@ -25,7 +25,7 @@ const renderBullets = (items: string[], emptyMessage: string) => {
   }
 
   return (
-    <ul className="mt-5 space-y-4">
+    <ul className="mt-4 space-y-3">
       {items.map((item) => (
         <li key={item} className="flex gap-3 text-sm leading-6 text-slate-600">
           <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
@@ -71,7 +71,7 @@ const ServiceDetail = () => {
         keywords={`${service.title}, chartered accountant, compliance`}
       />
 
-      <section className="section-padding relative overflow-hidden">
+      <section className="relative overflow-hidden pt-8 pb-4 md:pt-10 md:pb-6">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.12),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.10),transparent_28%)]" />
         <div className="container-custom">
           <div className="max-w-4xl rounded-[32px] border border-border/70 bg-white/85 p-8 shadow-[0_14px_40px_rgba(15,23,42,0.06)] backdrop-blur md:p-10">
@@ -109,7 +109,7 @@ const ServiceDetail = () => {
         </div>
       </section>
 
-      <section className="section-padding bg-gradient-to-b from-secondary/20 to-white">
+      <section className="bg-gradient-to-b from-secondary/20 to-white pt-4 pb-16 md:pt-6 md:pb-20">
         <div className="container-custom">
           {useCompactLayout ? (
             <div className="mx-auto max-w-5xl">
@@ -142,8 +142,8 @@ const ServiceDetail = () => {
               </div>
             </div>
           ) : (
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-              <div className="space-y-6">
+            <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_340px]">
+              <div className="space-y-3">
                 {hasKeyBenefits ? (
                   <div className={sectionCardStyles}>
                     <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-cyan-400" />
@@ -154,6 +154,15 @@ const ServiceDetail = () => {
                     {renderBullets(service.keyBenefits, "No key benefits provided in the current service copy.")}
                   </div>
                 ) : null}
+
+                <div className={sectionCardStyles}>
+                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-400 to-teal-500" />
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-semibold tracking-tight text-foreground">How we Support</h2>
+                    <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700">Support</span>
+                  </div>
+                  {renderBullets(service.support ?? [], "No support steps provided in the current service copy.")}
+                </div>
 
                 {hasLimitations ? (
                   <div className={sectionCardStyles}>
@@ -177,7 +186,7 @@ const ServiceDetail = () => {
                         Risks
                       </span>
                     </div>
-                    <ul className="mt-5 space-y-4">
+                    <ul className="mt-4 space-y-3">
                       {service.nonComplianceRisks.map((item) => (
                         <li key={item} className="flex gap-3 text-sm leading-6 text-slate-600">
                           <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-rose-500" />
@@ -189,17 +198,8 @@ const ServiceDetail = () => {
                 ) : null}
               </div>
 
-              <div className="space-y-6 lg:sticky lg:top-28">
-                <div className={sectionCardStyles}>
-                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-400 to-teal-500" />
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-semibold tracking-tight text-foreground">How we Support</h2>
-                    <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700">Support</span>
-                  </div>
-                  {renderBullets(service.support ?? [], "No support steps provided in the current service copy.")}
-                </div>
-
-                <div className="rounded-[28px] border border-primary/15 bg-gradient-to-br from-primary/10 via-white to-cyan-50 p-6 shadow-[0_8px_30px_rgba(15,23,42,0.06)]">
+              <div className="space-y-4 lg:sticky lg:top-28">
+                <div className="rounded-[28px] border border-primary/15 bg-gradient-to-br from-primary/10 via-white to-cyan-50 p-5 shadow-[0_8px_30px_rgba(15,23,42,0.06)] sm:p-6">
                   <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">Get Consultation</p>
                   <h3 className="mt-3 text-2xl font-semibold tracking-tight text-foreground">
                     Talk to our experts about your specific service requirements.

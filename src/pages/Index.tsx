@@ -60,6 +60,11 @@ const taxCompliance = [
 
 const businessSupport = [
   {
+    title: "Virtual Accountant",
+    description: "Dedicated remote accounting support for books, reconciliations, and reporting.",
+    icon: Calculator,
+  },
+  {
     title: "Book Keeping",
     description: "Monthly accounting with clean records.",
     icon: Calculator,
@@ -105,6 +110,7 @@ const serviceSlugs: Record<string, string> = {
   "GST": "gst",
   "MCA Compliance": "mca-compliance",
   "Book Keeping": "book-keeping",
+  "Virtual Accountant": "virtual-accountant",
   "Payroll": "payroll",
   "Virtual CFO": "virtual-cfo",
 };
@@ -213,12 +219,15 @@ const Index = () => {
 
             <div>
               <h3 className="text-lg font-semibold text-foreground">Business Support</h3>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+                Our flagship remote accounting service is built to help businesses stay financially organized without the overhead of a full-time hire.
+              </p>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {businessSupport.map((item) => (
                   <Link
                     key={item.title}
                     to={`/services/${serviceSlugs[item.title] ?? item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
-                    className="card-hover group p-4"
+                    className={`card-hover group p-4 ${item.title === "Virtual Accountant" ? "ring-1 ring-primary/20 bg-primary/5 shadow-[0_8px_30px_rgba(37,99,235,0.08)]" : ""}`}
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                       <item.icon className="h-5 w-5 text-primary" />

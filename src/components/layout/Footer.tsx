@@ -31,12 +31,10 @@ export function Footer() {
       <div className="container-custom section-padding">
         <div className="mx-auto max-w-[600px] text-center">
           <div className="flex flex-col items-center">
-            <Link to="/" className="mb-4 inline-block">
-              <img
-                src="/logo.png"
-                alt="89T CORPORATE ADVISORS PRIVATE LIMITED"
-                className="h-12 w-auto"
-              />
+            <Link to="/" className="mb-4 inline-block" aria-label="89T-CA home">
+              <span className="text-sm font-extrabold tracking-[0.34em] text-cyan-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)] md:text-base">
+                89T-CA
+              </span>
             </Link>
             <p className="mb-2 text-lg font-semibold tracking-wide text-background/95 md:text-xl">
               89T CORPORATE ADVISORS PRIVATE LIMITED

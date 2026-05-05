@@ -91,6 +91,7 @@ const auditsMenu = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileOpenMenu, setMobileOpenMenu] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const desktopNavRef = useRef<HTMLDivElement>(null);
 
@@ -104,6 +105,38 @@ export function Header() {
     document.addEventListener("mousedown", handlePointerDown);
     return () => document.removeEventListener("mousedown", handlePointerDown);
   }, []);
+
+  const mobileMenuSections = [
+    {
+      key: "starting-business",
+      label: "Starting a Business",
+      items: startingBusinessMenu.flatMap((section) => section.items),
+    },
+    {
+      key: "support-services",
+      label: "Support Services",
+      items: supportServicesMenu,
+    },
+    {
+      key: "compliances",
+      label: "Compliances",
+      items: compliancesMenu,
+    },
+    {
+      key: "funding",
+      label: "Funding",
+      items: fundingMenu,
+    },
+    {
+      key: "audits",
+      label: "Audits",
+      items: auditsMenu,
+    },
+  ];
+
+  const toggleMobileMenu = (menuKey: string) => {
+    setMobileOpenMenu((current) => (current === menuKey ? null : menuKey));
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -145,6 +178,9 @@ export function Header() {
                   <div className="grid gap-8 sm:grid-cols-2">
                     {startingBusinessMenu.map((section) => (
                       <div key={section.heading} className="space-y-3">
+                        <p className="text-sm font-semibold text-foreground">
+                          {section.heading}
+                        </p>
                         <ul className="space-y-2.5 text-sm text-muted-foreground">
                           {section.items.map((item) => (
                             <li key={item}>
@@ -359,7 +395,15 @@ export function Header() {
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-md p-2.5 text-foreground lg:hidden"
-            onClick={() => setMobileMenuOpen((open) => !open)}
+            onClick={() =>
+              setMobileMenuOpen((open) => {
+                const next = !open;
+                if (!next) {
+                  setMobileOpenMenu(null);
+                }
+                return next;
+              })
+            }
           >
             <span className="sr-only">Toggle menu</span>
             {mobileMenuOpen ? (
@@ -372,66 +416,49 @@ export function Header() {
 
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-border py-4">
-            <div className="flex flex-col space-y-4">
-              <Link
-                to="/starting-business"
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Starting a Business
-              </Link>
-              <div className="space-y-4">
-                {startingBusinessMenu.map((section) => (
-                  <div key={section.heading} className="space-y-2">
-                    <ul className="space-y-2">
-                      {section.items.map((item) => (
-                        <li key={item}>
-                          <Link
-                            to={`/services/${toSlug(item)}`}
-                            className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {item}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+            <div className="flex flex-col space-y-3">
+              {mobileMenuSections.map((section) => {
+                const isOpen = mobileOpenMenu === section.key;
+
+                return (
+                  <div key={section.key} className="rounded-xl border border-border/60 bg-background">
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:text-primary"
+                      onClick={() => toggleMobileMenu(section.key)}
+                      aria-expanded={isOpen}
+                    >
+                      {section.label}
+                      <ChevronDown
+                        className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                    {isOpen ? (
+                      <div className="border-t border-border/60 px-4 py-3">
+                        <ul className="space-y-2">
+                          {section.items.map((item) => (
+                            <li key={item}>
+                              <Link
+                                to={`/services/${section.key === "starting-business" ? toSlug(item) : getServiceSlug(item)}`}
+                                className="block text-sm text-muted-foreground transition-colors hover:text-primary"
+                                onClick={() => setMobileMenuOpen(false)}
+                              >
+                                {item}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null}
                   </div>
-                ))}
-              </div>
-              <Link
-                to="/support-services"
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Support Services
-              </Link>
-              <Link
-                to="/compliances"
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Compliances
-              </Link>
-              <Link
-                to="/funding"
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Funding
-              </Link>
-              <Link
-                to="/audits"
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Audits
-              </Link>
+                );
+              })}
+
               {navigation.map((item) => (
                 <Link
                   key={item.target}
                   to={item.target}
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                  className="rounded-xl border border-border/60 bg-background px-4 py-3 text-sm font-medium text-foreground transition-colors hover:text-primary"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.label}

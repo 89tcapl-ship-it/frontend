@@ -140,11 +140,11 @@
 
 @layer utilities {
   .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-4 sm:px-5 lg:px-6;
   }
 
   .section-padding {
-    @apply py-20 md:py-24;
+    @apply py-16 md:py-20;
   }
 
   .card-elevated {

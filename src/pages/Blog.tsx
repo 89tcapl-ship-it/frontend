@@ -126,20 +126,9 @@ const Blog = () => {
                   className="group flex flex-col rounded-xl border border-border bg-card overflow-hidden hover:shadow-elevated transition-shadow animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  {/* Featured Image */}
-                  {post.featuredImage ? (
-                    <div className="aspect-video overflow-hidden">
-                      <img
-                        src={post.featuredImage}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                  ) : (
-                    <div className="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
-                      <span className="text-4xl font-bold text-primary/20">89T</span>
-                    </div>
-                  )}
+                  <div className="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+                    <span className="text-4xl font-bold text-primary/20">89T</span>
+                  </div>
 
                   <div className="flex flex-col flex-1 p-6">
                     {/* Category & Tags */}

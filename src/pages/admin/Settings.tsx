@@ -7,7 +7,6 @@ import { Textarea } from '@/components/ui/textarea';
 import api from '@/lib/api';
 import { Settings as SettingsType, SettingsFormData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { ImageUpload } from '@/components/shared/ImageUpload';
 
 const Settings = () => {
     const [settings, setSettings] = useState<SettingsType | null>(null);
@@ -250,26 +249,6 @@ const Settings = () => {
                                     placeholder="https://instagram.com/yourhandle"
                                 />
                             </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* SEO Settings */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>SEO Settings</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="space-y-2">
-                            <Label>Open Graph Image</Label>
-                            <ImageUpload
-                                label="Upload OG Image (Recommended: 1200x630px)"
-                                value={formData.ogImage}
-                                onChange={(url) => setFormData({ ...formData, ogImage: url })}
-                            />
-                            <p className="text-xs text-muted-foreground">
-                                This image will be displayed when your site is shared on social media platforms like Facebook, Twitter, and LinkedIn.
-                            </p>
                         </div>
                     </CardContent>
                 </Card>

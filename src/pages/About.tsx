@@ -106,6 +106,7 @@ const About = () => {
               {founders.map((founder) => {
                 const title = (getSectionValue(`founder-${founder.key}`, "title", founder.name) as string);
                 const brief = (getSectionValue(`founder-${founder.key}`, "content", founder.brief) as string);
+                const imageUrl = (getSectionValue(`founder-${founder.key}`, "imageUrl", "") as string);
                 return (
                   <div
                     key={founder.key}
@@ -113,9 +114,17 @@ const About = () => {
                   >
                     <div className="grid gap-0 lg:grid-cols-[280px_minmax(0,1fr)]">
                       <div className="flex min-h-[220px] items-center justify-center border-b border-border bg-gradient-to-br from-slate-50 via-white to-slate-100 p-6 lg:border-b-0 lg:border-r">
-                        <div className="flex h-full min-h-[180px] w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/70 text-lg font-medium text-slate-500">
-                          {photoLabel}
-                        </div>
+                        {imageUrl ? (
+                          <img
+                            src={imageUrl}
+                            alt={title}
+                            className="h-full min-h-[180px] w-full rounded-2xl object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full min-h-[180px] w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/70 text-lg font-medium text-slate-500">
+                            {photoLabel}
+                          </div>
+                        )}
                       </div>
                       <div className="p-6 sm:p-8">
                         <p className="text-lg font-semibold tracking-tight text-foreground">

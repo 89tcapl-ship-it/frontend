@@ -32,15 +32,12 @@ export function HeroSection() {
   const content = getSectionValue('hero', 'content', 'We provide comprehensive corporate advisory services including company registration, MCA compliance, GST, and taxation support.');
   const buttonText = getSectionValue('hero', 'buttonText', 'Get Started');
   const buttonLink = getSectionValue('hero', 'buttonLink', '/contact');
-  const imageUrl = getSectionValue('hero', 'imageUrl', '/hero-section.png');
 
   return (
     <section
-      className="relative min-h-[85vh] flex items-center overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: `url(${imageUrl})` }}
+      className="relative min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800"
     >
-      {/* Overlay Layer */}
-      <div className="absolute inset-0 bg-black/55 z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.18),transparent_40%),linear-gradient(180deg,rgba(15,23,42,0.95),rgba(15,23,42,0.88))] z-0" />
 
       <div className="container-custom relative z-10 w-full">
         <div className="py-12 md:py-20 lg:py-24">

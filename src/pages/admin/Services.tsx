@@ -13,11 +13,11 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Plus, Edit, Trash2, ChevronDown } from 'lucide-react';
 import api from '@/lib/api';
 import { Service, ServiceFormData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { ImageUpload } from '@/components/shared/ImageUpload';
 import { defaultServiceSeed } from '@/data/defaultServiceSeed';
 
 const emptyForm: ServiceFormData = {
@@ -35,6 +35,44 @@ const emptyForm: ServiceFormData = {
     isActive: true,
     order: 0,
 };
+
+const serviceGroups = [
+    {
+        title: 'Starting a Business',
+        description: 'Company formation and allied registrations.',
+        slugs: [
+            'private-limited-company',
+            'llp',
+            'partnership',
+            'opc-registration',
+            'sole-proprietor',
+            'foreign-company-subsidiary',
+            'nbfc',
+            'trust-societies',
+            'apartment-association',
+        ],
+    },
+    {
+        title: 'Support Services',
+        description: 'Accounting, payroll, MIS, HR, and CFO support.',
+        slugs: ['book-keeping', 'virtual-accountant', 'virtual-cfo', 'payroll', 'mis-reports', 'hr-services'],
+    },
+    {
+        title: 'Compliances',
+        description: 'Tax, labour, and corporate compliance services.',
+        slugs: ['gst', 'epf-and-esi', 'pt', 'shops-establishments', 'trade-license', 'fssai', 'iec', 'msme-udyam', 'dpiit-startup-india', 'itr-and-tds', 'tds-filing', 'mca'],
+    },
+    {
+        title: 'Funding',
+        description: 'Fundraising, diligence, valuation, and finance support.',
+        slugs: ['startup-funding', 'due-diligence', 'valuation', 'fdi-compliance', 'bank-finance', 'project-reports'],
+    },
+    {
+        title: 'Audits',
+        description: 'Statutory, tax, internal, transfer pricing, and forensic audits.',
+        slugs: ['statutory-audits', 'income-tax-audit', 'internal-audits', 'transfer-pricing-audits', 'investigation-audit', 'compliance-health-check'],
+    },
+] as const;
 
 const toLines = (value?: string[]) => (value || []).join('\n');
 const fromLines = (value: string) => value.split('\n').map((line) => line.trim()).filter(Boolean);
@@ -59,13 +97,22 @@ const normalizeSeed = (seed: ServiceFormData): ServiceFormData => ({
     order: seed.order ?? 0,
 });
 
+const contentBlocks = [
+    { key: 'features', label: 'Features' },
+    { key: 'keyBenefits', label: 'Key Benefits' },
+    { key: 'support', label: 'Support Steps' },
+    { key: 'limitations', label: 'Limitations' },
+    { key: 'nonComplianceRisks', label: 'Non-Compliance Risks' },
+    { key: 'offers', label: 'Highlights / Offers' },
+] as const;
+
 const Services = () => {
     const [services, setServices] = useState<Service[]>([]);
     const [loading, setLoading] = useState(true);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editingService, setEditingService] = useState<Service | null>(null);
-    const { toast } = useToast();
     const [formData, setFormData] = useState<ServiceFormData>(emptyForm);
+    const { toast } = useToast();
 
     const fetchServices = async () => {
         try {
@@ -93,10 +140,10 @@ const Services = () => {
 
         return defaultServiceSeed.map((seed) => {
             const normalizedSeed = normalizeSeed(seed);
-            const backendService = normalizedSeed.slug ? backendBySlug.get(normalizedSeed.slug) : undefined;
+            const backendService = backendBySlug.get(normalizedSeed.slug || toSlug(normalizedSeed.title));
 
             return backendService || ({
-                _id: `seed-${normalizedSeed.slug}`,
+                _id: `seed-${normalizedSeed.slug || toSlug(normalizedSeed.title)}`,
                 title: normalizedSeed.title,
                 slug: normalizedSeed.slug || toSlug(normalizedSeed.title),
                 shortDescription: normalizedSeed.shortDescription,
@@ -115,6 +162,23 @@ const Services = () => {
             } satisfies Service);
         });
     }, [services]);
+
+    const catalogBySlug = useMemo(() => {
+        return catalog.reduce<Record<string, Service>>((acc, service) => {
+            acc[service.slug] = service;
+            return acc;
+        }, {});
+    }, [catalog]);
+
+    const groups = useMemo(() => {
+        return serviceGroups.map((group) => ({
+            ...group,
+            services: group.slugs
+                .map((slug) => catalogBySlug[slug])
+                .filter(Boolean)
+                .sort((a, b) => a.order - b.order),
+        }));
+    }, [catalogBySlug]);
 
     const resetForm = () => {
         setEditingService(null);
@@ -159,8 +223,8 @@ const Services = () => {
             if (editingService && !editingService._id.startsWith('seed-')) {
                 await api.put(`/services/${editingService._id}`, payload);
                 toast({ title: 'Success', description: 'Service updated successfully' });
-            } else if (editingService && editingService._id.startsWith('seed-')) {
-                const existing = services.find((service) => service.slug === editingService.slug);
+            } else {
+                const existing = services.find((item) => item.slug === payload.slug);
                 if (existing) {
                     await api.put(`/services/${existing._id}`, payload);
                     toast({ title: 'Success', description: 'Service updated successfully' });
@@ -168,10 +232,8 @@ const Services = () => {
                     await api.post('/services', payload);
                     toast({ title: 'Success', description: 'Service created successfully' });
                 }
-            } else {
-                await api.post('/services', payload);
-                toast({ title: 'Success', description: 'Service created successfully' });
             }
+
             setDialogOpen(false);
             resetForm();
             fetchServices();
@@ -213,42 +275,54 @@ const Services = () => {
 
         const failures: string[] = [];
 
-        try {
-            for (const service of missing) {
-                try {
-                    await api.post('/services', service);
-                } catch (error: any) {
-                    failures.push(service.title);
-                }
+        for (const service of missing) {
+            try {
+                await api.post('/services', service);
+            } catch {
+                failures.push(service.title);
             }
-
-            await fetchServices();
-            toast({
-                title: failures.length ? 'Partial success' : 'Success',
-                description: failures.length
-                    ? `Imported ${missing.length - failures.length} services. Failed: ${failures.join(', ')}`
-                    : `Imported ${missing.length} services from the frontend catalog.`,
-            });
-        } catch (error: any) {
-            toast({
-                title: 'Error',
-                description: error.message || 'Failed to import frontend services',
-                variant: 'destructive',
-            });
         }
+
+        await fetchServices();
+        toast({
+            title: failures.length ? 'Partial success' : 'Success',
+            description: failures.length
+                ? `Imported ${missing.length - failures.length} services. Failed: ${failures.join(', ')}`
+                : `Imported ${missing.length} services from the frontend catalog.`,
+        });
     };
 
     const updateTextList = (field: keyof Pick<ServiceFormData, 'features' | 'keyBenefits' | 'support' | 'limitations' | 'nonComplianceRisks' | 'offers'>, value: string) => {
         setFormData({ ...formData, [field]: fromLines(value) });
     };
 
+    const renderList = (items?: string[], emptyMessage = 'Not provided yet.') => {
+        if (!items || items.length === 0) {
+            return <p className="text-xs text-muted-foreground">{emptyMessage}</p>;
+        }
+
+        return (
+            <ul className="mt-2 space-y-2">
+                {items.map((item) => (
+                    <li key={item} className="flex gap-2 text-sm text-slate-600">
+                        <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-primary" />
+                        <span className="text-justify">{item}</span>
+                    </li>
+                ))}
+            </ul>
+        );
+    };
+
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold">Services</h1>
-                    <p className="text-muted-foreground">Manage your service offerings and detailed content</p>
+                    <p className="text-muted-foreground">
+                        Edit the 5 main service categories and all of their sub-services here.
+                    </p>
                 </div>
+
                 <div className="flex items-center gap-3">
                     <Button type="button" variant="outline" onClick={seedDefaultServices} className="hidden sm:inline-flex">
                         Import Frontend Catalog
@@ -268,31 +342,33 @@ const Services = () => {
                                 </DialogDescription>
                             </DialogHeader>
                             <form onSubmit={handleSubmit} className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="title">Title *</Label>
-                                    <Input
-                                        id="title"
-                                        required
-                                        value={formData.title}
-                                        onChange={(e) =>
-                                            setFormData((current) => ({
-                                                ...current,
-                                                title: e.target.value,
-                                                slug: current.slug ? current.slug : toSlug(e.target.value),
-                                            }))
-                                        }
-                                    />
-                                </div>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="title">Title *</Label>
+                                        <Input
+                                            id="title"
+                                            required
+                                            value={formData.title}
+                                            onChange={(e) =>
+                                                setFormData((current) => ({
+                                                    ...current,
+                                                    title: e.target.value,
+                                                    slug: current.slug ? current.slug : toSlug(e.target.value),
+                                                }))
+                                            }
+                                        />
+                                    </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="slug">Slug *</Label>
-                                    <Input
-                                        id="slug"
-                                        required
-                                        value={formData.slug || ''}
-                                        onChange={(e) => setFormData({ ...formData, slug: toSlug(e.target.value) })}
-                                        placeholder="private-limited-company"
-                                    />
+                                    <div className="space-y-2">
+                                        <Label htmlFor="slug">Slug *</Label>
+                                        <Input
+                                            id="slug"
+                                            required
+                                            value={formData.slug || ''}
+                                            onChange={(e) => setFormData({ ...formData, slug: toSlug(e.target.value) })}
+                                            placeholder="private-limited-company"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="space-y-2">
@@ -314,14 +390,6 @@ const Services = () => {
                                         rows={7}
                                         value={formData.description}
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label>Service Image</Label>
-                                    <ImageUpload
-                                        value={formData.image || ''}
-                                        onChange={(url) => setFormData({ ...formData, image: url })}
                                     />
                                 </div>
 
@@ -402,7 +470,7 @@ const Services = () => {
                                     </div>
                                 </div>
 
-                                <div className="flex gap-2 justify-end">
+                                <div className="flex justify-end gap-2">
                                     <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                                         Cancel
                                     </Button>
@@ -416,7 +484,7 @@ const Services = () => {
 
             <Card>
                 <CardContent className="py-4 text-sm text-muted-foreground">
-                    The panel shows the full frontend service catalog even if the backend is empty. Use <strong>Import Frontend Catalog</strong> to sync the missing services into the API.
+                    The 5 groups below match the frontend navigation. Each service card shows all editable content in one place.
                 </CardContent>
             </Card>
 
@@ -426,71 +494,89 @@ const Services = () => {
                         <p className="text-muted-foreground">Loading services...</p>
                     </CardContent>
                 </Card>
-            ) : catalog.length === 0 ? (
-                <Card>
-                    <CardContent className="py-12 text-center space-y-4">
-                        <p className="text-muted-foreground">No services found. Create your first service!</p>
-                        <Button type="button" variant="outline" onClick={seedDefaultServices}>
-                            Import Frontend Service Catalog
-                        </Button>
-                    </CardContent>
-                </Card>
             ) : (
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                    {catalog.map((service) => {
-                        const editable = Boolean(services.find((item) => item.slug === service.slug));
-                        return (
-                            <Card key={service.slug || service._id}>
-                                <CardHeader className="relative p-0 pt-0">
-                                    <div className="aspect-video w-full overflow-hidden rounded-t-xl bg-muted">
-                                        {service.image ? (
-                                            <img src={service.image} alt={service.title} className="h-full w-full object-cover" />
-                                        ) : (
-                                            <div className="flex h-full items-center justify-center text-muted-foreground">
-                                                No Image
-                                            </div>
-                                        )}
+                <div className="space-y-8">
+                    {groups.map((group) => (
+                        <Card key={group.title} className="border-border/70">
+                            <CardHeader>
+                                <div className="flex flex-wrap items-start justify-between gap-4">
+                                    <div>
+                                        <CardTitle className="text-2xl">{group.title}</CardTitle>
+                                        <p className="mt-1 text-sm text-muted-foreground">{group.description}</p>
                                     </div>
-                                    <div className="flex items-start justify-between p-6">
-                                        <div>
-                                            <CardTitle className="text-lg">{service.title}</CardTitle>
-                                            <p className="mt-1 text-sm text-muted-foreground">{service.shortDescription}</p>
-                                            <p className="mt-2 text-xs text-muted-foreground">Slug: {service.slug}</p>
-                                            {!editable && (
-                                                <p className="mt-2 text-xs text-amber-600">This item exists in the frontend catalog but is not yet synced in the backend.</p>
-                                            )}
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <Button variant="ghost" size="icon" onClick={() => handleEdit(service)}>
-                                                <Edit className="h-4 w-4" />
-                                            </Button>
-                                            {editable ? (
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={() => handleDelete(services.find((item) => item.slug === service.slug)!._id)}
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            ) : null}
-                                        </div>
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="space-y-3">
-                                    <div className="line-clamp-4 whitespace-pre-line text-sm text-muted-foreground">
-                                        {service.description}
-                                    </div>
-                                    <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                                        <span>Order: {service.order}</span>
-                                        <span>•</span>
-                                        <span className={service.isActive ? 'text-green-600' : 'text-red-600'}>
-                                            {service.isActive ? 'Active' : 'Inactive'}
-                                        </span>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        );
-                    })}
+                                    <Badge variant="secondary">{group.services.length} services</Badge>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                                    {group.services.map((service) => {
+                                        const editable = Boolean(services.find((item) => item.slug === service.slug));
+                                        return (
+                                            <Card key={service.slug} className="overflow-hidden">
+                                                <CardHeader className="p-0">
+                                                    <div className="flex items-start justify-between gap-4 p-5">
+                                                        <div>
+                                                            <CardTitle className="text-lg">{service.title}</CardTitle>
+                                                            <p className="mt-1 text-sm text-muted-foreground">{service.shortDescription}</p>
+                                                            <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                                                                <span>Slug: {service.slug}</span>
+                                                                <span>•</span>
+                                                                <span>Order: {service.order}</span>
+                                                                <span>•</span>
+                                                                <span className={service.isActive ? 'text-green-600' : 'text-red-600'}>
+                                                                    {service.isActive ? 'Active' : 'Inactive'}
+                                                                </span>
+                                                                {!editable && <span className="text-amber-600">Frontend seed only</span>}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex gap-2">
+                                                            <Button variant="ghost" size="icon" onClick={() => handleEdit(service)}>
+                                                                <Edit className="h-4 w-4" />
+                                                            </Button>
+                                                            {editable ? (
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon"
+                                                                    onClick={() => handleDelete(services.find((item) => item.slug === service.slug)!._id)}
+                                                                >
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </Button>
+                                                            ) : null}
+                                                        </div>
+                                                    </div>
+                                                </CardHeader>
+
+                                                <CardContent className="space-y-4 px-5 pb-5">
+                                                    <details className="rounded-xl border border-border bg-muted/20 p-4">
+                                                        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-foreground">
+                                                            <span>View all content</span>
+                                                            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                                                        </summary>
+
+                                                        <div className="mt-4 space-y-4">
+                                                            <div>
+                                                                <p className="text-sm font-semibold text-foreground">Description</p>
+                                                                <p className="mt-2 text-sm leading-6 text-muted-foreground whitespace-pre-line text-justify">
+                                                                    {service.description}
+                                                                </p>
+                                                            </div>
+
+                                                            {contentBlocks.map((block) => (
+                                                                <div key={block.key}>
+                                                                    <p className="text-sm font-semibold text-foreground">{block.label}</p>
+                                                                    {renderList((service as any)[block.key], 'Not provided yet.')}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </details>
+                                                </CardContent>
+                                            </Card>
+                                        );
+                                    })}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
                 </div>
             )}
         </div>

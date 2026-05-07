@@ -5,23 +5,19 @@ interface PageHeroProps {
   title?: string;
   subtitle?: string;
   pageName?: string;
-  imageUrl?: string;
 }
 
-export function PageHero({ title, subtitle, pageName = 'contact', imageUrl: propImageUrl }: PageHeroProps) {
+export function PageHero({ title, subtitle, pageName = 'contact' }: PageHeroProps) {
   const { getSectionValue, loading } = usePageContent(pageName);
 
   const displayTitle = title || getSectionValue('header', 'title', 'Get in Touch');
   const displaySubtitle = subtitle || getSectionValue('header', 'subtitle', "We're here to help");
-  const imageUrl = propImageUrl || getSectionValue('header', 'imageUrl', `/${pageName}-hero.png`);
 
   return (
     <section
-      className="relative min-h-[50vh] flex items-center overflow-hidden bg-cover bg-center border-b border-border"
-      style={{ backgroundImage: `url(${imageUrl})` }}
+      className="relative min-h-[50vh] flex items-center overflow-hidden border-b border-border bg-gradient-to-b from-slate-50 via-white to-slate-100"
     >
-      {/* Overlay Layer */}
-      <div className="absolute inset-0 bg-black/55 z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(14,165,233,0.12),transparent_45%)] z-0" />
 
       <div className="container-custom relative z-10 w-full">
         <div className="py-20 md:py-28 text-center flex flex-col items-center">

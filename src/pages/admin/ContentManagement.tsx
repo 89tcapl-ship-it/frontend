@@ -69,6 +69,24 @@ const emptyForm: PageSection = {
     isActive: true,
 };
 
+const getSeedSection = (page: string, sectionId: string): PageSection | null => {
+    const pageSeed = defaultPageContentSeed.find((entry) => entry.page === page);
+    const seed = pageSeed?.sections.find((section) => section.sectionId === sectionId);
+    return seed
+        ? {
+            sectionId: seed.sectionId,
+            title: seed.title,
+            subtitle: seed.subtitle,
+            content: seed.content,
+            buttonText: seed.buttonText,
+            buttonLink: seed.buttonLink,
+            imageUrl: seed.imageUrl,
+            order: seed.order,
+            isActive: seed.isActive,
+        }
+        : null;
+};
+
 const ContentManagement = () => {
     const [selectedPage, setSelectedPage] = useState('home');
     const [pageContent, setPageContent] = useState<PageContent | null>(null);
@@ -79,6 +97,8 @@ const ContentManagement = () => {
     const { toast } = useToast();
 
     const selectedPageMeta = useMemo(() => pages.find((page) => page.value === selectedPage) || null, [selectedPage]);
+    const isFounderPhotoSection = selectedPage === 'about' && formData.sectionId.startsWith('founder-');
+    const isContactMapSection = selectedPage === 'contact' && formData.sectionId === 'map';
 
     const fetchPageContent = async (page: string) => {
         try {
@@ -153,10 +173,14 @@ const ContentManagement = () => {
 
     const handleTemplateClick = (sectionId: string) => {
         const existingSection = pageContent?.sections.find((section) => section.sectionId === sectionId) || null;
+        const seedSection = getSeedSection(selectedPage, sectionId);
 
         if (existingSection) {
             setEditingSection(existingSection);
             setFormData(existingSection);
+        } else if (seedSection) {
+            setEditingSection(null);
+            setFormData(seedSection);
         } else {
             setEditingSection(null);
             setFormData({ ...emptyForm, sectionId });
@@ -293,11 +317,34 @@ const ContentManagement = () => {
                                 </div>
                             </div>
 
-                            <ImageUpload
-                                label="Section Image"
-                                value={formData.imageUrl}
-                                onChange={(url) => setFormData({ ...formData, imageUrl: url })}
-                            />
+                            {isFounderPhotoSection && (
+                                <div className="space-y-2">
+                                    <Label>Founder Photo</Label>
+                                    <ImageUpload
+                                        label="Upload Founder Photo"
+                                        value={formData.imageUrl || ''}
+                                        onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        This image appears on the About page founder cards only.
+                                    </p>
+                                </div>
+                            )}
+
+                            {isContactMapSection && (
+                                <div className="space-y-2">
+                                    <Label htmlFor="imageUrl">Map Embed URL</Label>
+                                    <Input
+                                        id="imageUrl"
+                                        value={formData.imageUrl || ''}
+                                        onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                                        placeholder="https://www.google.com/maps?q=..."
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        This is the embedded map URL used on the Contact page.
+                                    </p>
+                                </div>
+                            )}
 
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
@@ -448,10 +495,10 @@ const ContentManagement = () => {
                                                 <span>Button: {section.buttonText}</span>
                                             </>
                                         )}
-                                        {section.imageUrl && (
+                                        {selectedPage === 'about' && section.sectionId.startsWith('founder-') && section.imageUrl && (
                                             <>
                                                 <span>•</span>
-                                                <span>Has Image</span>
+                                                <span>Has Photo</span>
                                             </>
                                         )}
                                     </div>

@@ -26,7 +26,6 @@ import { BlogPost, BlogFormData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { format } from 'date-fns';
-import { ImageUpload } from '@/components/shared/ImageUpload';
 
 const Blog = () => {
     const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -189,12 +188,6 @@ const Blog = () => {
                                     placeholder="Write your blog post content here..."
                                 />
                             </div>
-
-                            <ImageUpload
-                                label="Featured Image"
-                                value={formData.featuredImage}
-                                onChange={(url) => setFormData({ ...formData, featuredImage: url })}
-                            />
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">

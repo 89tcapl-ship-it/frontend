@@ -151,6 +151,20 @@ const ContentManagement = () => {
         }
     };
 
+    const handleTemplateClick = (sectionId: string) => {
+        const existingSection = pageContent?.sections.find((section) => section.sectionId === sectionId) || null;
+
+        if (existingSection) {
+            setEditingSection(existingSection);
+            setFormData(existingSection);
+        } else {
+            setEditingSection(null);
+            setFormData({ ...emptyForm, sectionId });
+        }
+
+        setDialogOpen(true);
+    };
+
     const seedFrontendContent = async () => {
         try {
             for (const page of defaultPageContentSeed) {
@@ -363,9 +377,16 @@ const ContentManagement = () => {
                         <p className="text-sm font-medium text-foreground">Expected section IDs</p>
                         <div className="mt-3 flex flex-wrap gap-2">
                             {(pageTemplates[selectedPage] || []).map((sectionId) => (
-                                <Badge key={sectionId} variant="outline" className="text-xs">
-                                    {sectionId}
-                                </Badge>
+                                <button
+                                    key={sectionId}
+                                    type="button"
+                                    onClick={() => handleTemplateClick(sectionId)}
+                                    className="inline-flex"
+                                >
+                                    <Badge variant="outline" className="cursor-pointer text-xs transition-colors hover:border-primary hover:bg-primary/5">
+                                        {sectionId}
+                                    </Badge>
+                                </button>
                             ))}
                         </div>
                         <p className="mt-3 text-xs text-muted-foreground">

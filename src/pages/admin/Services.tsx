@@ -20,6 +20,7 @@ import { Service, ServiceFormData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { defaultServiceSeed } from '@/data/defaultServiceSeed';
 import serviceDetailData from '@/data/serviceDetailData';
+import { defaultServiceConsultationCta, SERVICE_CONSULTATION_CTA_SLUG } from '@/data/serviceConsultationCta';
 
 const emptyForm: ServiceFormData = {
     title: '',
@@ -123,6 +124,28 @@ const contentBlocks = [
     { key: 'offers', label: 'Highlights / Offers' },
 ] as const;
 
+interface ConsultationCtaFormData {
+    title: string;
+    shortDescription: string;
+    description: string;
+    consultationOverline: string;
+    consultationButtonText: string;
+    consultationButtonLink: string;
+    consultationWhatsappText: string;
+    consultationWhatsappLink: string;
+}
+
+const defaultConsultationCtaForm: ConsultationCtaFormData = {
+    title: defaultServiceConsultationCta.title,
+    shortDescription: defaultServiceConsultationCta.subtitle,
+    description: defaultServiceConsultationCta.subtitle,
+    consultationOverline: defaultServiceConsultationCta.overline,
+    consultationButtonText: defaultServiceConsultationCta.buttonText,
+    consultationButtonLink: defaultServiceConsultationCta.buttonLink,
+    consultationWhatsappText: defaultServiceConsultationCta.whatsappText,
+    consultationWhatsappLink: defaultServiceConsultationCta.whatsappLink,
+};
+
 const detailAliases: Record<string, string> = {
     'epf-and-esi': 'epf-esi',
     'itr-and-tds': 'itr-and-tds-compliance',
@@ -164,6 +187,8 @@ const Services = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editingService, setEditingService] = useState<Service | null>(null);
     const [formData, setFormData] = useState<ServiceFormData>(emptyForm);
+    const [consultationCtaForm, setConsultationCtaForm] = useState<ConsultationCtaFormData>(defaultConsultationCtaForm);
+    const [savingConsultationCta, setSavingConsultationCta] = useState(false);
     const { toast } = useToast();
 
     const fetchServices = async () => {
@@ -186,6 +211,24 @@ const Services = () => {
     useEffect(() => {
         fetchServices();
     }, []);
+
+    useEffect(() => {
+        const existing = services.find((service) => service.slug === SERVICE_CONSULTATION_CTA_SLUG);
+        setConsultationCtaForm(
+            existing
+                ? {
+                      title: existing.title || defaultConsultationCtaForm.title,
+                      shortDescription: existing.shortDescription || defaultConsultationCtaForm.shortDescription,
+                      description: existing.description || defaultConsultationCtaForm.description,
+                      consultationOverline: existing.consultationOverline || defaultConsultationCtaForm.consultationOverline,
+                      consultationButtonText: existing.consultationButtonText || defaultConsultationCtaForm.consultationButtonText,
+                      consultationButtonLink: existing.consultationButtonLink || defaultConsultationCtaForm.consultationButtonLink,
+                      consultationWhatsappText: existing.consultationWhatsappText || defaultConsultationCtaForm.consultationWhatsappText,
+                      consultationWhatsappLink: existing.consultationWhatsappLink || defaultConsultationCtaForm.consultationWhatsappLink,
+                  }
+                : defaultConsultationCtaForm
+        );
+    }, [services]);
 
     const catalog = useMemo(() => {
         const backendBySlug = new Map(services.map((service) => [service.slug, service]));
@@ -341,6 +384,49 @@ const Services = () => {
                 ? `Imported ${missing.length - failures.length} services. Failed: ${failures.join(', ')}`
                 : `Imported ${missing.length} services from the frontend catalog.`,
         });
+    };
+
+    const handleConsultationCtaSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSavingConsultationCta(true);
+
+        const payload: ServiceFormData & Record<string, string> = {
+            title: consultationCtaForm.title,
+            slug: SERVICE_CONSULTATION_CTA_SLUG,
+            shortDescription: consultationCtaForm.shortDescription,
+            description: consultationCtaForm.description,
+            image: '',
+            consultationOverline: consultationCtaForm.consultationOverline,
+            consultationButtonText: consultationCtaForm.consultationButtonText,
+            consultationButtonLink: consultationCtaForm.consultationButtonLink,
+            consultationWhatsappText: consultationCtaForm.consultationWhatsappText,
+            consultationWhatsappLink: consultationCtaForm.consultationWhatsappLink,
+            isActive: true,
+            order: 0,
+        };
+
+        try {
+            const existing = services.find((service) => service.slug === SERVICE_CONSULTATION_CTA_SLUG);
+            if (existing) {
+                await api.put(`/services/${existing._id}`, payload);
+            } else {
+                await api.post('/services', payload);
+            }
+
+            toast({
+                title: 'Success',
+                description: 'Service consultation CTA saved successfully',
+            });
+            fetchServices();
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message || 'Failed to save service consultation CTA',
+                variant: 'destructive',
+            });
+        } finally {
+            setSavingConsultationCta(false);
+        }
     };
 
     const updateTextList = (field: keyof Pick<ServiceFormData, 'keyBenefits' | 'support' | 'limitations' | 'nonComplianceRisks' | 'offers'>, value: string) => {
@@ -590,6 +676,107 @@ const Services = () => {
                     </Dialog>
                 </div>
             </div>
+
+            <Card className="border-primary/20">
+                <CardHeader>
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                        <div>
+                            <CardTitle className="text-2xl">Service Consultation CTA</CardTitle>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                This single CTA is shown on every service detail page.
+                            </p>
+                        </div>
+                        <Badge variant="outline">Shared</Badge>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleConsultationCtaSubmit} className="space-y-4">
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <div className="space-y-2">
+                                <Label htmlFor="ctaOverline">Overline</Label>
+                                <Input
+                                    id="ctaOverline"
+                                    value={consultationCtaForm.consultationOverline}
+                                    onChange={(e) =>
+                                        setConsultationCtaForm({ ...consultationCtaForm, consultationOverline: e.target.value })
+                                    }
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="ctaButtonText">Primary Button Text</Label>
+                                <Input
+                                    id="ctaButtonText"
+                                    value={consultationCtaForm.consultationButtonText}
+                                    onChange={(e) =>
+                                        setConsultationCtaForm({ ...consultationCtaForm, consultationButtonText: e.target.value })
+                                    }
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="ctaTitle">Title</Label>
+                            <Input
+                                id="ctaTitle"
+                                value={consultationCtaForm.title}
+                                onChange={(e) => setConsultationCtaForm({ ...consultationCtaForm, title: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="ctaDescription">Description</Label>
+                            <Textarea
+                                id="ctaDescription"
+                                rows={4}
+                                value={consultationCtaForm.description}
+                                onChange={(e) =>
+                                    setConsultationCtaForm({ ...consultationCtaForm, description: e.target.value, shortDescription: e.target.value })
+                                }
+                            />
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <div className="space-y-2">
+                                <Label htmlFor="ctaButtonLink">Primary Button Link</Label>
+                                <Input
+                                    id="ctaButtonLink"
+                                    value={consultationCtaForm.consultationButtonLink}
+                                    onChange={(e) =>
+                                        setConsultationCtaForm({ ...consultationCtaForm, consultationButtonLink: e.target.value })
+                                    }
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="ctaWhatsappText">WhatsApp Button Text</Label>
+                                <Input
+                                    id="ctaWhatsappText"
+                                    value={consultationCtaForm.consultationWhatsappText}
+                                    onChange={(e) =>
+                                        setConsultationCtaForm({ ...consultationCtaForm, consultationWhatsappText: e.target.value })
+                                    }
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="ctaWhatsappLink">WhatsApp Link</Label>
+                            <Input
+                                id="ctaWhatsappLink"
+                                value={consultationCtaForm.consultationWhatsappLink}
+                                onChange={(e) =>
+                                    setConsultationCtaForm({ ...consultationCtaForm, consultationWhatsappLink: e.target.value })
+                                }
+                            />
+                        </div>
+
+                        <div className="flex justify-end">
+                            <Button type="submit" disabled={savingConsultationCta}>
+                                {savingConsultationCta ? 'Saving...' : 'Save Consultation CTA'}
+                            </Button>
+                        </div>
+                    </form>
+                </CardContent>
+            </Card>
 
             <Card>
                 <CardContent className="py-4 text-sm text-muted-foreground">

@@ -5,6 +5,8 @@ import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
 import serviceData, { type ServiceDetailData } from "@/data/serviceDetailData";
 import { defaultServiceSeed } from "@/data/defaultServiceSeed";
+import { defaultServiceConsultationCta, SERVICE_CONSULTATION_CTA_SLUG } from "@/data/serviceConsultationCta";
+import { useServicesCatalog } from "@/hooks/useServicesCatalog";
 
 const defaultService: ServiceDetailData = {
   title: "Service Detail",
@@ -20,26 +22,38 @@ const defaultService: ServiceDetailData = {
 const sectionCardStyles =
   "relative overflow-hidden rounded-[28px] border border-border/70 bg-white/90 p-5 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur-sm transition-transform duration-200 hover:-translate-y-0.5 sm:p-6";
 
-const consultationSidebar = (
+const ConsultationSidebar = ({
+  overline,
+  title,
+  subtitle,
+  buttonText,
+  buttonLink,
+  whatsappText,
+  whatsappLink,
+}: {
+  overline: string;
+  title: string;
+  subtitle: string;
+  buttonText: string;
+  buttonLink: string;
+  whatsappText: string;
+  whatsappLink: string;
+}) => (
   <div className="overflow-hidden rounded-[28px] border border-primary/15 bg-gradient-to-br from-primary/10 via-white to-cyan-50 p-5 shadow-[0_12px_34px_rgba(15,23,42,0.08)] sm:p-6">
-    <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">Get Consultation</p>
-    <h3 className="mt-3 text-2xl font-semibold tracking-tight text-foreground">
-      Talk to our experts about your specific service requirements.
-    </h3>
-    <p className="mt-3 text-justify text-sm leading-6 text-slate-600">
-      We will help you understand the right next step and what documents or compliance support you need.
-    </p>
+    <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">{overline}</p>
+    <h3 className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{title}</h3>
+    <p className="mt-3 text-justify text-sm leading-6 text-slate-600">{subtitle}</p>
     <div className="mt-6 space-y-3">
-      <Link to="/contact" className="btn-primary inline-flex w-full justify-center shadow-lg shadow-primary/20">
-        Get Consultation
+      <Link to={buttonLink} className="btn-primary inline-flex w-full justify-center shadow-lg shadow-primary/20">
+        {buttonText}
       </Link>
       <a
-        href="https://wa.me/917019557994"
+        href={whatsappLink}
         target="_blank"
         rel="noreferrer"
         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25d366] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-[#20c05c]"
       >
-        WhatsApp
+        {whatsappText}
       </a>
     </div>
   </div>
@@ -65,6 +79,7 @@ const renderBullets = (items: string[], emptyMessage: string) => {
 const ServiceDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [expandedDescription, setExpandedDescription] = useState(false);
+  const { services } = useServicesCatalog();
 
   const service = useMemo(() => {
     if (!slug) return defaultService;
@@ -97,6 +112,19 @@ const ServiceDetail = () => {
       offers: seededService?.features?.length ? seededService.features : localService?.offers,
     } satisfies ServiceDetailData;
   }, [slug]);
+
+  const consultationCta = useMemo(() => {
+    const record = services.find((item) => item.slug === SERVICE_CONSULTATION_CTA_SLUG);
+    return {
+      overline: record?.consultationOverline || defaultServiceConsultationCta.overline,
+      title: record?.title || defaultServiceConsultationCta.title,
+      subtitle: record?.shortDescription || record?.description || defaultServiceConsultationCta.subtitle,
+      buttonText: record?.consultationButtonText || defaultServiceConsultationCta.buttonText,
+      buttonLink: record?.consultationButtonLink || defaultServiceConsultationCta.buttonLink,
+      whatsappText: record?.consultationWhatsappText || defaultServiceConsultationCta.whatsappText,
+      whatsappLink: record?.consultationWhatsappLink || defaultServiceConsultationCta.whatsappLink,
+    };
+  }, [services]);
 
   useEffect(() => {
     setExpandedDescription(false);
@@ -225,7 +253,9 @@ const ServiceDetail = () => {
             </div>
 
             <div className="hidden lg:block lg:relative">
-              <div className="sticky top-24 z-20 w-[360px] xl:w-[380px]">{consultationSidebar}</div>
+              <div className="sticky top-24 z-20 w-[360px] xl:w-[380px]">
+                <ConsultationSidebar {...consultationCta} />
+              </div>
             </div>
           </div>
         </div>

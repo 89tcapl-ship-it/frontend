@@ -39,6 +39,11 @@ export interface Service {
     shortDescription: string;
     description: string;
     image: string;
+    consultationOverline?: string;
+    consultationButtonText?: string;
+    consultationButtonLink?: string;
+    consultationWhatsappText?: string;
+    consultationWhatsappLink?: string;
     features?: string[];
     keyBenefits?: string[];
     support?: string[];
@@ -57,6 +62,11 @@ export interface ServiceFormData {
     shortDescription: string;
     description: string;
     image?: string;
+    consultationOverline?: string;
+    consultationButtonText?: string;
+    consultationButtonLink?: string;
+    consultationWhatsappText?: string;
+    consultationWhatsappLink?: string;
     features?: string[];
     keyBenefits?: string[];
     support?: string[];

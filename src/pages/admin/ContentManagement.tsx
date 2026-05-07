@@ -93,6 +93,37 @@ const getSeedSection = (page: string, sectionId: string): PageSection | null => 
         : null;
 };
 
+const mergeSectionWithSeed = (page: string, section: PageSection): PageSection => {
+    const seed = getSeedSection(page, section.sectionId);
+
+    if (!seed) {
+        return section;
+    }
+
+    return {
+        ...seed,
+        ...section,
+        title: section.title || seed.title,
+        subtitle: section.subtitle || seed.subtitle,
+        content: section.content || seed.content,
+        buttonText: section.buttonText || seed.buttonText,
+        buttonLink: section.buttonLink || seed.buttonLink,
+        imageUrl: section.imageUrl || seed.imageUrl,
+        order: section.order ?? seed.order,
+        isActive: section.isActive ?? seed.isActive,
+    };
+};
+
+const getSectionSortRank = (page: string, section: PageSection) => {
+    const templateOrder = pageTemplates[page] || [];
+    const templateIndex = templateOrder.indexOf(section.sectionId);
+    return {
+        templateIndex: templateIndex === -1 ? Number.POSITIVE_INFINITY : templateIndex,
+        order: typeof section.order === 'number' ? section.order : Number.POSITIVE_INFINITY,
+        sectionId: section.sectionId,
+    };
+};
+
 const ContentManagement = () => {
     const [selectedPage, setSelectedPage] = useState('home');
     const [pageContent, setPageContent] = useState<PageContent | null>(null);
@@ -151,17 +182,33 @@ const ContentManagement = () => {
     }, [formData.sectionId, selectedPage]);
     const visibleSections = useMemo(() => {
         const hidden = hiddenSectionIds[selectedPage] || new Set<string>();
-        return (pageContent?.sections || []).filter((section) => {
-            if (hidden.has(section.sectionId)) return false;
-            return Boolean(
-                section.title ||
-                section.subtitle ||
-                section.content ||
-                section.buttonText ||
-                section.buttonLink ||
-                section.imageUrl
-            );
-        });
+        return (pageContent?.sections || [])
+            .map((section) => mergeSectionWithSeed(selectedPage, section))
+            .filter((section) => {
+                if (hidden.has(section.sectionId)) return false;
+                return Boolean(
+                    section.title ||
+                    section.subtitle ||
+                    section.content ||
+                    section.buttonText ||
+                    section.buttonLink ||
+                    section.imageUrl
+                );
+            })
+            .sort((a, b) => {
+                const rankA = getSectionSortRank(selectedPage, a);
+                const rankB = getSectionSortRank(selectedPage, b);
+
+                if (rankA.templateIndex !== rankB.templateIndex) {
+                    return rankA.templateIndex - rankB.templateIndex;
+                }
+
+                if (rankA.order !== rankB.order) {
+                    return rankA.order - rankB.order;
+                }
+
+                return rankA.sectionId.localeCompare(rankB.sectionId);
+            });
     }, [pageContent, selectedPage]);
 
     const fetchPageContent = async (page: string) => {
@@ -191,8 +238,9 @@ const ContentManagement = () => {
     };
 
     const handleEdit = (section: PageSection) => {
+        const mergedSection = mergeSectionWithSeed(selectedPage, section);
         setEditingSection(section);
-        setFormData(section);
+        setFormData(mergedSection);
         setDialogOpen(true);
     };
 
@@ -240,8 +288,9 @@ const ContentManagement = () => {
         const seedSection = getSeedSection(selectedPage, sectionId);
 
         if (existingSection) {
+            const mergedSection = mergeSectionWithSeed(selectedPage, existingSection);
             setEditingSection(existingSection);
-            setFormData(existingSection);
+            setFormData(mergedSection);
         } else if (seedSection) {
             setEditingSection(null);
             setFormData(seedSection);
@@ -269,6 +318,22 @@ const ContentManagement = () => {
 
                 for (const section of missingSections) {
                     await api.post(`/content/${page.page}/sections`, section);
+                }
+
+                const existingSections = existing?.sections || [];
+                for (const section of existingSections) {
+                    const mergedSection = mergeSectionWithSeed(page.page, section);
+                    const hasMissingSeedContent =
+                        mergedSection.title !== section.title ||
+                        mergedSection.subtitle !== section.subtitle ||
+                        mergedSection.content !== section.content ||
+                        mergedSection.buttonText !== section.buttonText ||
+                        mergedSection.buttonLink !== section.buttonLink ||
+                        mergedSection.imageUrl !== section.imageUrl;
+
+                    if (hasMissingSeedContent) {
+                        await api.put(`/content/${page.page}/sections/${section.sectionId}`, mergedSection);
+                    }
                 }
             }
 
@@ -528,9 +593,7 @@ const ContentManagement = () => {
                 </Card>
             ) : (
                 <div className="space-y-4">
-                    {visibleSections
-                        .sort((a, b) => a.order - b.order)
-                        .map((section) => (
+                    {visibleSections.map((section, index) => (
                             <Card key={section.sectionId}>
                                 <CardHeader>
                                     <div className="flex items-start justify-between gap-4">
@@ -538,6 +601,7 @@ const ContentManagement = () => {
                                             <div className="flex items-center gap-2">
                                                 <CardTitle className="text-lg">{section.title || section.sectionId}</CardTitle>
                                                 {!section.isActive && <Badge variant="secondary">Inactive</Badge>}
+                                                <Badge variant="outline">#{index + 1}</Badge>
                                             </div>
                                             {section.subtitle && <p className="text-sm text-muted-foreground">{section.subtitle}</p>}
                                         </div>

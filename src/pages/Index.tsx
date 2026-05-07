@@ -125,24 +125,24 @@ const Index = () => {
       />
 
       <section className="bg-white">
-        <div className="container-custom px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
-          <div className="mx-auto max-w-[1200px] text-center">
-            <div className="mx-auto max-w-[1100px] pt-4 sm:pt-6 lg:pt-8">
-              <h1 className="mx-auto max-w-[980px] text-3xl font-bold leading-[1.08] tracking-tight text-foreground md:text-4xl lg:text-[2.75rem] xl:text-[2.9rem]">
-                <span className="block">End-to-End Finance and Compliance</span>
+        <div className="container-custom px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-18">
+          <div className="mx-auto max-w-[1180px] text-center">
+            <div className="mx-auto max-w-[1080px] pt-5 sm:pt-8 lg:pt-10">
+              <h1 className="mx-auto max-w-[940px] text-3xl font-bold leading-[1.22] tracking-[-0.03em] text-foreground md:text-4xl lg:text-[2.7rem] xl:text-[2.85rem]">
+                <span className="block pb-2">End-to-End Finance and Compliance</span>
                 <span className="block">Support for Growing Businesses</span>
               </h1>
-              <p className="mx-auto mt-6 max-w-[980px] text-base leading-[1.6] text-muted-foreground md:text-lg">
+              <p className="mx-auto mt-8 max-w-[920px] text-base leading-[1.7] text-muted-foreground md:text-lg">
                 Led by seasoned Chartered Accountants, 89TCA delivers structured solutions that empower businesses to operate efficiently and scale with confidence.
               </p>
 
-              <div className="mx-auto mt-7 max-w-[1400px] rounded-full border border-slate-200 bg-[#f8fafc] px-6 py-4 text-center shadow-[0_1px_5px_rgba(15,23,42,0.04)]">
+              <div className="mx-auto mt-10 max-w-[1400px] rounded-full border border-slate-200 bg-[#f8fafc] px-8 py-4 text-center shadow-[0_1px_5px_rgba(15,23,42,0.04)]">
                 <p className="text-sm font-medium text-slate-700 md:text-base lg:text-[1.02rem]">
                   Trusted Chartered Accountants • 10 Years Experience • Serving Startups, SMEs &amp; Enterprises Across India
                 </p>
               </div>
 
-              <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-4">
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
                 <Link
                   to="/contact"
                   className="btn-primary h-12 min-w-[168px] inline-flex items-center justify-center text-center transition-transform hover:-translate-y-0.5"

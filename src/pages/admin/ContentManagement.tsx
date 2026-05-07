@@ -105,6 +105,50 @@ const ContentManagement = () => {
     const selectedPageMeta = useMemo(() => pages.find((page) => page.value === selectedPage) || null, [selectedPage]);
     const isFounderPhotoSection = selectedPage === 'about' && formData.sectionId.startsWith('founder-');
     const isContactMapSection = selectedPage === 'contact' && formData.sectionId === 'map';
+    const sectionFieldConfig = useMemo(() => {
+        const sectionId = formData.sectionId;
+
+        if (selectedPage === 'home') {
+            if (sectionId === 'hero') return { title: true, subtitle: true, content: true, buttonText: true, buttonLink: true };
+            if (sectionId === 'hero-secondary-cta' || sectionId === 'home-services-cta') {
+                return { buttonText: true, buttonLink: true };
+            }
+            if (sectionId === 'services-intro' || sectionId === 'about' || sectionId === 'cta') {
+                return { title: true, content: true, buttonText: sectionId === 'cta', buttonLink: sectionId === 'cta' };
+            }
+            if (sectionId === 'starting-business-heading' || sectionId === 'tax-compliance-heading' || sectionId === 'business-support-heading' || sectionId === 'why-choose-us') {
+                return { title: true, subtitle: sectionId === 'why-choose-us', content: sectionId === 'why-choose-us' };
+            }
+            if (sectionId === 'business-support' || sectionId === 'about-overline' || sectionId === 'why-choose-us-overline') {
+                return { content: true };
+            }
+            if (sectionId.startsWith('why-choose-us-item-')) {
+                return { title: true, content: true };
+            }
+        }
+
+        if (selectedPage === 'about') {
+            if (sectionId === 'intro') return { title: true, subtitle: true, content: true };
+            if (sectionId === 'founders-heading') return { title: true };
+            if (sectionId === 'approach-combine-label') return { content: true };
+            if (sectionId === 'approach') return { title: true, content: true };
+            if (sectionId.startsWith('founder-')) return { title: true, content: true, imageUrl: true };
+            if (sectionId.startsWith('approach-point-')) return { content: true };
+        }
+
+        if (selectedPage === 'contact') {
+            if (sectionId === 'header') return { title: true, subtitle: true };
+            if (sectionId === 'contact-overline') return { content: true };
+            if (sectionId === 'contact-email' || sectionId === 'contact-phone' || sectionId === 'contact-address') {
+                return { title: true, content: true };
+            }
+            if (sectionId === 'form') return { title: true, buttonText: true };
+            if (sectionId.startsWith('form-')) return { title: true, content: true };
+            if (sectionId === 'map') return { title: true, buttonLink: true, imageUrl: true };
+        }
+
+        return { title: true, subtitle: true, content: true, buttonText: true, buttonLink: true, imageUrl: true };
+    }, [formData.sectionId, selectedPage]);
     const visibleSections = useMemo(() => {
         const hidden = hiddenSectionIds[selectedPage] || new Set<string>();
         return (pageContent?.sections || []).filter((section) => {
@@ -287,7 +331,7 @@ const ContentManagement = () => {
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            {sectionFieldConfig.title && (
                                 <div className="space-y-2">
                                     <Label htmlFor="title">Title</Label>
                                     <Input
@@ -296,7 +340,9 @@ const ContentManagement = () => {
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     />
                                 </div>
+                            )}
 
+                            {sectionFieldConfig.subtitle && (
                                 <div className="space-y-2">
                                     <Label htmlFor="subtitle">Subtitle</Label>
                                     <Input
@@ -305,19 +351,21 @@ const ContentManagement = () => {
                                         onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
                                     />
                                 </div>
-                            </div>
+                            )}
 
-                            <div className="space-y-2">
-                                <Label htmlFor="content">Content</Label>
-                                <Textarea
-                                    id="content"
-                                    rows={4}
-                                    value={formData.content}
-                                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                />
-                            </div>
+                            {sectionFieldConfig.content && (
+                                <div className="space-y-2">
+                                    <Label htmlFor="content">Content</Label>
+                                    <Textarea
+                                        id="content"
+                                        rows={4}
+                                        value={formData.content}
+                                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                    />
+                                </div>
+                            )}
 
-                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            {sectionFieldConfig.buttonText && (
                                 <div className="space-y-2">
                                     <Label htmlFor="buttonText">Button Text</Label>
                                     <Input
@@ -326,7 +374,9 @@ const ContentManagement = () => {
                                         onChange={(e) => setFormData({ ...formData, buttonText: e.target.value })}
                                     />
                                 </div>
+                            )}
 
+                            {sectionFieldConfig.buttonLink && (
                                 <div className="space-y-2">
                                     <Label htmlFor="buttonLink">Button Link</Label>
                                     <Input
@@ -335,7 +385,7 @@ const ContentManagement = () => {
                                         onChange={(e) => setFormData({ ...formData, buttonLink: e.target.value })}
                                     />
                                 </div>
-                            </div>
+                            )}
 
                             {isFounderPhotoSection && (
                                 <div className="space-y-2">

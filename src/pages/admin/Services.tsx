@@ -40,16 +40,35 @@ const serviceGroups = [
     {
         title: 'Starting a Business',
         description: 'Company formation and allied registrations.',
-        slugs: [
-            'private-limited-company',
-            'llp',
-            'partnership',
-            'opc-registration',
-            'sole-proprietor',
-            'foreign-company-subsidiary',
-            'nbfc',
-            'trust-societies',
-            'apartment-association',
+        subgroups: [
+            {
+                title: 'Entity Formation',
+                slugs: [
+                    'sole-proprietor',
+                    'partnership',
+                    'llp',
+                    'opc-registration',
+                    'private-limited-company',
+                    'foreign-company-subsidiary',
+                    'nbfc',
+                    'trust-societies',
+                    'apartment-association',
+                ],
+            },
+            {
+                title: 'Allied Registrations',
+                slugs: [
+                    'gst',
+                    'shops-establishments',
+                    'epf-and-esi',
+                    'pt',
+                    'trade-license',
+                    'fssai',
+                    'iec',
+                    'msme-udyam',
+                    'dpiit-startup-india',
+                ],
+            },
         ],
     },
     {
@@ -198,13 +217,20 @@ const Services = () => {
     }, [catalog]);
 
     const groups = useMemo(() => {
-        return serviceGroups.map((group) => ({
-            ...group,
-            services: group.slugs
-                .map((slug) => catalogBySlug[slug])
-                .filter(Boolean)
-                .sort((a, b) => a.order - b.order),
-        }));
+        return serviceGroups.map((group) => {
+            if ('subgroups' in group) {
+                const servicesFromSubgroups = group.subgroups.flatMap((subcategory) => subcategory.slugs.map((slug) => catalogBySlug[slug]).filter(Boolean));
+                return {
+                    ...group,
+                    services: servicesFromSubgroups.sort((a, b) => a.order - b.order),
+                };
+            }
+
+            return {
+                ...group,
+                services: group.slugs.map((slug) => catalogBySlug[slug]).filter(Boolean).sort((a, b) => a.order - b.order),
+            };
+        });
     }, [catalogBySlug]);
 
     const resetForm = () => {
@@ -335,6 +361,73 @@ const Services = () => {
                     </li>
                 ))}
             </ul>
+        );
+    };
+
+    const renderServiceCard = (service: Service) => {
+        const editable = Boolean(services.find((item) => item.slug === service.slug));
+        const detail = getDetailData(service.slug);
+
+        return (
+            <Card key={service.slug} className="overflow-hidden">
+                <CardHeader className="p-0">
+                    <div className="flex items-start justify-between gap-4 p-5">
+                        <div>
+                            <CardTitle className="text-lg">{service.title}</CardTitle>
+                            <p className="mt-1 text-sm text-muted-foreground">{service.shortDescription}</p>
+                            <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                                <span>Slug: {service.slug}</span>
+                                <span>â€¢</span>
+                                <span>Order: {service.order}</span>
+                                <span>â€¢</span>
+                                <span className={service.isActive ? 'text-green-600' : 'text-red-600'}>
+                                    {service.isActive ? 'Active' : 'Inactive'}
+                                </span>
+                                {!editable && <span className="text-amber-600">Frontend seed only</span>}
+                            </div>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button variant="ghost" size="icon" onClick={() => handleEdit(service)}>
+                                <Edit className="h-4 w-4" />
+                            </Button>
+                            {editable ? (
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => handleDelete(services.find((item) => item.slug === service.slug)!._id)}
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            ) : null}
+                        </div>
+                    </div>
+                </CardHeader>
+
+                <CardContent className="space-y-4 px-5 pb-5">
+                    <details className="rounded-xl border border-border bg-muted/20 p-4">
+                        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-foreground">
+                            <span>View all content</span>
+                            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        </summary>
+
+                        <div className="mt-4 space-y-4">
+                            <div>
+                                <p className="text-sm font-semibold text-foreground">Description</p>
+                                <p className="mt-2 text-sm leading-6 text-muted-foreground whitespace-pre-line text-justify">
+                                    {detail?.description || service.description}
+                                </p>
+                            </div>
+
+                            {contentBlocks.map((block) => (
+                                <div key={block.key}>
+                                    <p className="text-sm font-semibold text-foreground">{block.label}</p>
+                                    {renderList((service as any)[block.key], 'Not provided yet.')}
+                                </div>
+                            ))}
+                        </div>
+                    </details>
+                </CardContent>
+            </Card>
         );
     };
 
@@ -524,73 +617,29 @@ const Services = () => {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-                                    {group.services.map((service) => {
-                                        const editable = Boolean(services.find((item) => item.slug === service.slug));
-                                        const detail = getDetailData(service.slug);
-                                        return (
-                                            <Card key={service.slug} className="overflow-hidden">
-                                                <CardHeader className="p-0">
-                                                    <div className="flex items-start justify-between gap-4 p-5">
-                                                        <div>
-                                                            <CardTitle className="text-lg">{service.title}</CardTitle>
-                                                            <p className="mt-1 text-sm text-muted-foreground">{service.shortDescription}</p>
-                                                            <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                                                                <span>Slug: {service.slug}</span>
-                                                                <span>•</span>
-                                                                <span>Order: {service.order}</span>
-                                                                <span>•</span>
-                                                                <span className={service.isActive ? 'text-green-600' : 'text-red-600'}>
-                                                                    {service.isActive ? 'Active' : 'Inactive'}
-                                                                </span>
-                                                                {!editable && <span className="text-amber-600">Frontend seed only</span>}
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex gap-2">
-                                                            <Button variant="ghost" size="icon" onClick={() => handleEdit(service)}>
-                                                                <Edit className="h-4 w-4" />
-                                                            </Button>
-                                                            {editable ? (
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    onClick={() => handleDelete(services.find((item) => item.slug === service.slug)!._id)}
-                                                                >
-                                                                    <Trash2 className="h-4 w-4" />
-                                                                </Button>
-                                                            ) : null}
-                                                        </div>
-                                                    </div>
-                                                </CardHeader>
-
-                                                <CardContent className="space-y-4 px-5 pb-5">
-                                                    <details className="rounded-xl border border-border bg-muted/20 p-4">
-                                                        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-foreground">
-                                                            <span>View all content</span>
-                                                            <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                                                        </summary>
-
-                                                        <div className="mt-4 space-y-4">
-                                                            <div>
-                                                                <p className="text-sm font-semibold text-foreground">Description</p>
-                                                                <p className="mt-2 text-sm leading-6 text-muted-foreground whitespace-pre-line text-justify">
-                                                                    {detail?.description || service.description}
-                                                                </p>
-                                                            </div>
-
-                                                            {contentBlocks.map((block) => (
-                                                                <div key={block.key}>
-                                                                    <p className="text-sm font-semibold text-foreground">{block.label}</p>
-                                                                    {renderList((service as any)[block.key], 'Not provided yet.')}
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </details>
-                                                </CardContent>
-                                            </Card>
-                                        );
-                                    })}
-                                </div>
+                                {'subgroups' in group ? (
+                                    <div className="space-y-8">
+                                        {group.subgroups.map((subcategory) => (
+                                            <div key={subcategory.title} className="space-y-4">
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <h3 className="text-xl font-semibold text-foreground">{subcategory.title}</h3>
+                                                    <Badge variant="secondary">{subcategory.slugs.length} services</Badge>
+                                                </div>
+                                                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                                                    {subcategory.slugs
+                                                        .map((slug) => catalogBySlug[slug])
+                                                        .filter(Boolean)
+                                                        .sort((a, b) => a.order - b.order)
+                                                        .map((service) => renderServiceCard(service))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                                        {group.services.map((service) => renderServiceCard(service))}
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     ))}
@@ -601,3 +650,4 @@ const Services = () => {
 };
 
 export default Services;
+

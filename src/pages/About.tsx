@@ -57,7 +57,6 @@ const About = () => {
   ) as string;
 
   const foundersHeading = getSectionValue("founders-heading", "title", "Founders' Background") as string;
-  const photoLabel = getSectionValue("founder-photo-label", "content", "Photo") as string;
   const approachTitle = getSectionValue("approach", "title", "Our Approach") as string;
   const approachPrefix = getSectionValue("approach-combine-label", "content", "We combine:") as string;
   const approachIntro = getSectionValue(
@@ -122,7 +121,7 @@ const About = () => {
                           />
                         ) : (
                           <div className="flex h-full min-h-[180px] w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/70 text-lg font-medium text-slate-500">
-                            {photoLabel}
+                            Photo
                           </div>
                         )}
                       </div>

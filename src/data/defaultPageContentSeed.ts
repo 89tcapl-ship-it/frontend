@@ -30,12 +30,6 @@ export const defaultPageContentSeed: PageContentSeed[] = [
         isActive: true,
       },
       {
-        sectionId: "hero-badge",
-        content: "Trusted Corporate Advisory Partner",
-        order: 2,
-        isActive: true,
-      },
-      {
         sectionId: "hero-secondary-cta",
         buttonText: "View Services",
         buttonLink: "/services",
@@ -161,12 +155,6 @@ export const defaultPageContentSeed: PageContentSeed[] = [
         sectionId: "founders-heading",
         title: "Founders' Background",
         order: 2,
-        isActive: true,
-      },
-      {
-        sectionId: "founder-photo-label",
-        content: "Photo",
-        order: 3,
         isActive: true,
       },
       {

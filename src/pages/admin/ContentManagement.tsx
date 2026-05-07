@@ -52,9 +52,15 @@ const pages: PageOption[] = [
 ];
 
 const pageTemplates: Record<string, string[]> = {
-    home: ['hero', 'hero-badge', 'hero-secondary-cta', 'services-intro', 'starting-business-heading', 'tax-compliance-heading', 'business-support-heading', 'business-support', 'about', 'about-overline', 'why-choose-us-item-1', 'why-choose-us-item-2', 'why-choose-us-item-3', 'why-choose-us-item-4', 'why-choose-us-overline', 'why-choose-us', 'cta', 'home-services-cta'],
-    about: ['intro', 'founders-heading', 'founder-photo-label', 'approach-combine-label', 'approach', 'founder-mahitha', 'founder-diwakar', 'founder-surendranath', 'founder-lokesh', 'founder-jyothi', 'approach-point-1', 'approach-point-2', 'approach-point-3'],
+    home: ['hero', 'hero-secondary-cta', 'services-intro', 'starting-business-heading', 'tax-compliance-heading', 'business-support-heading', 'business-support', 'about', 'about-overline', 'why-choose-us-item-1', 'why-choose-us-item-2', 'why-choose-us-item-3', 'why-choose-us-item-4', 'why-choose-us-overline', 'why-choose-us', 'cta', 'home-services-cta'],
+    about: ['intro', 'founders-heading', 'approach-combine-label', 'approach', 'founder-mahitha', 'founder-diwakar', 'founder-surendranath', 'founder-lokesh', 'founder-jyothi', 'approach-point-1', 'approach-point-2', 'approach-point-3'],
     contact: ['contact-overline', 'header', 'contact-email', 'contact-phone', 'contact-address', 'form', 'form-name', 'form-email', 'form-phone', 'form-service', 'form-message', 'map'],
+};
+
+const hiddenSectionIds: Record<string, Set<string>> = {
+    home: new Set(['hero-badge']),
+    about: new Set(['founder-photo-label']),
+    contact: new Set(),
 };
 
 const emptyForm: PageSection = {
@@ -99,6 +105,20 @@ const ContentManagement = () => {
     const selectedPageMeta = useMemo(() => pages.find((page) => page.value === selectedPage) || null, [selectedPage]);
     const isFounderPhotoSection = selectedPage === 'about' && formData.sectionId.startsWith('founder-');
     const isContactMapSection = selectedPage === 'contact' && formData.sectionId === 'map';
+    const visibleSections = useMemo(() => {
+        const hidden = hiddenSectionIds[selectedPage] || new Set<string>();
+        return (pageContent?.sections || []).filter((section) => {
+            if (hidden.has(section.sectionId)) return false;
+            return Boolean(
+                section.title ||
+                section.subtitle ||
+                section.content ||
+                section.buttonText ||
+                section.buttonLink ||
+                section.imageUrl
+            );
+        });
+    }, [pageContent, selectedPage]);
 
     const fetchPageContent = async (page: string) => {
         try {
@@ -449,7 +469,7 @@ const ContentManagement = () => {
                         <p className="text-muted-foreground">Loading content...</p>
                     </CardContent>
                 </Card>
-            ) : !pageContent || pageContent.sections.length === 0 ? (
+            ) : visibleSections.length === 0 ? (
                 <Card>
                     <CardContent className="py-12 text-center">
                         <FileEdit className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
@@ -458,7 +478,7 @@ const ContentManagement = () => {
                 </Card>
             ) : (
                 <div className="space-y-4">
-                    {pageContent.sections
+                    {visibleSections
                         .sort((a, b) => a.order - b.order)
                         .map((section) => (
                             <Card key={section.sectionId}>

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import api from '@/lib/api';
 import { Settings as SettingsType, SettingsFormData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -32,6 +33,10 @@ const Settings = () => {
             instagram: '',
             youtube: '',
             whatsapp: '',
+            showFacebook: true,
+            showLinkedin: true,
+            showYoutube: true,
+            showWhatsapp: true,
         },
         ogImage: '',
     });
@@ -56,7 +61,18 @@ const Settings = () => {
                     incorporationDate: '',
                     status: '',
                 },
-                socialLinks: response.data.socialLinks,
+                socialLinks: {
+                    facebook: response.data.socialLinks?.facebook || '',
+                    twitter: response.data.socialLinks?.twitter || '',
+                    linkedin: response.data.socialLinks?.linkedin || '',
+                    instagram: response.data.socialLinks?.instagram || '',
+                    youtube: response.data.socialLinks?.youtube || '',
+                    whatsapp: response.data.socialLinks?.whatsapp || '',
+                    showFacebook: response.data.socialLinks?.showFacebook ?? true,
+                    showLinkedin: response.data.socialLinks?.showLinkedin ?? true,
+                    showYoutube: response.data.socialLinks?.showYoutube ?? true,
+                    showWhatsapp: response.data.socialLinks?.showWhatsapp ?? true,
+                },
                 ogImage: response.data.ogImage || '',
             });
         } catch (error: any) {
@@ -203,6 +219,22 @@ const Settings = () => {
                                     placeholder="https://facebook.com/yourpage"
                                 />
                             </div>
+                            <div className="flex items-center justify-between rounded-xl border border-border/70 px-4 py-3">
+                                <div>
+                                    <Label htmlFor="showFacebook" className="text-sm font-medium">Show Facebook Icon</Label>
+                                    <p className="text-xs text-muted-foreground">Hide or show the Facebook icon in the footer.</p>
+                                </div>
+                                <Switch
+                                    id="showFacebook"
+                                    checked={formData.socialLinks?.showFacebook ?? true}
+                                    onCheckedChange={(checked) =>
+                                        setFormData({
+                                            ...formData,
+                                            socialLinks: { ...formData.socialLinks!, showFacebook: checked },
+                                        })
+                                    }
+                                />
+                            </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="twitter">Twitter</Label>
@@ -233,6 +265,22 @@ const Settings = () => {
                                         })
                                     }
                                     placeholder="https://linkedin.com/company/yourcompany"
+                                />
+                            </div>
+                            <div className="flex items-center justify-between rounded-xl border border-border/70 px-4 py-3">
+                                <div>
+                                    <Label htmlFor="showLinkedin" className="text-sm font-medium">Show LinkedIn Icon</Label>
+                                    <p className="text-xs text-muted-foreground">Hide or show the LinkedIn icon in the footer.</p>
+                                </div>
+                                <Switch
+                                    id="showLinkedin"
+                                    checked={formData.socialLinks?.showLinkedin ?? true}
+                                    onCheckedChange={(checked) =>
+                                        setFormData({
+                                            ...formData,
+                                            socialLinks: { ...formData.socialLinks!, showLinkedin: checked },
+                                        })
+                                    }
                                 />
                             </div>
 
@@ -267,6 +315,22 @@ const Settings = () => {
                                     placeholder="https://youtube.com/@yourchannel"
                                 />
                             </div>
+                            <div className="flex items-center justify-between rounded-xl border border-border/70 px-4 py-3">
+                                <div>
+                                    <Label htmlFor="showYoutube" className="text-sm font-medium">Show YouTube Icon</Label>
+                                    <p className="text-xs text-muted-foreground">Hide or show the YouTube icon in the footer.</p>
+                                </div>
+                                <Switch
+                                    id="showYoutube"
+                                    checked={formData.socialLinks?.showYoutube ?? true}
+                                    onCheckedChange={(checked) =>
+                                        setFormData({
+                                            ...formData,
+                                            socialLinks: { ...formData.socialLinks!, showYoutube: checked },
+                                        })
+                                    }
+                                />
+                            </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="whatsapp">WhatsApp</Label>
@@ -281,6 +345,22 @@ const Settings = () => {
                                         })
                                     }
                                     placeholder="https://wa.me/917019557994"
+                                />
+                            </div>
+                            <div className="flex items-center justify-between rounded-xl border border-border/70 px-4 py-3">
+                                <div>
+                                    <Label htmlFor="showWhatsapp" className="text-sm font-medium">Show WhatsApp Icon</Label>
+                                    <p className="text-xs text-muted-foreground">Hide or show the WhatsApp icon in the footer.</p>
+                                </div>
+                                <Switch
+                                    id="showWhatsapp"
+                                    checked={formData.socialLinks?.showWhatsapp ?? true}
+                                    onCheckedChange={(checked) =>
+                                        setFormData({
+                                            ...formData,
+                                            socialLinks: { ...formData.socialLinks!, showWhatsapp: checked },
+                                        })
+                                    }
                                 />
                             </div>
                         </div>

@@ -23,35 +23,55 @@ const sectionCardStyles =
   "relative overflow-hidden rounded-[28px] border border-border/70 bg-white/90 p-5 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur-sm transition-transform duration-200 hover:-translate-y-0.5 sm:p-6";
 
 const ConsultationSidebar = ({
+  overline,
+  title,
+  subtitle,
+  buttonText,
   buttonLink,
 }: {
+  overline: string;
+  title: string;
+  subtitle: string;
+  buttonText: string;
   buttonLink: string;
 }) => (
   <div className="overflow-hidden rounded-[32px] border border-border/70 bg-white shadow-[0_12px_34px_rgba(15,23,42,0.08)]">
-    <div className="relative aspect-[4/5] min-h-[520px]">
-      <img
-        src="/services-hero.png"
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-slate-950/15 to-transparent" />
-      <div className="absolute inset-0 flex flex-col justify-between p-5 sm:p-6">
+    <div className="relative min-h-[520px] bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.18),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.18),transparent_30%),linear-gradient(180deg,#f8fbff_0%,#eef8f6_100%)] p-5 sm:p-6">
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(15,23,42,0.04)_1px,transparent_1px),linear-gradient(225deg,rgba(15,23,42,0.04)_1px,transparent_1px)] bg-[size:24px_24px] opacity-50" />
+      <div className="relative flex min-h-[520px] flex-col justify-between">
         <div className="inline-flex w-fit items-center rounded-full border border-cyan-500/20 bg-white/90 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-700 shadow-sm backdrop-blur">
-          Expert Guidance
+          {overline}
         </div>
 
-        <div className="rounded-[28px] border border-white/60 bg-white/88 p-5 shadow-[0_12px_30px_rgba(15,23,42,0.12)] backdrop-blur-sm sm:p-6">
-          <h3 className="text-[1.7rem] font-semibold leading-[1.08] tracking-tight text-slate-900 sm:text-[2rem]">
-            Talk to Our CA Experts About Your Specific Needs
+        <div className="relative mx-auto my-8 flex h-64 w-full max-w-[300px] items-center justify-center">
+          <div className="absolute inset-x-8 top-6 h-28 rounded-[28px] border border-white/80 bg-white/75 shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur" />
+          <div className="absolute inset-x-4 top-14 h-28 rounded-[28px] border border-white/80 bg-cyan-50/80 shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur" />
+          <div className="absolute bottom-6 left-6 h-24 w-24 rounded-[28px] border border-blue-100 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.10)]" />
+          <div className="absolute bottom-10 right-4 h-20 w-20 rounded-[22px] border border-emerald-100 bg-emerald-50 shadow-[0_18px_40px_rgba(15,23,42,0.10)]" />
+          <div className="relative flex h-40 w-40 items-center justify-center rounded-[42px] border border-primary/10 bg-white shadow-[0_26px_55px_rgba(15,23,42,0.14)]">
+            <div className="flex h-24 w-24 items-center justify-center rounded-[32px] bg-[linear-gradient(135deg,#0e6f8f,#22c55e)] shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]">
+              <span className="text-center text-xs font-semibold uppercase tracking-[0.28em] text-white">
+                89TCA
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4 rounded-[28px] border border-white/60 bg-white/80 p-5 shadow-[0_16px_36px_rgba(15,23,42,0.10)] backdrop-blur-md sm:p-6">
+          <div className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+            Service Guide
+          </div>
+          <h3 className="whitespace-pre-line text-[1.75rem] font-semibold leading-[1.04] tracking-tight text-slate-900 sm:text-[2.05rem]">
+            {title}
           </h3>
-          <p className="mt-4 text-sm leading-6 text-slate-600 sm:text-[1rem]">
-            From queries to execution, we guide you through each stage of compliance, making the process simple, structured, and stress-free.
+          <p className="max-w-[34ch] text-[0.95rem] leading-7 text-slate-600 sm:text-[1.02rem]">
+            {subtitle}
           </p>
           <Link
             to={buttonLink}
-            className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[#0e6f8f] px-5 py-4 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(14,111,143,0.22)] transition hover:bg-[#0b5d77]"
+            className="inline-flex w-full items-center justify-center rounded-full bg-[#0e6f8f] px-5 py-4 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(14,111,143,0.22)] transition hover:bg-[#0b5d77]"
           >
-            Get Free Consultation
+            {buttonText}
           </Link>
         </div>
       </div>
@@ -116,6 +136,9 @@ const ServiceDetail = () => {
   const consultationCta = useMemo(() => {
     const record = services.find((item) => item.slug === SERVICE_CONSULTATION_CTA_SLUG);
     return {
+      overline: record?.consultationOverline || defaultServiceConsultationCta.overline,
+      title: record?.title || defaultServiceConsultationCta.title,
+      subtitle: record?.shortDescription || record?.description || defaultServiceConsultationCta.subtitle,
       buttonText: record?.consultationButtonText || defaultServiceConsultationCta.buttonText,
       buttonLink: record?.consultationButtonLink || defaultServiceConsultationCta.buttonLink,
     };
@@ -249,7 +272,13 @@ const ServiceDetail = () => {
 
             <div className="hidden lg:block lg:relative">
               <div className="sticky top-24 z-20 w-[360px] xl:w-[380px]">
-                <ConsultationSidebar buttonLink={consultationCta.buttonLink} />
+                <ConsultationSidebar
+                  overline={consultationCta.overline}
+                  title={consultationCta.title}
+                  subtitle={consultationCta.subtitle}
+                  buttonText={consultationCta.buttonText}
+                  buttonLink={consultationCta.buttonLink}
+                />
               </div>
             </div>
           </div>

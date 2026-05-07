@@ -129,6 +129,10 @@ export interface Settings {
         instagram: string;
         youtube?: string;
         whatsapp?: string;
+        showFacebook?: boolean;
+        showLinkedin?: boolean;
+        showYoutube?: boolean;
+        showWhatsapp?: boolean;
     };
     logo: string;
     favicon: string;
@@ -156,6 +160,10 @@ export interface SettingsFormData {
         instagram?: string;
         youtube?: string;
         whatsapp?: string;
+        showFacebook?: boolean;
+        showLinkedin?: boolean;
+        showYoutube?: boolean;
+        showWhatsapp?: boolean;
     };
     logo?: string;
     favicon?: string;

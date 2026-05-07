@@ -15,6 +15,10 @@ interface Settings {
     instagram?: string;
     youtube?: string;
     whatsapp?: string;
+    showFacebook?: boolean;
+    showLinkedin?: boolean;
+    showYoutube?: boolean;
+    showWhatsapp?: boolean;
   };
 }
 
@@ -44,6 +48,13 @@ export function Footer() {
   const whatsappUrl =
     settings?.socialLinks?.whatsapp ||
     `https://wa.me/${(settings?.contactPhone || "+917019557994").replace(/[^0-9]/g, "")}`;
+  const facebookUrl = settings?.socialLinks?.facebook || "";
+  const linkedinUrl = settings?.socialLinks?.linkedin || "";
+  const youtubeUrl = settings?.socialLinks?.youtube || "";
+  const showWhatsapp = settings?.socialLinks?.showWhatsapp ?? true;
+  const showFacebook = settings?.socialLinks?.showFacebook ?? true;
+  const showLinkedin = settings?.socialLinks?.showLinkedin ?? true;
+  const showYoutube = settings?.socialLinks?.showYoutube ?? true;
 
   return (
     <footer className="bg-foreground text-background">
@@ -93,51 +104,71 @@ export function Footer() {
             </div>
 
             <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="WhatsApp"
-                title="WhatsApp"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition hover:bg-white/10 hover:text-[#25D366]"
-              >
-                <WhatsAppIcon />
-              </a>
-
-              {settings?.socialLinks?.facebook ? (
+              {showWhatsapp ? (
                 <a
-                  href={settings.socialLinks.facebook}
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label="WhatsApp"
+                  title="WhatsApp"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition hover:bg-white/10 hover:text-[#25D366]"
+                >
+                  <WhatsAppIcon />
+                </a>
+              ) : null}
+
+              {showFacebook ? (
+                <a
+                  href={facebookUrl || undefined}
+                  target={facebookUrl ? "_blank" : undefined}
+                  rel={facebookUrl ? "noreferrer" : undefined}
                   aria-label="Facebook"
                   title="Facebook"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition hover:bg-white/10 hover:text-[#1877F2]"
+                  aria-disabled={!facebookUrl}
+                  onClick={(e) => {
+                    if (!facebookUrl) e.preventDefault();
+                  }}
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition ${
+                    facebookUrl ? "hover:bg-white/10 hover:text-[#1877F2]" : "cursor-not-allowed opacity-55"
+                  }`}
                 >
                   <Facebook className="h-5 w-5" />
                 </a>
               ) : null}
 
-              {settings?.socialLinks?.linkedin ? (
+              {showLinkedin ? (
                 <a
-                  href={settings.socialLinks.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
+                  href={linkedinUrl || undefined}
+                  target={linkedinUrl ? "_blank" : undefined}
+                  rel={linkedinUrl ? "noreferrer" : undefined}
                   aria-label="LinkedIn"
                   title="LinkedIn"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition hover:bg-white/10 hover:text-[#0A66C2]"
+                  aria-disabled={!linkedinUrl}
+                  onClick={(e) => {
+                    if (!linkedinUrl) e.preventDefault();
+                  }}
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition ${
+                    linkedinUrl ? "hover:bg-white/10 hover:text-[#0A66C2]" : "cursor-not-allowed opacity-55"
+                  }`}
                 >
                   <Linkedin className="h-5 w-5" />
                 </a>
               ) : null}
 
-              {settings?.socialLinks?.youtube ? (
+              {showYoutube ? (
                 <a
-                  href={settings.socialLinks.youtube}
-                  target="_blank"
-                  rel="noreferrer"
+                  href={youtubeUrl || undefined}
+                  target={youtubeUrl ? "_blank" : undefined}
+                  rel={youtubeUrl ? "noreferrer" : undefined}
                   aria-label="YouTube"
                   title="YouTube"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition hover:bg-white/10 hover:text-[#FF0000]"
+                  aria-disabled={!youtubeUrl}
+                  onClick={(e) => {
+                    if (!youtubeUrl) e.preventDefault();
+                  }}
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition ${
+                    youtubeUrl ? "hover:bg-white/10 hover:text-[#FF0000]" : "cursor-not-allowed opacity-55"
+                  }`}
                 >
                   <Youtube className="h-5 w-5" />
                 </a>

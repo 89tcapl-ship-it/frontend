@@ -34,7 +34,7 @@ export const defaultServiceSeed: ServiceFormData[] = [
     order: 3,
   },
   {
-    title: "OPC",
+    title: "OPC Registration",
     slug: "opc-registration",
     shortDescription: "Company structure for single founders with limited liability.",
     description: "A One Person Company lets a solo founder operate through a corporate structure with limited liability and corporate credibility.",
@@ -70,7 +70,7 @@ export const defaultServiceSeed: ServiceFormData[] = [
     order: 7,
   },
   {
-    title: "Trust/Societies",
+    title: "Trust / Society",
     slug: "trust-societies",
     shortDescription: "Non-profit legal setup for charitable and social objectives.",
     description: "Trust and society registration support for NGOs, educational bodies, and charitable institutions.",
@@ -115,7 +115,7 @@ export const defaultServiceSeed: ServiceFormData[] = [
     order: 12,
   },
   {
-    title: "Shops & Establishments (Labour)",
+    title: "Shops & Establishments",
     slug: "shops-establishments",
     shortDescription: "State labour registration for offices and shops.",
     description: "Registration and renewal support for shops and establishment compliance across states.",
@@ -151,7 +151,7 @@ export const defaultServiceSeed: ServiceFormData[] = [
     order: 16,
   },
   {
-    title: "MSME/UDYAM",
+    title: "MSME / UDYAM",
     slug: "msme-udyam",
     shortDescription: "MSME registration to unlock government benefits.",
     description: "Udyam registration support for businesses seeking MSME recognition and the benefits that come with it.",
@@ -160,10 +160,10 @@ export const defaultServiceSeed: ServiceFormData[] = [
     order: 17,
   },
   {
-    title: "DPIIT / StartUp India Registration",
+    title: "DPIIT / Startup India Registration",
     slug: "dpiit-startup-india",
     shortDescription: "Startup recognition and benefits support.",
-    description: "DPIIT startup recognition and support for founders looking to access incentives, recognition, and growth support.",
+    description: "DPIIT recognition under the Startup India initiative is a government certification for qualifying startups that unlocks tax incentives, regulatory relaxations, and funding benefits. A startup can apply if it is incorporated as a private limited company, LLP, or registered partnership; is not more than 10 years old; has annual turnover not exceeding Rs. 100 crore; and is working towards innovation, development, or improvement of products or services.",
     features: ["Eligibility guidance", "Application support", "Documentation help", "Ongoing advisory"],
     isActive: true,
     order: 18,

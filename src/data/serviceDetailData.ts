@@ -166,7 +166,7 @@ export const serviceDetailData: Record<string, ServiceDetailData> = {
   },
 
   "trust-societies": {
-    title: "Trust/Societies",
+    title: "Trust / Society",
     description: "A Trust or Society is a non-profit legal entity formed for charitable, educational, religious, or social objectives. Trusts are governed by the Indian Trusts Act, 1882 or state-specific public trust acts; societies are registered under the Societies Registration Act, 1860. A trust is formed by a Trust Deed; a society requires a Memorandum of Association and Bye-Laws signed by at least seven persons. Both can receive donations, apply for tax-exempt status under Section 12A, and receive foreign contributions under FCRA registration. Organisations registered under Section 80G can offer donors a tax deduction. NGOs, educational institutions, hospitals, religious bodies, and community organisations typically use these structures.",
     keyBenefits: [
       "Enjoy income tax exemption under Section 12A on income applied for charitable purposes.",
@@ -370,7 +370,7 @@ export const serviceDetailData: Record<string, ServiceDetailData> = {
   },
 
   "msme-udyam": {
-    title: "MSME/UDYAM Registration",
+    title: "MSME / UDYAM Registration",
     description: "MSME stands for Micro, Small, and Medium Enterprises — classified based on investment in plant and machinery and annual turnover. Micro: investment up to Rs. 1 crore, turnover up to Rs. 5 crore. Small: up to Rs. 10 crore investment, Rs. 50 crore turnover. Medium: up to Rs. 50 crore investment, Rs. 250 crore turnover. Udyam Registration is a free, online, self-declaration-based process on udyamregistration.gov.in linked to Aadhaar and PAN. It unlocks priority sector lending at concessional rates, protection under MSME Development Act against delayed payments (MSME Samadhaan), access to government tenders reserved for MSMEs, and eligibility for central and state government schemes including ECLGS and CGTMSE.",
     keyBenefits: [
       "Access to collateral-free loans up to Rs. 2 crore under CGTMSE guarantee scheme.",
@@ -394,8 +394,9 @@ export const serviceDetailData: Record<string, ServiceDetailData> = {
   },
 
   "dpiit-startup-india": {
-    title: "DPIIT / StartUp India Registration",
-    description: "DPIIT recognition under the Startup India initiative is a government certification for qualifying startups that unlocks tax incentives, regulatory relaxations, and funding benefits. A startup can apply if it is incorporated as a private limited company, LLP, or registered partnership; is not more than 10 years old; has annual turnover not exceeding Rs. 100 crore; and is working towards innovation, development, or improvement of products or services. Benefits include: 3-year income tax exemption under Section 80-IAC, exemption from Angel Tax (Section 56(2)(viib)), self-certification compliance under 9 labour and 3 environment laws, access to Fund of Funds managed by SIDBI, and rebates on patent (80%) and trademark (50%) filing fees.",
+    title: "DPIIT / Startup India Registration",
+    description:
+      "DPIIT recognition under the Startup India initiative is a government certification for qualifying startups that unlocks tax incentives, regulatory relaxations, and funding benefits. A startup can apply if it is incorporated as a private limited company, LLP, or registered partnership; is not more than 10 years old; has annual turnover not exceeding Rs. 100 crore; and is working towards innovation, development, or improvement of products or services. Benefits include: 3-year income tax exemption under Section 80-IAC, exemption from Angel Tax (Section 56(2)(viib)), self-certification compliance under 9 labour and 3 environment laws, access to Fund of Funds managed by SIDBI, and rebates on patent (80%) and trademark (50%) filing fees.",
     keyBenefits: [
       "3-year income tax exemption — keep more cash in the business during the critical growth phase.",
       "Angel Tax exemption — no tax on equity investments received above FMV from eligible investors.",

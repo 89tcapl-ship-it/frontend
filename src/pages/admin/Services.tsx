@@ -156,6 +156,9 @@ const detailAliases: Record<string, string> = {
     'one-person-company': 'opc-registration',
     'llp-registration': 'llp',
     'shops-and-establishments-labour': 'shops-establishments',
+    'dpiit-startup-india-registration': 'dpiit-startup-india',
+    'startup-india-registration': 'dpiit-startup-india',
+    'startup-india': 'dpiit-startup-india',
 };
 
 const getDetailData = (slug: string) => {

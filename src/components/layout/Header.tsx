@@ -96,10 +96,10 @@ export function Header() {
                       {startingBusinessMenu.map((section, index) => (
                         <div
                           key={section.heading}
-                          className={`space-y-3 ${index === 0 ? "pl-2 sm:pl-4" : "-ml-1 sm:-ml-3"}`}
+                          className={`space-y-3 ${index === 0 ? "pl-6 sm:pl-10" : "pl-2 sm:pl-4"}`}
                         >
                           <p className="text-sm font-semibold text-foreground">{section.heading}</p>
-                          <ul className={`space-y-2.5 text-sm text-muted-foreground ${index === 0 ? "pl-2 sm:pl-4" : "pl-1 sm:pl-2"}`}>
+                          <ul className={`space-y-2.5 text-sm text-muted-foreground ${index === 0 ? "pl-4 sm:pl-8" : "pl-3 sm:pl-6"}`}>
                             {section.items.map((item) => (
                               <li key={item}>
                                 <Link to={`/services/${toSlug(item)}`} className="transition-colors hover:text-primary hover:underline">
@@ -216,7 +216,7 @@ export function Header() {
 
           <div className="hidden lg:flex">
             <Link to="/contact" className="btn-primary">
-              Get Started
+              +918958889589
             </Link>
           </div>
 

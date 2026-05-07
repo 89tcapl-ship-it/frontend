@@ -1,17 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import {
     Dialog,
     DialogContent,
@@ -20,6 +13,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
 import { Plus, Edit, Trash2, FileEdit } from 'lucide-react';
 import api from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
@@ -44,6 +38,76 @@ interface PageContent {
     sections: PageSection[];
 }
 
+interface PageOption {
+    value: string;
+    label: string;
+    hint: string;
+}
+
+interface PageGroup {
+    title: string;
+    description: string;
+    items: PageOption[];
+}
+
+const pageGroups: PageGroup[] = [
+    {
+        title: 'Global',
+        description: 'Shared content used across the site shell.',
+        items: [
+            { value: 'header', label: 'Header / Navigation', hint: 'Logo, menu labels, CTA text' },
+            { value: 'footer', label: 'Footer', hint: 'Tagline, disclaimer, contact text' },
+        ],
+    },
+    {
+        title: 'Homepage',
+        description: 'All homepage blocks are editable here.',
+        items: [
+            { value: 'home', label: 'Home Page', hint: 'Hero, service intro, about, CTA' },
+            { value: 'about', label: 'About Page', hint: 'Intro, founders, approach' },
+            { value: 'contact', label: 'Contact Page', hint: 'Contact info, map, form copy' },
+        ],
+    },
+    {
+        title: 'Services',
+        description: 'The five main service areas shown in the navigation.',
+        items: [
+            { value: 'services', label: 'Services Overview', hint: 'Main services landing page' },
+            { value: 'starting-business', label: 'Starting a Business', hint: 'Entity formation + allied registrations' },
+            { value: 'support-services', label: 'Support Services', hint: 'Book keeping, payroll, CFO' },
+            { value: 'compliances', label: 'Compliances', hint: 'GST, PF, ESI, PT, ITR, MCA' },
+            { value: 'funding', label: 'Funding', hint: 'Funding, diligence, valuation, FDI' },
+            { value: 'audits', label: 'Audits', hint: 'Statutory, tax, internal, TP, investigation' },
+        ],
+    },
+];
+
+const pageTemplates: Record<string, string[]> = {
+    header: ['logo', 'about-link', 'starting-business-link', 'support-services-link', 'compliances-link', 'funding-link', 'audits-link', 'cta'],
+    footer: ['tagline', 'disclaimer'],
+    home: ['hero', 'services-intro', 'business-support', 'about', 'why-choose-us', 'cta'],
+    about: ['intro', 'approach', 'founder-mahitha', 'founder-diwakar', 'founder-surendranath', 'founder-lokesh', 'founder-jyothi', 'approach-point-1', 'approach-point-2', 'approach-point-3'],
+    contact: ['header', 'contact-email', 'contact-phone', 'contact-address', 'form', 'map'],
+    services: ['header', 'starting-business', 'support-services', 'compliances', 'funding', 'audits'],
+    'starting-business': ['header', 'entity-formation', 'allied-registrations'],
+    'support-services': ['header'],
+    compliances: ['header', 'gst-compliance', 'epf-compliance', 'esi-compliance', 'pt-compliance', 'itr-tds-compliance', 'mca-compliance', 'tax-compliances', 'regulatory-compliances'],
+    funding: ['header'],
+    audits: ['header'],
+};
+
+const emptyForm: PageSection = {
+    sectionId: '',
+    title: '',
+    subtitle: '',
+    content: '',
+    buttonText: '',
+    buttonLink: '',
+    imageUrl: '',
+    order: 0,
+    isActive: true,
+};
+
 const ContentManagement = () => {
     const [selectedPage, setSelectedPage] = useState('home');
     const [pageContent, setPageContent] = useState<PageContent | null>(null);
@@ -51,32 +115,17 @@ const ContentManagement = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editingSection, setEditingSection] = useState<PageSection | null>(null);
     const { toast } = useToast();
+    const [formData, setFormData] = useState<PageSection>(emptyForm);
 
-    const [formData, setFormData] = useState<PageSection>({
-        sectionId: '',
-        title: '',
-        subtitle: '',
-        content: '',
-        buttonText: '',
-        buttonLink: '',
-        imageUrl: '',
-        order: 0,
-        isActive: true,
-    });
-
-    const pages = [
-        { value: 'header', label: 'Header / Navigation' },
-        { value: 'footer', label: 'Footer' },
-        { value: 'home', label: 'Home Page' },
-        { value: 'about', label: 'About Page' },
-        { value: 'contact', label: 'Contact Page' },
-        { value: 'services', label: 'Services Page' },
-        { value: 'starting-business', label: 'Starting Business Page' },
-        { value: 'support-services', label: 'Support Services Page' },
-        { value: 'compliances', label: 'Compliances Page' },
-        { value: 'funding', label: 'Funding Page' },
-        { value: 'audits', label: 'Audits Page' },
-    ];
+    const selectedPageMeta = useMemo(() => {
+        for (const group of pageGroups) {
+            const item = group.items.find((entry) => entry.value === selectedPage);
+            if (item) {
+                return { group: group.title, ...item };
+            }
+        }
+        return null;
+    }, [selectedPage]);
 
     const fetchPageContent = async (page: string) => {
         try {
@@ -98,16 +147,25 @@ const ContentManagement = () => {
         fetchPageContent(selectedPage);
     }, [selectedPage]);
 
+    const resetForm = () => {
+        setEditingSection(null);
+        setFormData(emptyForm);
+    };
+
+    const handleEdit = (section: PageSection) => {
+        setEditingSection(section);
+        setFormData(section);
+        setDialogOpen(true);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
             if (editingSection) {
-                // Update existing section
                 await api.put(`/content/${selectedPage}/sections/${editingSection.sectionId}`, formData);
                 toast({ title: 'Success', description: 'Section updated successfully' });
             } else {
-                // Add new section
                 await api.post(`/content/${selectedPage}/sections`, formData);
                 toast({ title: 'Success', description: 'Section added successfully' });
             }
@@ -139,34 +197,16 @@ const ContentManagement = () => {
         }
     };
 
-    const handleEdit = (section: PageSection) => {
-        setEditingSection(section);
-        setFormData(section);
-        setDialogOpen(true);
-    };
-
-    const resetForm = () => {
-        setEditingSection(null);
-        setFormData({
-            sectionId: '',
-            title: '',
-            subtitle: '',
-            content: '',
-            buttonText: '',
-            buttonLink: '',
-            imageUrl: '',
-            order: 0,
-            isActive: true,
-        });
-    };
-
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="space-y-8">
+            <div className="flex items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold">Content Management</h1>
-                    <p className="text-muted-foreground">Edit live website content</p>
+                    <p className="text-muted-foreground">
+                        Edit the homepage, the five service pages, and the shared header/footer content.
+                    </p>
                 </div>
+
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
                         <Button onClick={resetForm}>
@@ -189,30 +229,32 @@ const ContentManagement = () => {
                                     required
                                     value={formData.sectionId}
                                     onChange={(e) => setFormData({ ...formData, sectionId: e.target.value })}
-                                    placeholder="e.g., hero, features, about"
+                                    placeholder="hero, cta, header, etc."
                                     disabled={!!editingSection}
                                 />
                                 <p className="text-xs text-muted-foreground">
-                                    Unique identifier for this section (cannot be changed after creation)
+                                    Use one of the suggested section IDs for the selected page, or add a new one if needed.
                                 </p>
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="title">Title</Label>
-                                <Input
-                                    id="title"
-                                    value={formData.title}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                />
-                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="title">Title</Label>
+                                    <Input
+                                        id="title"
+                                        value={formData.title}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    />
+                                </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="subtitle">Subtitle</Label>
-                                <Input
-                                    id="subtitle"
-                                    value={formData.subtitle}
-                                    onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-                                />
+                                <div className="space-y-2">
+                                    <Label htmlFor="subtitle">Subtitle</Label>
+                                    <Input
+                                        id="subtitle"
+                                        value={formData.subtitle}
+                                        onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+                                    />
+                                </div>
                             </div>
 
                             <div className="space-y-2">
@@ -225,7 +267,7 @@ const ContentManagement = () => {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="buttonText">Button Text</Label>
                                     <Input
@@ -251,14 +293,14 @@ const ContentManagement = () => {
                                 onChange={(url) => setFormData({ ...formData, imageUrl: url })}
                             />
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="order">Display Order</Label>
                                     <Input
                                         id="order"
                                         type="number"
                                         value={formData.order}
-                                        onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                                        onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value || '0', 10) })}
                                     />
                                 </div>
 
@@ -283,28 +325,70 @@ const ContentManagement = () => {
                 </Dialog>
             </div>
 
-            {/* Page Selector */}
-            <Card>
-                <CardContent className="pt-6">
-                    <div className="flex items-center gap-4">
-                        <Label>Select Page:</Label>
-                        <Select value={selectedPage} onValueChange={setSelectedPage}>
-                            <SelectTrigger className="w-64">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {pages.map((page) => (
-                                    <SelectItem key={page.value} value={page.value}>
-                                        {page.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+            <div className="grid gap-4 lg:grid-cols-3">
+                {pageGroups.map((group) => (
+                    <Card key={group.title} className="border-border/70">
+                        <CardHeader>
+                            <CardTitle className="text-lg">{group.title}</CardTitle>
+                            <p className="text-sm text-muted-foreground">{group.description}</p>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {group.items.map((page) => {
+                                const active = page.value === selectedPage;
+                                return (
+                                    <button
+                                        key={page.value}
+                                        type="button"
+                                        onClick={() => setSelectedPage(page.value)}
+                                        className={`w-full rounded-xl border px-4 py-3 text-left transition-colors ${active
+                                            ? 'border-primary bg-primary/5'
+                                            : 'border-border hover:bg-muted'
+                                            }`}
+                                    >
+                                        <div className="flex items-center justify-between gap-4">
+                                            <div>
+                                                <p className="font-medium text-foreground">{page.label}</p>
+                                                <p className="text-xs text-muted-foreground">{page.hint}</p>
+                                            </div>
+                                            {active && <Badge>Open</Badge>}
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+
+            <Card className="border-border/70">
+                <CardHeader>
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <CardTitle className="text-xl">{selectedPageMeta?.label || selectedPage}</CardTitle>
+                            <p className="text-sm text-muted-foreground">
+                                {selectedPageMeta?.hint || 'Selected content bucket'}
+                            </p>
+                        </div>
+                        <Badge variant="secondary">{selectedPageMeta?.group || 'Content'}</Badge>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <div className="rounded-xl border border-dashed border-border bg-muted/30 p-4">
+                        <p className="text-sm font-medium text-foreground">Expected section IDs</p>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                            {(pageTemplates[selectedPage] || []).map((sectionId) => (
+                                <Badge key={sectionId} variant="outline" className="text-xs">
+                                    {sectionId}
+                                </Badge>
+                            ))}
+                        </div>
+                        <p className="mt-3 text-xs text-muted-foreground">
+                            This list reflects the homepage blocks and the five service pages shown in the current frontend.
+                        </p>
                     </div>
                 </CardContent>
             </Card>
 
-            {/* Sections List */}
             {loading ? (
                 <Card>
                     <CardContent className="py-12 text-center">
@@ -325,12 +409,12 @@ const ContentManagement = () => {
                         .map((section) => (
                             <Card key={section.sectionId}>
                                 <CardHeader>
-                                    <div className="flex items-start justify-between">
+                                    <div className="flex items-start justify-between gap-4">
                                         <div className="space-y-1 flex-1">
                                             <div className="flex items-center gap-2">
                                                 <CardTitle className="text-lg">{section.title || section.sectionId}</CardTitle>
                                                 {!section.isActive && (
-                                                    <span className="text-xs bg-muted px-2 py-1 rounded">Inactive</span>
+                                                    <Badge variant="secondary">Inactive</Badge>
                                                 )}
                                             </div>
                                             {section.subtitle && (

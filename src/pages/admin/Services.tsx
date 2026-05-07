@@ -18,6 +18,7 @@ import api from '@/lib/api';
 import { Service, ServiceFormData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/shared/ImageUpload';
+import { defaultServiceSeed } from '@/data/defaultServiceSeed';
 
 const emptyForm: ServiceFormData = {
     title: '',
@@ -139,6 +140,34 @@ const Services = () => {
         }
     };
 
+    const seedDefaultServices = async () => {
+        const existingSlugs = new Set(services.map((service) => service.slug));
+        const missing = defaultServiceSeed.filter((service) => service.slug && !existingSlugs.has(service.slug));
+
+        if (missing.length === 0) {
+            toast({ title: 'Nothing to import', description: 'All frontend services are already present.' });
+            return;
+        }
+
+        try {
+            for (const service of missing) {
+                await api.post('/services', service);
+            }
+
+            toast({
+                title: 'Success',
+                description: `Imported ${missing.length} services from the frontend catalog.`,
+            });
+            fetchServices();
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message || 'Failed to import frontend services',
+                variant: 'destructive',
+            });
+        }
+    };
+
     const updateTextList = (field: keyof Pick<ServiceFormData, 'features' | 'keyBenefits' | 'support' | 'limitations' | 'nonComplianceRisks' | 'offers'>, value: string) => {
         setFormData({ ...formData, [field]: fromLines(value) });
     };
@@ -150,14 +179,18 @@ const Services = () => {
                     <h1 className="text-3xl font-bold">Services</h1>
                     <p className="text-muted-foreground">Manage your service offerings and detailed content</p>
                 </div>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button onClick={resetForm}>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Service
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                <div className="flex items-center gap-3">
+                    <Button type="button" variant="outline" onClick={seedDefaultServices} className="hidden sm:inline-flex">
+                        Import Frontend Catalog
+                    </Button>
+                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button onClick={resetForm}>
+                                <Plus className="h-4 w-4 mr-2" />
+                                Add Service
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>{editingService ? 'Edit Service' : 'Add New Service'}</DialogTitle>
                             <DialogDescription>
@@ -292,7 +325,8 @@ const Services = () => {
                             </div>
                         </form>
                     </DialogContent>
-                </Dialog>
+                    </Dialog>
+                </div>
             </div>
 
             {loading ? (
@@ -303,8 +337,11 @@ const Services = () => {
                 </Card>
             ) : services.length === 0 ? (
                 <Card>
-                    <CardContent className="py-12 text-center">
+                    <CardContent className="py-12 text-center space-y-4">
                         <p className="text-muted-foreground">No services found. Create your first service!</p>
+                        <Button type="button" variant="outline" onClick={seedDefaultServices}>
+                            Import Frontend Service Catalog
+                        </Button>
                     </CardContent>
                 </Card>
             ) : (

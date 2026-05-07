@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Facebook, Linkedin, Youtube } from "lucide-react";
 
 interface Settings {
   siteName: string;
@@ -7,7 +8,21 @@ interface Settings {
   address: string;
   contactEmail: string;
   contactPhone: string;
+  socialLinks?: {
+    facebook?: string;
+    twitter?: string;
+    linkedin?: string;
+    instagram?: string;
+    youtube?: string;
+    whatsapp?: string;
+  };
 }
+
+const WhatsAppIcon = ({ className = "h-5 w-5" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+    <path d="M20.52 3.48A11.87 11.87 0 0 0 12.06 0C5.5 0 .17 5.33.17 11.89c0 2.1.55 4.15 1.6 5.95L0 24l6.33-1.67a11.86 11.86 0 0 0 5.66 1.44h.01c6.56 0 11.89-5.33 11.89-11.89 0-3.18-1.24-6.17-3.37-8.4Zm-8.46 18.28h-.01a9.86 9.86 0 0 1-5.02-1.38l-.36-.22-3.75.99 1-3.66-.24-.38a9.85 9.85 0 0 1-1.51-5.22C2.17 6.42 6.45 2.14 11.98 2.14c2.68 0 5.2 1.04 7.08 2.92a9.7 9.7 0 0 1 2.92 6.83c0 5.53-4.28 9.87-9.92 9.87Zm5.74-7.84c-.31-.16-1.84-.91-2.13-1.01-.29-.11-.5-.16-.71.16-.21.31-.82 1.01-1 1.22-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.49-1.52-.92-.82-1.54-1.84-1.72-2.15-.18-.31-.02-.47.14-.62.15-.15.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.03-.55-.08-.16-.71-1.7-.97-2.34-.26-.62-.53-.54-.71-.55h-.61c-.21 0-.55.08-.84.39-.29.31-1.1 1.07-1.1 2.61 0 1.54 1.13 3.03 1.29 3.24.16.21 2.22 3.39 5.39 4.75.75.32 1.33.51 1.79.65.75.24 1.43.21 1.97.13.6-.09 1.84-.75 2.1-1.48.26-.73.26-1.36.18-1.48-.08-.11-.29-.18-.6-.34Z" />
+  </svg>
+);
 
 export function Footer() {
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -25,6 +40,10 @@ export function Footer() {
 
     fetchSettings();
   }, []);
+
+  const whatsappUrl =
+    settings?.socialLinks?.whatsapp ||
+    `https://wa.me/${(settings?.contactPhone || "+917019557994").replace(/[^0-9]/g, "")}`;
 
   return (
     <footer className="bg-foreground text-background">
@@ -71,6 +90,58 @@ export function Footer() {
                   {settings?.contactPhone || "+91 70195 57994"}
                 </a>
               </p>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="WhatsApp"
+                title="WhatsApp"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition hover:bg-white/10 hover:text-[#25D366]"
+              >
+                <WhatsAppIcon />
+              </a>
+
+              {settings?.socialLinks?.facebook ? (
+                <a
+                  href={settings.socialLinks.facebook}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Facebook"
+                  title="Facebook"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition hover:bg-white/10 hover:text-[#1877F2]"
+                >
+                  <Facebook className="h-5 w-5" />
+                </a>
+              ) : null}
+
+              {settings?.socialLinks?.linkedin ? (
+                <a
+                  href={settings.socialLinks.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="LinkedIn"
+                  title="LinkedIn"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition hover:bg-white/10 hover:text-[#0A66C2]"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
+              ) : null}
+
+              {settings?.socialLinks?.youtube ? (
+                <a
+                  href={settings.socialLinks.youtube}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="YouTube"
+                  title="YouTube"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-background transition hover:bg-white/10 hover:text-[#FF0000]"
+                >
+                  <Youtube className="h-5 w-5" />
+                </a>
+              ) : null}
             </div>
           </div>
         </div>

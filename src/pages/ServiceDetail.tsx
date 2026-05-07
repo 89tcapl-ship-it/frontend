@@ -23,38 +23,38 @@ const sectionCardStyles =
   "relative overflow-hidden rounded-[28px] border border-border/70 bg-white/90 p-5 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur-sm transition-transform duration-200 hover:-translate-y-0.5 sm:p-6";
 
 const ConsultationSidebar = ({
-  overline,
-  title,
-  subtitle,
-  buttonText,
   buttonLink,
-  whatsappText,
-  whatsappLink,
 }: {
-  overline: string;
-  title: string;
-  subtitle: string;
-  buttonText: string;
   buttonLink: string;
-  whatsappText: string;
-  whatsappLink: string;
 }) => (
-  <div className="overflow-hidden rounded-[28px] border border-primary/15 bg-gradient-to-br from-primary/10 via-white to-cyan-50 p-5 shadow-[0_12px_34px_rgba(15,23,42,0.08)] sm:p-6">
-    <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">{overline}</p>
-    <h3 className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{title}</h3>
-    <p className="mt-3 text-justify text-sm leading-6 text-slate-600">{subtitle}</p>
-    <div className="mt-6 space-y-3">
-      <Link to={buttonLink} className="btn-primary inline-flex w-full justify-center shadow-lg shadow-primary/20">
-        {buttonText}
-      </Link>
-      <a
-        href={whatsappLink}
-        target="_blank"
-        rel="noreferrer"
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25d366] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-[#20c05c]"
-      >
-        {whatsappText}
-      </a>
+  <div className="overflow-hidden rounded-[32px] border border-border/70 bg-white shadow-[0_12px_34px_rgba(15,23,42,0.08)]">
+    <div className="relative aspect-[4/5] min-h-[520px]">
+      <img
+        src="/services-hero.png"
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-slate-950/15 to-transparent" />
+      <div className="absolute inset-0 flex flex-col justify-between p-5 sm:p-6">
+        <div className="inline-flex w-fit items-center rounded-full border border-cyan-500/20 bg-white/90 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-700 shadow-sm backdrop-blur">
+          Expert Guidance
+        </div>
+
+        <div className="rounded-[28px] border border-white/60 bg-white/88 p-5 shadow-[0_12px_30px_rgba(15,23,42,0.12)] backdrop-blur-sm sm:p-6">
+          <h3 className="text-[1.7rem] font-semibold leading-[1.08] tracking-tight text-slate-900 sm:text-[2rem]">
+            Talk to Our CA Experts About Your Specific Needs
+          </h3>
+          <p className="mt-4 text-sm leading-6 text-slate-600 sm:text-[1rem]">
+            From queries to execution, we guide you through each stage of compliance, making the process simple, structured, and stress-free.
+          </p>
+          <Link
+            to={buttonLink}
+            className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[#0e6f8f] px-5 py-4 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(14,111,143,0.22)] transition hover:bg-[#0b5d77]"
+          >
+            Get Free Consultation
+          </Link>
+        </div>
+      </div>
     </div>
   </div>
 );
@@ -116,13 +116,8 @@ const ServiceDetail = () => {
   const consultationCta = useMemo(() => {
     const record = services.find((item) => item.slug === SERVICE_CONSULTATION_CTA_SLUG);
     return {
-      overline: record?.consultationOverline || defaultServiceConsultationCta.overline,
-      title: record?.title || defaultServiceConsultationCta.title,
-      subtitle: record?.shortDescription || record?.description || defaultServiceConsultationCta.subtitle,
       buttonText: record?.consultationButtonText || defaultServiceConsultationCta.buttonText,
       buttonLink: record?.consultationButtonLink || defaultServiceConsultationCta.buttonLink,
-      whatsappText: record?.consultationWhatsappText || defaultServiceConsultationCta.whatsappText,
-      whatsappLink: record?.consultationWhatsappLink || defaultServiceConsultationCta.whatsappLink,
     };
   }, [services]);
 
@@ -254,7 +249,7 @@ const ServiceDetail = () => {
 
             <div className="hidden lg:block lg:relative">
               <div className="sticky top-24 z-20 w-[360px] xl:w-[380px]">
-                <ConsultationSidebar {...consultationCta} />
+                <ConsultationSidebar buttonLink={consultationCta.buttonLink} />
               </div>
             </div>
           </div>

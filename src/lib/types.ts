@@ -127,6 +127,8 @@ export interface Settings {
         twitter: string;
         linkedin: string;
         instagram: string;
+        youtube?: string;
+        whatsapp?: string;
     };
     logo: string;
     favicon: string;
@@ -152,6 +154,8 @@ export interface SettingsFormData {
         twitter?: string;
         linkedin?: string;
         instagram?: string;
+        youtube?: string;
+        whatsapp?: string;
     };
     logo?: string;
     favicon?: string;

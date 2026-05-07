@@ -72,7 +72,7 @@ export function ConsultationWidget() {
         className="min-w-[14rem] rounded-full bg-primary px-4 py-3 text-[11px] font-semibold text-primary-foreground shadow-md transition-transform hover:-translate-y-0.5"
         aria-expanded={open}
       >
-        15 Min Free CA Consultation
+        Available Free CA Consultation
       </button>
     </div>
   );

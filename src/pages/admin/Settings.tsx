@@ -30,6 +30,8 @@ const Settings = () => {
             twitter: '',
             linkedin: '',
             instagram: '',
+            youtube: '',
+            whatsapp: '',
         },
         ogImage: '',
     });
@@ -247,6 +249,38 @@ const Settings = () => {
                                         })
                                     }
                                     placeholder="https://instagram.com/yourhandle"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="youtube">YouTube</Label>
+                                <Input
+                                    id="youtube"
+                                    type="url"
+                                    value={formData.socialLinks?.youtube}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            socialLinks: { ...formData.socialLinks!, youtube: e.target.value },
+                                        })
+                                    }
+                                    placeholder="https://youtube.com/@yourchannel"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="whatsapp">WhatsApp</Label>
+                                <Input
+                                    id="whatsapp"
+                                    type="url"
+                                    value={formData.socialLinks?.whatsapp}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            socialLinks: { ...formData.socialLinks!, whatsapp: e.target.value },
+                                        })
+                                    }
+                                    placeholder="https://wa.me/917019557994"
                                 />
                             </div>
                         </div>

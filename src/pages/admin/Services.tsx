@@ -678,103 +678,106 @@ const Services = () => {
             </div>
 
             <Card className="border-primary/20">
-                <CardHeader>
-                    <div className="flex flex-wrap items-start justify-between gap-4">
-                        <div>
-                            <CardTitle className="text-2xl">Service Consultation CTA</CardTitle>
-                            <p className="mt-1 text-sm text-muted-foreground">
-                                This single CTA is shown on every service detail page.
-                            </p>
-                        </div>
-                        <Badge variant="outline">Shared</Badge>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleConsultationCtaSubmit} className="space-y-4">
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label htmlFor="ctaOverline">Overline</Label>
-                                <Input
-                                    id="ctaOverline"
-                                    value={consultationCtaForm.consultationOverline}
-                                    onChange={(e) =>
-                                        setConsultationCtaForm({ ...consultationCtaForm, consultationOverline: e.target.value })
-                                    }
-                                />
+                <CardContent className="p-0">
+                    <details className="group">
+                        <summary className="flex cursor-pointer list-none items-start justify-between gap-4 p-6">
+                            <div>
+                                <CardTitle className="text-2xl">Service Consultation CTA</CardTitle>
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                    Click to edit the shared CTA used on every service detail page.
+                                </p>
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="ctaButtonText">Primary Button Text</Label>
-                                <Input
-                                    id="ctaButtonText"
-                                    value={consultationCtaForm.consultationButtonText}
-                                    onChange={(e) =>
-                                        setConsultationCtaForm({ ...consultationCtaForm, consultationButtonText: e.target.value })
-                                    }
-                                />
-                            </div>
-                        </div>
+                            <Badge variant="outline">Shared</Badge>
+                        </summary>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="ctaTitle">Title</Label>
-                            <Input
-                                id="ctaTitle"
-                                value={consultationCtaForm.title}
-                                onChange={(e) => setConsultationCtaForm({ ...consultationCtaForm, title: e.target.value })}
-                            />
-                        </div>
+                        <div className="border-t border-border/70 px-6 pb-6">
+                            <form onSubmit={handleConsultationCtaSubmit} className="space-y-4 pt-6">
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="ctaOverline">Overline</Label>
+                                        <Input
+                                            id="ctaOverline"
+                                            value={consultationCtaForm.consultationOverline}
+                                            onChange={(e) =>
+                                                setConsultationCtaForm({ ...consultationCtaForm, consultationOverline: e.target.value })
+                                            }
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="ctaButtonText">Primary Button Text</Label>
+                                        <Input
+                                            id="ctaButtonText"
+                                            value={consultationCtaForm.consultationButtonText}
+                                            onChange={(e) =>
+                                                setConsultationCtaForm({ ...consultationCtaForm, consultationButtonText: e.target.value })
+                                            }
+                                        />
+                                    </div>
+                                </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="ctaDescription">Description</Label>
-                            <Textarea
-                                id="ctaDescription"
-                                rows={4}
-                                value={consultationCtaForm.description}
-                                onChange={(e) =>
-                                    setConsultationCtaForm({ ...consultationCtaForm, description: e.target.value, shortDescription: e.target.value })
-                                }
-                            />
-                        </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="ctaTitle">Title</Label>
+                                    <Input
+                                        id="ctaTitle"
+                                        value={consultationCtaForm.title}
+                                        onChange={(e) => setConsultationCtaForm({ ...consultationCtaForm, title: e.target.value })}
+                                    />
+                                </div>
 
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label htmlFor="ctaButtonLink">Primary Button Link</Label>
-                                <Input
-                                    id="ctaButtonLink"
-                                    value={consultationCtaForm.consultationButtonLink}
-                                    onChange={(e) =>
-                                        setConsultationCtaForm({ ...consultationCtaForm, consultationButtonLink: e.target.value })
-                                    }
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="ctaWhatsappText">WhatsApp Button Text</Label>
-                                <Input
-                                    id="ctaWhatsappText"
-                                    value={consultationCtaForm.consultationWhatsappText}
-                                    onChange={(e) =>
-                                        setConsultationCtaForm({ ...consultationCtaForm, consultationWhatsappText: e.target.value })
-                                    }
-                                />
-                            </div>
-                        </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="ctaDescription">Description</Label>
+                                    <Textarea
+                                        id="ctaDescription"
+                                        rows={4}
+                                        value={consultationCtaForm.description}
+                                        onChange={(e) =>
+                                            setConsultationCtaForm({ ...consultationCtaForm, description: e.target.value, shortDescription: e.target.value })
+                                        }
+                                    />
+                                </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="ctaWhatsappLink">WhatsApp Link</Label>
-                            <Input
-                                id="ctaWhatsappLink"
-                                value={consultationCtaForm.consultationWhatsappLink}
-                                onChange={(e) =>
-                                    setConsultationCtaForm({ ...consultationCtaForm, consultationWhatsappLink: e.target.value })
-                                }
-                            />
-                        </div>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="ctaButtonLink">Primary Button Link</Label>
+                                        <Input
+                                            id="ctaButtonLink"
+                                            value={consultationCtaForm.consultationButtonLink}
+                                            onChange={(e) =>
+                                                setConsultationCtaForm({ ...consultationCtaForm, consultationButtonLink: e.target.value })
+                                            }
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="ctaWhatsappText">WhatsApp Button Text</Label>
+                                        <Input
+                                            id="ctaWhatsappText"
+                                            value={consultationCtaForm.consultationWhatsappText}
+                                            onChange={(e) =>
+                                                setConsultationCtaForm({ ...consultationCtaForm, consultationWhatsappText: e.target.value })
+                                            }
+                                        />
+                                    </div>
+                                </div>
 
-                        <div className="flex justify-end">
-                            <Button type="submit" disabled={savingConsultationCta}>
-                                {savingConsultationCta ? 'Saving...' : 'Save Consultation CTA'}
-                            </Button>
+                                <div className="space-y-2">
+                                    <Label htmlFor="ctaWhatsappLink">WhatsApp Link</Label>
+                                    <Input
+                                        id="ctaWhatsappLink"
+                                        value={consultationCtaForm.consultationWhatsappLink}
+                                        onChange={(e) =>
+                                            setConsultationCtaForm({ ...consultationCtaForm, consultationWhatsappLink: e.target.value })
+                                        }
+                                    />
+                                </div>
+
+                                <div className="flex justify-end">
+                                    <Button type="submit" disabled={savingConsultationCta}>
+                                        {savingConsultationCta ? 'Saving...' : 'Save Consultation CTA'}
+                                    </Button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </details>
                 </CardContent>
             </Card>
 

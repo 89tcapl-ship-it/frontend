@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -122,6 +122,19 @@ const getSectionSortRank = (page: string, section: PageSection) => {
         order: typeof section.order === 'number' ? section.order : Number.POSITIVE_INFINITY,
         sectionId: section.sectionId,
     };
+};
+
+const compactSectionFields = (section: PageSection) => {
+    const fields: Array<{ label: string; value?: string }> = [
+        { label: 'Title', value: section.title },
+        { label: 'Subtitle', value: section.subtitle },
+        { label: 'Content', value: section.content },
+        { label: 'Button Text', value: section.buttonText },
+        { label: 'Button Link', value: section.buttonLink },
+        { label: 'Image', value: section.imageUrl },
+    ];
+
+    return fields.filter((field) => Boolean(field.value && field.value.trim()));
 };
 
 const ContentManagement = () => {
@@ -594,7 +607,7 @@ const ContentManagement = () => {
             ) : (
                 <div className="space-y-4">
                     {visibleSections.map((section, index) => (
-                            <Card key={section.sectionId}>
+                        <Card key={section.sectionId}>
                                 <CardHeader>
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1 space-y-1">
@@ -616,25 +629,35 @@ const ContentManagement = () => {
                                     </div>
                                 </CardHeader>
                                 <CardContent>
-                                    {section.content && (
-                                        <p className="mb-4 whitespace-pre-line text-sm text-muted-foreground">{section.content}</p>
-                                    )}
-                                    <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
-                                        <span>ID: {section.sectionId}</span>
-                                        <span>•</span>
-                                        <span>Order: {section.order}</span>
-                                        {section.buttonText && (
-                                            <>
-                                                <span>•</span>
-                                                <span>Button: {section.buttonText}</span>
-                                            </>
+                                    <div className="space-y-3">
+                                        {compactSectionFields(section).length > 0 ? (
+                                            <div className="grid gap-3 md:grid-cols-2">
+                                                {compactSectionFields(section).map((field) => (
+                                                    <div key={`${section.sectionId}-${field.label}`} className="rounded-xl border border-border/70 bg-muted/20 p-3">
+                                                        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                                                            {field.label}
+                                                        </p>
+                                                        <p className="mt-1 whitespace-pre-line text-sm leading-6 text-foreground">
+                                                            {field.label === 'Image' ? 'Uploaded image available' : field.value}
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p className="text-sm text-muted-foreground">No visible content fields yet.</p>
                                         )}
-                                        {selectedPage === 'about' && section.sectionId.startsWith('founder-') && section.imageUrl && (
-                                            <>
-                                                <span>•</span>
-                                                <span>Has Photo</span>
-                                            </>
-                                        )}
+
+                                        <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
+                                            <span>ID: {section.sectionId}</span>
+                                            <span>•</span>
+                                            <span>Order: {section.order}</span>
+                                            {selectedPage === 'about' && section.sectionId.startsWith('founder-') && section.imageUrl && (
+                                                <>
+                                                    <span>•</span>
+                                                    <span>Has Photo</span>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </CardContent>
                             </Card>

@@ -93,10 +93,13 @@ export function Header() {
                 <div className="absolute left-0 top-full z-40 pt-4">
                   <div className="pointer-events-auto w-[min(92vw,56rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
                     <div className="grid gap-8 sm:grid-cols-2">
-                      {startingBusinessMenu.map((section) => (
-                        <div key={section.heading} className="space-y-3">
+                      {startingBusinessMenu.map((section, index) => (
+                        <div
+                          key={section.heading}
+                          className={`space-y-3 ${index === 0 ? "pl-2 sm:pl-4" : "-ml-1 sm:-ml-3"}`}
+                        >
                           <p className="text-sm font-semibold text-foreground">{section.heading}</p>
-                          <ul className="space-y-2.5 text-sm text-muted-foreground">
+                          <ul className={`space-y-2.5 text-sm text-muted-foreground ${index === 0 ? "pl-2 sm:pl-4" : "pl-1 sm:pl-2"}`}>
                             {section.items.map((item) => (
                               <li key={item}>
                                 <Link to={`/services/${toSlug(item)}`} className="transition-colors hover:text-primary hover:underline">

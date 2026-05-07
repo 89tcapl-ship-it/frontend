@@ -56,7 +56,10 @@ const About = () => {
     "The promoters collectively bring over four decades of combined experience across financial consulting, compliance, risk management, and strategic advisory."
   ) as string;
 
+  const foundersHeading = getSectionValue("founders-heading", "title", "Founders' Background") as string;
+  const photoLabel = getSectionValue("founder-photo-label", "content", "Photo") as string;
   const approachTitle = getSectionValue("approach", "title", "Our Approach") as string;
+  const approachPrefix = getSectionValue("approach-combine-label", "content", "We combine:") as string;
   const approachIntro = getSectionValue(
     "approach",
     "content",
@@ -96,9 +99,7 @@ const About = () => {
         <div className="container-custom">
           <div className="mx-auto max-w-4xl">
             <div>
-              <h2 className="mt-0 text-3xl font-semibold tracking-tight text-foreground">
-                Founders' Background
-              </h2>
+              <h2 className="mt-0 text-3xl font-semibold tracking-tight text-foreground">{foundersHeading}</h2>
             </div>
 
             <div className="mt-4 space-y-6">
@@ -113,7 +114,7 @@ const About = () => {
                     <div className="grid gap-0 lg:grid-cols-[280px_minmax(0,1fr)]">
                       <div className="flex min-h-[220px] items-center justify-center border-b border-border bg-gradient-to-br from-slate-50 via-white to-slate-100 p-6 lg:border-b-0 lg:border-r">
                         <div className="flex h-full min-h-[180px] w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/70 text-lg font-medium text-slate-500">
-                          Photo
+                          {photoLabel}
                         </div>
                       </div>
                       <div className="p-6 sm:p-8">
@@ -141,7 +142,7 @@ const About = () => {
             </h2>
 
             <div className="mt-4 rounded-[30px] border border-border bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.06)] sm:p-8">
-              <p className="text-sm font-semibold text-foreground">We combine:</p>
+              <p className="text-sm font-semibold text-foreground">{approachPrefix}</p>
               <ul className="mt-4 space-y-4">
                 {approachPoints.map((point) => (
                   <li key={point} className="flex gap-3 text-sm leading-6 text-slate-600 md:text-base">

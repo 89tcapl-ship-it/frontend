@@ -32,11 +32,25 @@ const Contact = () => {
 
   const title = getSectionValue("header", "title", "Contact Us") as string;
   const subtitle = getSectionValue("header", "subtitle", "Get in touch with our experts for your business needs") as string;
+  const overline = getSectionValue("contact-overline", "content", "Contact") as string;
   const emailLabel = getSectionValue("contact-email", "title", "Email") as string;
   const phoneLabel = getSectionValue("contact-phone", "title", "Phone") as string;
   const addressLabel = getSectionValue("contact-address", "title", "Registered Office") as string;
   const formTitle = getSectionValue("form", "title", "Send us a message") as string;
   const submitText = getSectionValue("form", "buttonText", "Submit Request") as string;
+  const nameLabel = getSectionValue("form-name", "title", "Full Name *") as string;
+  const namePlaceholder = getSectionValue("form-name", "content", "Your full name") as string;
+  const emailFieldLabel = getSectionValue("form-email", "title", "Email *") as string;
+  const emailPlaceholder = getSectionValue("form-email", "content", "your@email.com") as string;
+  const phoneFieldLabel = getSectionValue("form-phone", "title", "Phone Number *") as string;
+  const phonePlaceholder = getSectionValue("form-phone", "content", "+91 98765 43210") as string;
+  const serviceFieldLabel = getSectionValue("form-service", "title", "Service Interested In *") as string;
+  const serviceOptions = (getSectionValue("form-service", "content", "Select a service\nStarting a Business\nSupport Services\nCompliances\nFunding\nAudits") as string)
+    .split('\n')
+    .map((option) => option.trim())
+    .filter(Boolean);
+  const messageLabel = getSectionValue("form-message", "title", "Message *") as string;
+  const messagePlaceholder = getSectionValue("form-message", "content", "Tell us about your requirements...") as string;
   const mapTitle = getSectionValue("map", "title", "Open in Maps") as string;
   const mapQuery = getSectionValue("map", "buttonLink", "https://maps.google.com/?q=Hoodi%2C%20Bangalore%20560048") as string;
   const embeddedMap = getSectionValue("map", "imageUrl", "https://www.google.com/maps?q=Hoodi%2C%20Bangalore%20560048&output=embed") as string;
@@ -52,7 +66,7 @@ const Contact = () => {
       <section className="section-padding bg-background">
         <div className="container-custom">
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold text-primary">Contact</p>
+            <p className="text-sm font-semibold text-primary">{overline}</p>
             <h1 className="mt-3 text-4xl font-semibold text-foreground md:text-5xl">
               {title}
             </h1>
@@ -129,21 +143,21 @@ const Contact = () => {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <label className="text-xs font-semibold text-muted-foreground">
-                      Full Name *
+                      {nameLabel}
                     </label>
                     <input
                       type="text"
-                      placeholder="Your full name"
+                      placeholder={namePlaceholder}
                       className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-primary"
                     />
                   </div>
                   <div>
                     <label className="text-xs font-semibold text-muted-foreground">
-                      Email *
+                      {emailFieldLabel}
                     </label>
                     <input
                       type="email"
-                      placeholder="your@email.com"
+                      placeholder={emailPlaceholder}
                       className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-primary"
                     />
                   </div>
@@ -152,36 +166,33 @@ const Contact = () => {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <label className="text-xs font-semibold text-muted-foreground">
-                      Phone Number *
+                      {phoneFieldLabel}
                     </label>
                     <input
                       type="tel"
-                      placeholder="+91 98765 43210"
+                      placeholder={phonePlaceholder}
                       className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-primary"
                     />
                   </div>
                   <div>
                     <label className="text-xs font-semibold text-muted-foreground">
-                      Service Interested In *
+                      {serviceFieldLabel}
                     </label>
                     <select className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-primary">
-                      <option>Select a service</option>
-                      <option>Starting a Business</option>
-                      <option>Support Services</option>
-                      <option>Compliances</option>
-                      <option>Funding</option>
-                      <option>Audits</option>
+                      {serviceOptions.map((option) => (
+                        <option key={option}>{option}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
 
                 <div>
                   <label className="text-xs font-semibold text-muted-foreground">
-                    Message *
+                    {messageLabel}
                   </label>
                   <textarea
                     rows={5}
-                    placeholder="Tell us about your requirements..."
+                    placeholder={messagePlaceholder}
                     className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-primary"
                   />
                 </div>

@@ -98,19 +98,27 @@ const businessSupport = [
 
 const whyChooseUs = [
   {
-    title: "Experienced Chartered Accountants",
+    sectionId: "why-choose-us-item-1",
+    fallbackTitle: "Compliance-First Approach",
+    fallbackContent: "We ensure every filing is accurate, timely, and fully compliant with regulations.",
     icon: BadgeCheck,
   },
   {
-    title: "End-to-end business support",
+    sectionId: "why-choose-us-item-2",
+    fallbackTitle: "Dedicated Support",
+    fallbackContent: "A dedicated advisor for your business, always available to answer your queries.",
     icon: Users,
   },
   {
-    title: "Trusted & compliant solutions",
+    sectionId: "why-choose-us-item-3",
+    fallbackTitle: "Transparent Pricing",
+    fallbackContent: "No hidden costs. Clear pricing for every service, upfront.",
     icon: ClipboardList,
   },
   {
-    title: "Client-focused approach",
+    sectionId: "why-choose-us-item-4",
+    fallbackTitle: "Growth-Oriented",
+    fallbackContent: "We help you scale by handling compliance so you can focus on business.",
     icon: Briefcase,
   },
 ];
@@ -146,6 +154,8 @@ const Index = () => {
   );
   const heroButtonText = sectionValue(getSectionValue, "hero", "buttonText", "Get Started");
   const heroButtonLink = sectionValue(getSectionValue, "hero", "buttonLink", "/contact");
+  const heroSecondaryButtonText = sectionValue(getSectionValue, "hero-secondary-cta", "buttonText", "View Services");
+  const heroSecondaryButtonLink = sectionValue(getSectionValue, "hero-secondary-cta", "buttonLink", "/services");
 
   const servicesTitle = sectionValue(getSectionValue, "services-intro", "title", "Our Services");
   const servicesIntro = sectionValue(
@@ -154,6 +164,11 @@ const Index = () => {
     "content",
     "Explore tailored services across incorporation, compliance, and business support."
   );
+  const startingBusinessHeading = sectionValue(getSectionValue, "starting-business-heading", "title", "Starting a Business");
+  const taxComplianceHeading = sectionValue(getSectionValue, "tax-compliance-heading", "title", "Tax & Compliance");
+  const businessSupportHeading = sectionValue(getSectionValue, "business-support-heading", "title", "Business Support");
+  const servicesCtaText = sectionValue(getSectionValue, "home-services-cta", "buttonText", "Explore All Services");
+  const servicesCtaLink = sectionValue(getSectionValue, "home-services-cta", "buttonLink", "/services");
 
   const aboutTitle = sectionValue(getSectionValue, "about", "title", "About 89TCA");
   const aboutContent = sectionValue(
@@ -162,7 +177,9 @@ const Index = () => {
     "content",
     "Backed by 40+ years of combined experience, we provide expert advisory, audit, taxation, and compliance services."
   );
+  const aboutOverline = sectionValue(getSectionValue, "about-overline", "content", "About 89TCA");
 
+  const whyChooseOverline = sectionValue(getSectionValue, "why-choose-us-overline", "content", "Why Choose Us");
   const whyChooseTitle = sectionValue(getSectionValue, "why-choose-us", "title", "Why Choose Us");
 
   const ctaTitle = sectionValue(
@@ -236,10 +253,10 @@ const Index = () => {
                   {heroButtonText}
                 </Link>
                 <Link
-                  to="/contact"
+                  to={heroSecondaryButtonLink}
                   className="btn-outline h-12 min-w-[168px] inline-flex items-center justify-center text-center transition-transform hover:-translate-y-0.5"
                 >
-                  Contact Us
+                  {heroSecondaryButtonText}
                 </Link>
               </div>
             </div>
@@ -256,14 +273,14 @@ const Index = () => {
 
           <div className="mt-10 space-y-10">
             <div>
-              <h3 className="text-lg font-semibold text-foreground">Starting a Business</h3>
+              <h3 className="text-lg font-semibold text-foreground">{startingBusinessHeading}</h3>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {startingBusiness.map(renderServiceCard)}
               </div>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-foreground">Tax & Compliance</h3>
+              <h3 className="text-lg font-semibold text-foreground">{taxComplianceHeading}</h3>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {taxCompliance.map((item) => {
                   const service = getServiceBySlug(item.slug);
@@ -291,7 +308,7 @@ const Index = () => {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-foreground">Business Support</h3>
+              <h3 className="text-lg font-semibold text-foreground">{businessSupportHeading}</h3>
               <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
                 {sectionValue(
                   getSectionValue,
@@ -328,8 +345,8 @@ const Index = () => {
           </div>
 
           <div className="mt-10">
-            <Link to="/services" className="btn-outline inline-flex">
-              Explore All Services
+            <Link to={servicesCtaLink} className="btn-outline inline-flex">
+              {servicesCtaText}
             </Link>
           </div>
         </div>
@@ -339,7 +356,7 @@ const Index = () => {
         <div className="container-custom">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
-              <p className="text-sm font-semibold text-primary">About 89TCA</p>
+              <p className="text-sm font-semibold text-primary">{aboutOverline}</p>
               <h2 className="mt-3 text-3xl font-semibold text-foreground">{aboutTitle}</h2>
               <p className="mt-4 text-muted-foreground">{aboutContent}</p>
             </div>
@@ -355,18 +372,23 @@ const Index = () => {
       <section className="section-padding bg-secondary/30">
         <div className="container-custom">
           <div>
-            <p className="text-sm font-semibold text-primary">Why Choose Us</p>
+            <p className="text-sm font-semibold text-primary">{whyChooseOverline}</p>
             <h2 className="mt-3 text-3xl font-semibold text-foreground">{whyChooseTitle}</h2>
           </div>
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {whyChooseUs.map((item) => (
-              <div key={item.title} className="card-hover p-6 text-sm">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-                  <item.icon className="h-5 w-5 text-primary" />
+            {whyChooseUs.map((item) => {
+              const title = sectionValue(getSectionValue, item.sectionId, "title", item.fallbackTitle);
+              const content = sectionValue(getSectionValue, item.sectionId, "content", item.fallbackContent);
+              return (
+                <div key={item.sectionId} className="card-hover p-6 text-sm">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                    <item.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <p className="mt-4 font-semibold text-foreground">{title}</p>
+                  <p className="mt-2 text-xs text-muted-foreground">{content}</p>
                 </div>
-                <p className="mt-4 font-semibold text-foreground">{item.title}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

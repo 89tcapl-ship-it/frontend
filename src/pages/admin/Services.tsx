@@ -22,6 +22,7 @@ import { defaultServiceSeed } from '@/data/defaultServiceSeed';
 
 const emptyForm: ServiceFormData = {
     title: '',
+    slug: '',
     shortDescription: '',
     description: '',
     features: [],
@@ -37,6 +38,12 @@ const emptyForm: ServiceFormData = {
 
 const toLines = (value?: string[]) => (value || []).join('\n');
 const fromLines = (value: string) => value.split('\n').map((line) => line.trim()).filter(Boolean);
+const toSlug = (value: string) =>
+    value
+        .toLowerCase()
+        .replace(/&/g, 'and')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
 
 const Services = () => {
     const [services, setServices] = useState<Service[]>([]);
@@ -76,6 +83,7 @@ const Services = () => {
         setEditingService(service);
         setFormData({
             title: service.title,
+            slug: service.slug,
             shortDescription: service.shortDescription,
             description: service.description,
             features: service.features || [],
@@ -204,8 +212,28 @@ const Services = () => {
                                     id="title"
                                     required
                                     value={formData.title}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    onChange={(e) =>
+                                        setFormData((current) => ({
+                                            ...current,
+                                            title: e.target.value,
+                                            slug: current.slug ? current.slug : toSlug(e.target.value),
+                                        }))
+                                    }
                                 />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="slug">Slug *</Label>
+                                <Input
+                                    id="slug"
+                                    required
+                                    value={formData.slug || ''}
+                                    onChange={(e) => setFormData({ ...formData, slug: toSlug(e.target.value) })}
+                                    placeholder="private-limited-company"
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    This controls the service URL, like <code>/services/private-limited-company</code>.
+                                </p>
                             </div>
 
                             <div className="space-y-2">

@@ -18,6 +18,7 @@ import { Plus, Edit, Trash2, FileEdit } from 'lucide-react';
 import api from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/shared/ImageUpload';
+import { defaultPageContentSeed } from '@/data/defaultPageContentSeed';
 
 interface PageSection {
     sectionId: string;
@@ -51,9 +52,9 @@ const pages: PageOption[] = [
 ];
 
 const pageTemplates: Record<string, string[]> = {
-    home: ['hero', 'services-intro', 'business-support', 'about', 'why-choose-us', 'cta'],
-    about: ['intro', 'approach', 'founder-mahitha', 'founder-diwakar', 'founder-surendranath', 'founder-lokesh', 'founder-jyothi', 'approach-point-1', 'approach-point-2', 'approach-point-3'],
-    contact: ['header', 'contact-email', 'contact-phone', 'contact-address', 'form', 'map'],
+    home: ['hero', 'hero-badge', 'hero-secondary-cta', 'services-intro', 'starting-business-heading', 'tax-compliance-heading', 'business-support-heading', 'business-support', 'about', 'about-overline', 'why-choose-us-item-1', 'why-choose-us-item-2', 'why-choose-us-item-3', 'why-choose-us-item-4', 'why-choose-us-overline', 'why-choose-us', 'cta', 'home-services-cta'],
+    about: ['intro', 'founders-heading', 'founder-photo-label', 'approach-combine-label', 'approach', 'founder-mahitha', 'founder-diwakar', 'founder-surendranath', 'founder-lokesh', 'founder-jyothi', 'approach-point-1', 'approach-point-2', 'approach-point-3'],
+    contact: ['contact-overline', 'header', 'contact-email', 'contact-phone', 'contact-address', 'form', 'form-name', 'form-email', 'form-phone', 'form-service', 'form-message', 'map'],
 };
 
 const emptyForm: PageSection = {
@@ -150,6 +151,39 @@ const ContentManagement = () => {
         }
     };
 
+    const seedFrontendContent = async () => {
+        try {
+            for (const page of defaultPageContentSeed) {
+                let existing: PageContent | null = null;
+                try {
+                    const response: any = await api.get(`/content/${page.page}`);
+                    existing = response.data;
+                } catch {
+                    existing = null;
+                }
+
+                const existingIds = new Set(existing?.sections?.map((section) => section.sectionId) || []);
+                const missingSections = page.sections.filter((section) => !existingIds.has(section.sectionId));
+
+                for (const section of missingSections) {
+                    await api.post(`/content/${page.page}/sections`, section);
+                }
+            }
+
+            toast({
+                title: 'Success',
+                description: 'Imported frontend content for Home, About, and Contact.',
+            });
+            fetchPageContent(selectedPage);
+        } catch (error: any) {
+            toast({
+                title: 'Error',
+                description: error.message || 'Failed to import frontend content',
+                variant: 'destructive',
+            });
+        }
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
@@ -161,12 +195,17 @@ const ContentManagement = () => {
                 </div>
 
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button onClick={resetForm}>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Add Section
+                    <div className="flex items-center gap-3">
+                        <Button type="button" variant="outline" onClick={seedFrontendContent}>
+                            Import Frontend Content
                         </Button>
-                    </DialogTrigger>
+                        <DialogTrigger asChild>
+                            <Button onClick={resetForm}>
+                                <Plus className="mr-2 h-4 w-4" />
+                                Add Section
+                            </Button>
+                        </DialogTrigger>
+                    </div>
                     <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>{editingSection ? 'Edit Section' : 'Add New Section'}</DialogTitle>

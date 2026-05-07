@@ -1,7 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
-import { usePageContent } from "@/hooks/usePageContent";
-import { useServicesCatalog } from "@/hooks/useServicesCatalog";
+import { usePublicServicesCatalog } from "@/hooks/usePublicServicesCatalog";
 import { CheckCircle2, ClipboardCheck, FileText, ShieldCheck } from "lucide-react";
 
 const auditServices = [
@@ -14,11 +13,7 @@ const auditServices = [
 ];
 
 const Audits = () => {
-  const { getSectionValue } = usePageContent("audits");
-  const { getServiceBySlug } = useServicesCatalog();
-
-  const title = getSectionValue("header", "title", "Audits") as string;
-  const subtitle = getSectionValue("header", "content", "Audit support to keep your business compliant") as string;
+  const { getServiceBySlug } = usePublicServicesCatalog();
 
   return (
     <Layout>
@@ -31,9 +26,9 @@ const Audits = () => {
       <section className="section-padding">
         <div className="container-custom">
           <div className="max-w-2xl">
-            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">{title}</h1>
+            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">Audits</h1>
             <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
-              {subtitle}
+              Audit support to keep your business compliant
             </p>
           </div>
 

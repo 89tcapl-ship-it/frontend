@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
-import { usePageContent } from "@/hooks/usePageContent";
-import { useServicesCatalog } from "@/hooks/useServicesCatalog";
+import { usePublicServicesCatalog } from "@/hooks/usePublicServicesCatalog";
 import {
   Building2,
   Briefcase,
@@ -106,11 +105,7 @@ const sections = [
 ];
 
 const Services = () => {
-  const { getSectionValue } = usePageContent("services");
-  const { getServiceBySlug } = useServicesCatalog();
-
-  const pageTitle = getSectionValue("header", "title", "Our Services") as string;
-  const pageIntro = getSectionValue("header", "content", "Comprehensive solutions for your business needs") as string;
+  const { getServiceBySlug } = usePublicServicesCatalog();
 
   const renderItems = (sectionTitle: string, items: typeof sections[number]["items"]) =>
     items.map((item) => {
@@ -146,17 +141,17 @@ const Services = () => {
       <section className="section-padding">
         <div className="container-custom">
           <div className="max-w-2xl">
-            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">{pageTitle}</h1>
+            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">Our Services</h1>
             <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
-              {pageIntro}
+              Comprehensive solutions for your business needs
             </p>
           </div>
 
           <div className="mt-12 space-y-12">
             {sections.map((section) => {
               const sectionId = sectionIds[section.title] ?? toSlug(section.title);
-              const sectionContent = getSectionValue(sectionId, "content", section.description || "") as string;
-              const sectionHeading = getSectionValue(sectionId, "title", section.title) as string;
+              const sectionContent = section.description || "";
+              const sectionHeading = section.title;
 
               return (
                 <div key={section.title} id={sectionId} className="scroll-mt-24">

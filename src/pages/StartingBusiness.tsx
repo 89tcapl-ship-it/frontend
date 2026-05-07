@@ -1,8 +1,7 @@
+import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
-import { Link } from "react-router-dom";
-import { usePageContent } from "@/hooks/usePageContent";
-import { useServicesCatalog } from "@/hooks/useServicesCatalog";
+import { usePublicServicesCatalog } from "@/hooks/usePublicServicesCatalog";
 import {
   Building2,
   Briefcase,
@@ -43,17 +42,7 @@ const alliedRegistrations = [
 ];
 
 const StartingBusiness = () => {
-  const { getSectionValue } = usePageContent("starting-business");
-  const { getServiceBySlug } = useServicesCatalog();
-
-  const title = getSectionValue("header", "title", "Starting a Business") as string;
-  const intro = getSectionValue(
-    "header",
-    "content",
-    "Starting a business is one of the most significant decisions in an entrepreneur's life. India offers a robust legal framework with multiple entity types to suit every scale and nature of business. Choosing the right structure from day one ensures legal protection, tax efficiency, investor readiness, and long-term sustainability. At 89T Corporate Advisors, we guide you through every step of business formation and allied registrations."
-  ) as string;
-  const entityTitle = getSectionValue("entity-formation", "title", "Entity Formation") as string;
-  const alliedTitle = getSectionValue("allied-registrations", "title", "Allied Registrations") as string;
+  const { getServiceBySlug } = usePublicServicesCatalog();
 
   const renderServiceCard = (item: typeof entityFormation[number], compact = false) => {
     const service = getServiceBySlug(item.slug);
@@ -72,12 +61,8 @@ const StartingBusiness = () => {
           </span>
           <p className="text-sm font-semibold text-foreground">{displayTitle}</p>
         </div>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {displayDescription}
-        </p>
-        <span className="mt-3 inline-flex text-sm font-semibold text-primary">
-          Learn More &rarr;
-        </span>
+        <p className="mt-2 text-sm text-muted-foreground">{displayDescription}</p>
+        <span className="mt-3 inline-flex text-sm font-semibold text-primary">Learn More &rarr;</span>
       </Link>
     ) : (
       <Link
@@ -100,9 +85,7 @@ const StartingBusiness = () => {
         >
           {displayDescription}
         </p>
-        <span className="mt-3 inline-flex text-sm font-semibold text-primary">
-          Learn More &rarr;
-        </span>
+        <span className="mt-3 inline-flex text-sm font-semibold text-primary">Learn More &rarr;</span>
       </Link>
     );
   };
@@ -118,22 +101,22 @@ const StartingBusiness = () => {
       <section className="section-padding">
         <div className="container-custom">
           <div className="max-w-2xl">
-            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">{title}</h1>
+            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">Starting a Business</h1>
             <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
-              {intro}
+              Starting a business is one of the most significant decisions in an entrepreneur's life. India offers a robust legal framework with multiple entity types to suit every scale and nature of business. Choosing the right structure from day one ensures legal protection, tax efficiency, investor readiness, and long-term sustainability. At 89T Corporate Advisors, we guide you through every step of business formation and allied registrations.
             </p>
           </div>
 
           <div className="mt-12 space-y-12">
             <div>
-              <h2 className="text-2xl font-semibold text-foreground">{entityTitle}</h2>
+              <h2 className="text-2xl font-semibold text-foreground">Entity Formation</h2>
               <div className="mt-6 grid gap-5 sm:grid-cols-2">
                 {entityFormation.map((item) => renderServiceCard(item))}
               </div>
             </div>
 
             <div>
-              <h2 className="text-2xl font-semibold text-foreground">{alliedTitle}</h2>
+              <h2 className="text-2xl font-semibold text-foreground">Allied Registrations</h2>
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 {alliedRegistrations.map((item) => renderServiceCard(item, true))}
               </div>

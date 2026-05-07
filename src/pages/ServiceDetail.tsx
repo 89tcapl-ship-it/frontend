@@ -4,12 +4,11 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
 import serviceData, { type ServiceDetailData } from "@/data/serviceDetailData";
-import { useServicesCatalog } from "@/hooks/useServicesCatalog";
+import { defaultServiceSeed } from "@/data/defaultServiceSeed";
 
 const defaultService: ServiceDetailData = {
   title: "Service Detail",
-  description:
-    "Professional advisory and compliance support tailored to your business requirements.",
+  description: "Professional advisory and compliance support tailored to your business requirements.",
   offers: [
     "Requirement assessment and scoping",
     "Dedicated engagement support",
@@ -39,12 +38,7 @@ const consultationSidebar = (
         target="_blank"
         rel="noreferrer"
         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25d366] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-[#20c05c]"
-        aria-label="Chat with us on WhatsApp"
-        title="Chat with us on WhatsApp"
       >
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 shrink-0 fill-current">
-          <path d="M20.5 11.9a8.5 8.5 0 0 1-12.7 7.4l-4.1 1.1 1.1-4A8.5 8.5 0 1 1 20.5 11.9Zm-8.5-6.7a6.7 6.7 0 0 0-5.7 10.3l-.7 2.6 2.7-.7a6.7 6.7 0 1 0 3.7-12.2Zm3.9 8.6c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1l-.8 1c-.1.1-.3.2-.5.1a5.5 5.5 0 0 1-2.4-1.8 5.7 5.7 0 0 1-1.3-2.5c0-.2 0-.4.1-.5l.6-.7c.1-.1.1-.3 0-.5l-.6-1.5c-.1-.3-.3-.3-.4-.3h-.4c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.1 0 1.2.9 2.4 1 2.6.1.2 1.7 2.7 4.1 3.8.6.3 1 .4 1.4.5.6.2 1.1.2 1.5.2.5 0 1.4-.6 1.6-1.2.2-.6.2-1.1.1-1.2-.1-.1-.2-.1-.4-.2Z" />
-        </svg>
         WhatsApp
       </a>
     </div>
@@ -71,16 +65,15 @@ const renderBullets = (items: string[], emptyMessage: string) => {
 const ServiceDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [expandedDescription, setExpandedDescription] = useState(false);
-  const { getServiceBySlug } = useServicesCatalog();
 
   const service = useMemo(() => {
     if (!slug) return defaultService;
 
-    const apiService = getServiceBySlug(slug);
+    const seededService = defaultServiceSeed.find((entry) => entry.slug === slug);
     const localService = serviceData[slug];
 
     const title =
-      apiService?.title ||
+      seededService?.title ||
       localService?.title ||
       slug
         .split("-")
@@ -88,12 +81,12 @@ const ServiceDetail = () => {
         .join(" ");
 
     const description =
-      apiService?.description ||
-      apiService?.shortDescription ||
+      seededService?.description ||
+      seededService?.shortDescription ||
       localService?.description ||
       defaultService.description;
 
-    const support = apiService?.features?.length ? apiService.features : localService?.support;
+    const support = seededService?.features?.length ? seededService.features : localService?.support;
 
     return {
       ...defaultService,
@@ -101,18 +94,18 @@ const ServiceDetail = () => {
       title,
       description,
       support,
-      offers: apiService?.features?.length ? apiService.features : localService?.offers,
+      offers: seededService?.features?.length ? seededService.features : localService?.offers,
     } satisfies ServiceDetailData;
-  }, [getServiceBySlug, slug]);
+  }, [slug]);
+
+  useEffect(() => {
+    setExpandedDescription(false);
+  }, [slug]);
 
   const hasKeyBenefits = Boolean(service.keyBenefits && service.keyBenefits.length > 0);
   const hasLimitations = Boolean(service.limitations && service.limitations.length > 0);
   const hasNonComplianceRisks = Boolean(service.nonComplianceRisks && service.nonComplianceRisks.length > 0);
   const useCompactLayout = !hasKeyBenefits && !hasLimitations && !hasNonComplianceRisks;
-
-  useEffect(() => {
-    setExpandedDescription(false);
-  }, [slug]);
 
   return (
     <Layout showConsultationWidget={false} showWhatsAppWidget={false}>
@@ -132,9 +125,7 @@ const ServiceDetail = () => {
                   <span className="h-2 w-2 rounded-full bg-primary" />
                   Service Detail
                 </div>
-                <h1 className="mt-5 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-                  {service.title}
-                </h1>
+                <h1 className="mt-5 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">{service.title}</h1>
                 <p
                   className="mt-5 max-w-3xl text-justify text-sm leading-7 text-slate-600 md:text-base"
                   style={
@@ -211,21 +202,10 @@ const ServiceDetail = () => {
                       <div className={sectionCardStyles}>
                         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-rose-500 to-red-500" />
                         <div className="flex items-center justify-between">
-                          <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-                            Non-Compliance Risks
-                          </h2>
-                          <span className="rounded-full bg-rose-500/10 px-3 py-1 text-xs font-semibold text-rose-700">
-                            Risks
-                          </span>
+                          <h2 className="text-2xl font-semibold tracking-tight text-foreground">Non-Compliance Risks</h2>
+                          <span className="rounded-full bg-rose-500/10 px-3 py-1 text-xs font-semibold text-rose-700">Risks</span>
                         </div>
-                        <ul className="mt-4 space-y-3">
-                          {service.nonComplianceRisks.map((item) => (
-                            <li key={item} className="flex gap-3 text-sm leading-6 text-slate-600">
-                              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-rose-500" />
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        {renderBullets(service.nonComplianceRisks, "No non-compliance risks provided in the current service copy.")}
                       </div>
                     ) : null}
                   </>
@@ -245,9 +225,7 @@ const ServiceDetail = () => {
             </div>
 
             <div className="hidden lg:block lg:relative">
-              <div className="sticky top-24 z-20 w-[360px] xl:w-[380px]">
-                {consultationSidebar}
-              </div>
+              <div className="sticky top-24 z-20 w-[360px] xl:w-[380px]">{consultationSidebar}</div>
             </div>
           </div>
         </div>

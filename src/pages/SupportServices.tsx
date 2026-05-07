@@ -1,7 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
-import { usePageContent } from "@/hooks/usePageContent";
-import { useServicesCatalog } from "@/hooks/useServicesCatalog";
+import { usePublicServicesCatalog } from "@/hooks/usePublicServicesCatalog";
 import { Briefcase, ClipboardList, FileText, Users } from "lucide-react";
 
 const leftColumn = [
@@ -17,11 +16,7 @@ const rightColumn = [
 ];
 
 const SupportServices = () => {
-  const { getSectionValue } = usePageContent("support-services");
-  const { getServiceBySlug } = useServicesCatalog();
-
-  const title = getSectionValue("header", "title", "Support Services") as string;
-  const subtitle = getSectionValue("header", "content", "Efficient solutions to manage your business operations") as string;
+  const { getServiceBySlug } = usePublicServicesCatalog();
 
   const renderCard = (item: typeof leftColumn[number]) => {
     const service = getServiceBySlug(item.slug);
@@ -59,9 +54,9 @@ const SupportServices = () => {
       <section className="section-padding">
         <div className="container-custom">
           <div className="max-w-2xl">
-            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">{title}</h1>
+            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">Support Services</h1>
             <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
-              {subtitle}
+              Efficient solutions to manage your business operations
             </p>
           </div>
 

@@ -44,56 +44,16 @@ interface PageOption {
     hint: string;
 }
 
-interface PageGroup {
-    title: string;
-    description: string;
-    items: PageOption[];
-}
-
-const pageGroups: PageGroup[] = [
-    {
-        title: 'Global',
-        description: 'Shared content used across the site shell.',
-        items: [
-            { value: 'header', label: 'Header / Navigation', hint: 'Logo, menu labels, CTA text' },
-            { value: 'footer', label: 'Footer', hint: 'Tagline, disclaimer, contact text' },
-        ],
-    },
-    {
-        title: 'Homepage',
-        description: 'All homepage blocks are editable here.',
-        items: [
-            { value: 'home', label: 'Home Page', hint: 'Hero, service intro, about, CTA' },
-            { value: 'about', label: 'About Page', hint: 'Intro, founders, approach' },
-            { value: 'contact', label: 'Contact Page', hint: 'Contact info, map, form copy' },
-        ],
-    },
-    {
-        title: 'Services',
-        description: 'The five main service areas shown in the navigation.',
-        items: [
-            { value: 'services', label: 'Services Overview', hint: 'Main services landing page' },
-            { value: 'starting-business', label: 'Starting a Business', hint: 'Entity formation + allied registrations' },
-            { value: 'support-services', label: 'Support Services', hint: 'Book keeping, payroll, CFO' },
-            { value: 'compliances', label: 'Compliances', hint: 'GST, PF, ESI, PT, ITR, MCA' },
-            { value: 'funding', label: 'Funding', hint: 'Funding, diligence, valuation, FDI' },
-            { value: 'audits', label: 'Audits', hint: 'Statutory, tax, internal, TP, investigation' },
-        ],
-    },
+const pages: PageOption[] = [
+    { value: 'home', label: 'Home Page', hint: 'Hero, service intro, about, CTA' },
+    { value: 'about', label: 'About Page', hint: 'Intro, founders, approach' },
+    { value: 'contact', label: 'Contact Page', hint: 'Contact info, map, form copy' },
 ];
 
 const pageTemplates: Record<string, string[]> = {
-    header: ['logo', 'about-link', 'starting-business-link', 'support-services-link', 'compliances-link', 'funding-link', 'audits-link', 'cta'],
-    footer: ['tagline', 'disclaimer'],
     home: ['hero', 'services-intro', 'business-support', 'about', 'why-choose-us', 'cta'],
     about: ['intro', 'approach', 'founder-mahitha', 'founder-diwakar', 'founder-surendranath', 'founder-lokesh', 'founder-jyothi', 'approach-point-1', 'approach-point-2', 'approach-point-3'],
     contact: ['header', 'contact-email', 'contact-phone', 'contact-address', 'form', 'map'],
-    services: ['header', 'starting-business', 'support-services', 'compliances', 'funding', 'audits'],
-    'starting-business': ['header', 'entity-formation', 'allied-registrations'],
-    'support-services': ['header'],
-    compliances: ['header', 'gst-compliance', 'epf-compliance', 'esi-compliance', 'pt-compliance', 'itr-tds-compliance', 'mca-compliance', 'tax-compliances', 'regulatory-compliances'],
-    funding: ['header'],
-    audits: ['header'],
 };
 
 const emptyForm: PageSection = {
@@ -114,18 +74,10 @@ const ContentManagement = () => {
     const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editingSection, setEditingSection] = useState<PageSection | null>(null);
-    const { toast } = useToast();
     const [formData, setFormData] = useState<PageSection>(emptyForm);
+    const { toast } = useToast();
 
-    const selectedPageMeta = useMemo(() => {
-        for (const group of pageGroups) {
-            const item = group.items.find((entry) => entry.value === selectedPage);
-            if (item) {
-                return { group: group.title, ...item };
-            }
-        }
-        return null;
-    }, [selectedPage]);
+    const selectedPageMeta = useMemo(() => pages.find((page) => page.value === selectedPage) || null, [selectedPage]);
 
     const fetchPageContent = async (page: string) => {
         try {
@@ -133,6 +85,7 @@ const ContentManagement = () => {
             const response: any = await api.get(`/content/${page}`);
             setPageContent(response.data);
         } catch (error: any) {
+            setPageContent(null);
             toast({
                 title: 'Error',
                 description: error.message || 'Failed to fetch page content',
@@ -199,22 +152,22 @@ const ContentManagement = () => {
 
     return (
         <div className="space-y-8">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold">Content Management</h1>
                     <p className="text-muted-foreground">
-                        Edit the homepage, the five service pages, and the shared header/footer content.
+                        Edit only the Home, About, and Contact page content here.
                     </p>
                 </div>
 
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
                         <Button onClick={resetForm}>
-                            <Plus className="h-4 w-4 mr-2" />
+                            <Plus className="mr-2 h-4 w-4" />
                             Add Section
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>{editingSection ? 'Edit Section' : 'Add New Section'}</DialogTitle>
                             <DialogDescription>
@@ -229,15 +182,15 @@ const ContentManagement = () => {
                                     required
                                     value={formData.sectionId}
                                     onChange={(e) => setFormData({ ...formData, sectionId: e.target.value })}
-                                    placeholder="hero, cta, header, etc."
+                                    placeholder="hero, cta, intro, etc."
                                     disabled={!!editingSection}
                                 />
                                 <p className="text-xs text-muted-foreground">
-                                    Use one of the suggested section IDs for the selected page, or add a new one if needed.
+                                    Use the suggested section IDs for the selected page so the frontend can pick them up.
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="title">Title</Label>
                                     <Input
@@ -267,7 +220,7 @@ const ContentManagement = () => {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="buttonText">Button Text</Label>
                                     <Input
@@ -293,7 +246,7 @@ const ContentManagement = () => {
                                 onChange={(url) => setFormData({ ...formData, imageUrl: url })}
                             />
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="order">Display Order</Label>
                                     <Input
@@ -314,7 +267,7 @@ const ContentManagement = () => {
                                 </div>
                             </div>
 
-                            <div className="flex gap-2 justify-end">
+                            <div className="flex justify-end gap-2">
                                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                                     Cancel
                                 </Button>
@@ -326,38 +279,34 @@ const ContentManagement = () => {
             </div>
 
             <div className="grid gap-4 lg:grid-cols-3">
-                {pageGroups.map((group) => (
-                    <Card key={group.title} className="border-border/70">
-                        <CardHeader>
-                            <CardTitle className="text-lg">{group.title}</CardTitle>
-                            <p className="text-sm text-muted-foreground">{group.description}</p>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                            {group.items.map((page) => {
-                                const active = page.value === selectedPage;
-                                return (
-                                    <button
-                                        key={page.value}
-                                        type="button"
-                                        onClick={() => setSelectedPage(page.value)}
-                                        className={`w-full rounded-xl border px-4 py-3 text-left transition-colors ${active
-                                            ? 'border-primary bg-primary/5'
-                                            : 'border-border hover:bg-muted'
-                                            }`}
-                                    >
-                                        <div className="flex items-center justify-between gap-4">
-                                            <div>
-                                                <p className="font-medium text-foreground">{page.label}</p>
-                                                <p className="text-xs text-muted-foreground">{page.hint}</p>
-                                            </div>
-                                            {active && <Badge>Open</Badge>}
+                {pages.map((page) => {
+                    const active = page.value === selectedPage;
+                    return (
+                        <Card key={page.value} className="border-border/70">
+                            <CardHeader>
+                                <CardTitle className="text-lg">{page.label}</CardTitle>
+                                <p className="text-sm text-muted-foreground">{page.hint}</p>
+                            </CardHeader>
+                            <CardContent>
+                                <button
+                                    type="button"
+                                    onClick={() => setSelectedPage(page.value)}
+                                    className={`w-full rounded-xl border px-4 py-3 text-left transition-colors ${
+                                        active ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted'
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between gap-4">
+                                        <div>
+                                            <p className="font-medium text-foreground">{page.label}</p>
+                                            <p className="text-xs text-muted-foreground">{page.hint}</p>
                                         </div>
-                                    </button>
-                                );
-                            })}
-                        </CardContent>
-                    </Card>
-                ))}
+                                        {active && <Badge>Open</Badge>}
+                                    </div>
+                                </button>
+                            </CardContent>
+                        </Card>
+                    );
+                })}
             </div>
 
             <Card className="border-border/70">
@@ -365,11 +314,9 @@ const ContentManagement = () => {
                     <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
                             <CardTitle className="text-xl">{selectedPageMeta?.label || selectedPage}</CardTitle>
-                            <p className="text-sm text-muted-foreground">
-                                {selectedPageMeta?.hint || 'Selected content bucket'}
-                            </p>
+                            <p className="text-sm text-muted-foreground">{selectedPageMeta?.hint || 'Selected content bucket'}</p>
                         </div>
-                        <Badge variant="secondary">{selectedPageMeta?.group || 'Content'}</Badge>
+                        <Badge variant="secondary">Content</Badge>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -383,7 +330,7 @@ const ContentManagement = () => {
                             ))}
                         </div>
                         <p className="mt-3 text-xs text-muted-foreground">
-                            This list reflects the homepage blocks and the five service pages shown in the current frontend.
+                            Only the Home, About, and Contact page sections are managed here.
                         </p>
                     </div>
                 </CardContent>
@@ -398,7 +345,7 @@ const ContentManagement = () => {
             ) : !pageContent || pageContent.sections.length === 0 ? (
                 <Card>
                     <CardContent className="py-12 text-center">
-                        <FileEdit className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                        <FileEdit className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
                         <p className="text-muted-foreground">No content sections yet. Add your first section!</p>
                     </CardContent>
                 </Card>
@@ -410,26 +357,18 @@ const ContentManagement = () => {
                             <Card key={section.sectionId}>
                                 <CardHeader>
                                     <div className="flex items-start justify-between gap-4">
-                                        <div className="space-y-1 flex-1">
+                                        <div className="flex-1 space-y-1">
                                             <div className="flex items-center gap-2">
                                                 <CardTitle className="text-lg">{section.title || section.sectionId}</CardTitle>
-                                                {!section.isActive && (
-                                                    <Badge variant="secondary">Inactive</Badge>
-                                                )}
+                                                {!section.isActive && <Badge variant="secondary">Inactive</Badge>}
                                             </div>
-                                            {section.subtitle && (
-                                                <p className="text-sm text-muted-foreground">{section.subtitle}</p>
-                                            )}
+                                            {section.subtitle && <p className="text-sm text-muted-foreground">{section.subtitle}</p>}
                                         </div>
                                         <div className="flex gap-2">
                                             <Button variant="ghost" size="icon" onClick={() => handleEdit(section)}>
                                                 <Edit className="h-4 w-4" />
                                             </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => handleDelete(section.sectionId)}
-                                            >
+                                            <Button variant="ghost" size="icon" onClick={() => handleDelete(section.sectionId)}>
                                                 <Trash2 className="h-4 w-4" />
                                             </Button>
                                         </div>
@@ -437,9 +376,7 @@ const ContentManagement = () => {
                                 </CardHeader>
                                 <CardContent>
                                     {section.content && (
-                                        <p className="text-sm text-muted-foreground mb-4 whitespace-pre-line">
-                                            {section.content}
-                                        </p>
+                                        <p className="mb-4 whitespace-pre-line text-sm text-muted-foreground">{section.content}</p>
                                     )}
                                     <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
                                         <span>ID: {section.sectionId}</span>

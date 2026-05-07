@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { usePageContent } from "@/hooks/usePageContent";
 
 interface Settings {
   siteName: string;
@@ -12,7 +11,6 @@ interface Settings {
 
 export function Footer() {
   const [settings, setSettings] = useState<Settings | null>(null);
-  const { getSectionValue } = usePageContent("footer");
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -28,9 +26,6 @@ export function Footer() {
     fetchSettings();
   }, []);
 
-  const footerTagline = (getSectionValue("tagline", "content", "A compliant business is a confident business") as string) || "";
-  const disclaimer = (getSectionValue("disclaimer", "content", "This website is for informational purposes only and does not constitute legal or financial advice.") as string) || "";
-
   return (
     <footer className="bg-foreground text-background">
       <div className="container-custom section-padding">
@@ -45,7 +40,7 @@ export function Footer() {
               {settings?.siteName || "89T Corporate Advisors Private Limited"}
             </p>
             <p className="mb-4 text-sm italic font-semibold text-slate-400 md:text-[15px]">
-              {footerTagline || "A Compliant Business is a Confident Business"}
+              A Compliant Business is a Confident Business
             </p>
             <p className="mb-5 text-sm leading-7 text-slate-300">
               {settings?.siteDescription ||
@@ -81,12 +76,9 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-white/10 pt-8 text-center text-sm text-slate-300">
-          <p>
-            © 2026 {settings?.siteName || "89T Corporate Advisors Private Limited"}.
-            All rights reserved.
-          </p>
+          <p>© 2026 {settings?.siteName || "89T Corporate Advisors Private Limited"}. All rights reserved.</p>
           <p className="mt-2">
-            <span className="text-background/40">Disclaimer:</span> {disclaimer}
+            <span className="text-background/40">Disclaimer:</span> This website is for informational purposes only and does not constitute legal or financial advice.
           </p>
         </div>
       </div>

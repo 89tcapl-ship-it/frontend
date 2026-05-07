@@ -1,7 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
-import { usePageContent } from "@/hooks/usePageContent";
-import { useServicesCatalog } from "@/hooks/useServicesCatalog";
+import { usePublicServicesCatalog } from "@/hooks/usePublicServicesCatalog";
 import { Banknote, ClipboardList, PiggyBank, ShieldCheck } from "lucide-react";
 
 const fundingServices = [
@@ -14,11 +13,7 @@ const fundingServices = [
 ];
 
 const Funding = () => {
-  const { getSectionValue } = usePageContent("funding");
-  const { getServiceBySlug } = useServicesCatalog();
-
-  const title = getSectionValue("header", "title", "Funding") as string;
-  const subtitle = getSectionValue("header", "content", "Funding support to help you grow your business") as string;
+  const { getServiceBySlug } = usePublicServicesCatalog();
 
   return (
     <Layout>
@@ -31,9 +26,9 @@ const Funding = () => {
       <section className="section-padding">
         <div className="container-custom">
           <div className="max-w-2xl">
-            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">{title}</h1>
+            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">Funding</h1>
             <p className="mt-4 text-base text-muted-foreground text-justify md:text-lg">
-              {subtitle}
+              Funding support to help you grow your business
             </p>
           </div>
 

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
 import { usePageContent } from "@/hooks/usePageContent";
-import { useServicesCatalog } from "@/hooks/useServicesCatalog";
+import { usePublicServicesCatalog } from "@/hooks/usePublicServicesCatalog";
 import {
   Building2,
   FileCheck,
@@ -124,7 +124,7 @@ const sectionValue = (
 
 const Index = () => {
   const { getSectionValue } = usePageContent("home");
-  const { getServiceBySlug } = useServicesCatalog();
+  const { getServiceBySlug } = usePublicServicesCatalog();
 
   const heroTitle = sectionValue(
     getSectionValue,

@@ -24,7 +24,6 @@ const AdminLayout = () => {
         { name: 'Inbox', href: '/admin/inbox', icon: Inbox },
         { name: 'Content', href: '/admin/content', icon: FileText },
         { name: 'Services', href: '/admin/services', icon: Briefcase },
-        { name: 'Blog', href: '/admin/blog', icon: FileText },
         { name: 'Settings', href: '/admin/settings', icon: Settings },
         ...(isSuperAdmin ? [{ name: 'Users', href: '/admin/users', icon: Users }] : []),
     ];

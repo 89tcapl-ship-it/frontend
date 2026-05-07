@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Inbox, Briefcase, FileText, TrendingUp } from 'lucide-react';
+import { Inbox, Briefcase, TrendingUp } from 'lucide-react';
 import api from '@/lib/api';
 import { InboxStats } from '@/lib/types';
 
@@ -45,13 +45,6 @@ const Dashboard = () => {
             color: 'text-orange-600',
             bgColor: 'bg-orange-100',
         },
-        {
-            title: 'Blog Posts',
-            value: '-',
-            icon: FileText,
-            color: 'text-purple-600',
-            bgColor: 'bg-purple-100',
-        },
     ];
 
     return (
@@ -62,7 +55,7 @@ const Dashboard = () => {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {statCards.map((stat) => {
                     const Icon = stat.icon;
                     return (
@@ -91,7 +84,7 @@ const Dashboard = () => {
                     <CardTitle>Quick Actions</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <a
                             href="/admin/inbox"
                             className="p-4 border border-border rounded-lg hover:bg-muted transition-colors"
@@ -110,16 +103,6 @@ const Dashboard = () => {
                             <h3 className="font-semibold">Manage Services</h3>
                             <p className="text-sm text-muted-foreground">
                                 Add or edit services
-                            </p>
-                        </a>
-                        <a
-                            href="/admin/blog"
-                            className="p-4 border border-border rounded-lg hover:bg-muted transition-colors"
-                        >
-                            <FileText className="h-6 w-6 mb-2 text-primary" />
-                            <h3 className="font-semibold">Create Blog Post</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Write a new article
                             </p>
                         </a>
                     </div>

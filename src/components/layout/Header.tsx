@@ -1,10 +1,7 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
-
-const navigation = [
-  { label: "About", target: "/about" },
-];
+import { usePageContent } from "@/hooks/usePageContent";
 
 const toSlug = (label: string) =>
   label
@@ -12,15 +9,6 @@ const toSlug = (label: string) =>
     .replace(/&/g, "and")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
-
-const getServiceSlug = (label: string) => {
-  const overrides: Record<string, string> = {
-    "Shops & Establishments (Labour)": "shops-establishments",
-    "Trade Mark": "dpiit-startup-india",
-  };
-
-  return overrides[label] ?? toSlug(label);
-};
 
 const startingBusinessMenu = [
   {
@@ -62,24 +50,8 @@ const supportServicesMenu = [
   "HR Services",
 ];
 
-const compliancesMenu = [
-  "GST",
-  "EPF",
-  "ESI",
-  "PT",
-  "ITR & TDS",
-  "MCA",
-];
-
-const fundingMenu = [
-  "Startup Funding",
-  "Due Diligence",
-  "Valuation",
-  "FDI Compliance",
-  "Bank Finance",
-  "Project Reports",
-];
-
+const compliancesMenu = ["GST", "EPF", "ESI", "PT", "ITR & TDS", "MCA"];
+const fundingMenu = ["Startup Funding", "Due Diligence", "Valuation", "FDI Compliance", "Bank Finance", "Project Reports"];
 const auditsMenu = [
   "Statutory Audits",
   "Income Tax Audit",
@@ -94,6 +66,7 @@ export function Header() {
   const [mobileOpenMenu, setMobileOpenMenu] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const desktopNavRef = useRef<HTMLDivElement>(null);
+  const { getSectionValue } = usePageContent("header");
 
   useEffect(() => {
     const handlePointerDown = (event: MouseEvent) => {
@@ -106,355 +79,222 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handlePointerDown);
   }, []);
 
-  const mobileMenuSections = [
-    {
-      key: "starting-business",
-      label: "Starting a Business",
-      items: startingBusinessMenu.flatMap((section) => section.items),
-    },
-    {
-      key: "support-services",
-      label: "Support Services",
-      items: supportServicesMenu,
-    },
-    {
-      key: "compliances",
-      label: "Compliances",
-      items: compliancesMenu,
-    },
-    {
-      key: "funding",
-      label: "Funding",
-      items: fundingMenu,
-    },
-    {
-      key: "audits",
-      label: "Audits",
-      items: auditsMenu,
-    },
+  const navLabel = (sectionId: string, fallback: string) =>
+    (getSectionValue(sectionId, "title", fallback) as string) || fallback;
+
+  const mobileSections = useMemo(
+    () => [
+      { key: "starting-business", label: navLabel("starting-business-link", "Starting a Business"), items: startingBusinessMenu.flatMap((s) => s.items) },
+      { key: "support-services", label: navLabel("support-services-link", "Support Services"), items: supportServicesMenu },
+      { key: "compliances", label: navLabel("compliances-link", "Compliances"), items: compliancesMenu },
+      { key: "funding", label: navLabel("funding-link", "Funding"), items: fundingMenu },
+      { key: "audits", label: navLabel("audits-link", "Audits"), items: auditsMenu },
+    ],
+    [getSectionValue]
+  );
+
+  const desktopNavItems = [
+    { label: navLabel("about-link", "About"), target: "/about" },
   ];
 
-  const toggleMobileMenu = (menuKey: string) => {
-    setMobileOpenMenu((current) => (current === menuKey ? null : menuKey));
-  };
+  const sectionMenuTitle = (heading: string) => navLabel(`${toSlug(heading)}-heading`, heading);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <nav className="container-custom" aria-label="Global">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <img
-              src="/logo.png"
-              alt="89TCA"
-              className="h-9 w-auto"
-            />
+            <img src="/logo.png" alt={navLabel("logo", "89TCA")} className="h-9 w-auto" />
           </Link>
 
-          <div ref={desktopNavRef} className="hidden lg:flex items-center gap-6">
+          <div ref={desktopNavRef} className="hidden items-center gap-6 lg:flex">
             <div className="relative">
               <button
                 type="button"
                 className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                onClick={() =>
-                  setOpenMenu((current) => (current === "starting-business" ? null : "starting-business"))
-                }
+                onClick={() => setOpenMenu((current) => (current === "starting-business" ? null : "starting-business"))}
                 aria-expanded={openMenu === "starting-business"}
-                aria-controls="starting-business-menu"
               >
-                Starting a Business
-                <ChevronDown
-                  className={`h-4 w-4 text-muted-foreground/70 transition-transform ${
-                    openMenu === "starting-business" ? "rotate-180" : ""
-                  }`}
-                />
+                {navLabel("starting-business-link", "Starting a Business")}
+                <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === "starting-business" ? "rotate-180" : ""}`} />
               </button>
-              <div
-                id="starting-business-menu"
-                className={`absolute left-0 top-full z-40 pt-4 ${
-                  openMenu === "starting-business" ? "block" : "hidden"
-                }`}
-              >
-                <div className="pointer-events-auto w-[min(92vw,56rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
-                  <div className="grid gap-8 sm:grid-cols-2">
-                    {startingBusinessMenu.map((section) => (
-                      <div key={section.heading} className="space-y-3">
-                        <p className="text-sm font-semibold text-foreground">
-                          {section.heading}
-                        </p>
-                        <ul className="space-y-2.5 text-sm text-muted-foreground">
-                          {section.items.map((item) => (
-                            <li key={item}>
-                              <Link
-                                to={`/services/${getServiceSlug(item)}`}
-                                className="transition-colors hover:text-primary hover:underline"
-                              >
-                                {item}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-6 border-t border-border pt-4">
-                    <Link
-                      to="/starting-business"
-                      className="text-sm font-semibold text-primary hover:underline"
-                    >
-                      View All Services &rarr;
-                    </Link>
+              {openMenu === "starting-business" && (
+                <div className="absolute left-0 top-full z-40 pt-4">
+                  <div className="pointer-events-auto w-[min(92vw,56rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
+                    <div className="grid gap-8 sm:grid-cols-2">
+                      {startingBusinessMenu.map((section) => (
+                        <div key={section.heading} className="space-y-3">
+                          <p className="text-sm font-semibold text-foreground">{sectionMenuTitle(section.heading)}</p>
+                          <ul className="space-y-2.5 text-sm text-muted-foreground">
+                            {section.items.map((item) => (
+                              <li key={item}>
+                                <Link to={`/services/${toSlug(item)}`} className="transition-colors hover:text-primary hover:underline">
+                                  {navLabel(`${toSlug(item)}-label`, item)}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-6 border-t border-border pt-4">
+                      <Link to="/starting-business" className="text-sm font-semibold text-primary hover:underline">
+                        View All Services &rarr;
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="relative">
-              <button
-                type="button"
-                className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                onClick={() =>
-                  setOpenMenu((current) => (current === "support-services" ? null : "support-services"))
-                }
-                aria-expanded={openMenu === "support-services"}
-                aria-controls="support-services-menu"
-              >
-                Support Services
-                <ChevronDown
-                  className={`h-4 w-4 text-muted-foreground/70 transition-transform ${
-                    openMenu === "support-services" ? "rotate-180" : ""
-                  }`}
-                />
+              <button type="button" className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary" onClick={() => setOpenMenu((current) => (current === "support-services" ? null : "support-services"))} aria-expanded={openMenu === "support-services"}>
+                {navLabel("support-services-link", "Support Services")}
+                <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === "support-services" ? "rotate-180" : ""}`} />
               </button>
-              <div
-                id="support-services-menu"
-                className={`absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4 ${
-                  openMenu === "support-services" ? "block" : "hidden"
-                }`}
-              >
-                <div className="pointer-events-auto w-[min(90vw,48rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
-                  <div className="space-y-3">
+              {openMenu === "support-services" && (
+                <div className="absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4">
+                  <div className="pointer-events-auto w-[min(90vw,48rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
                     <ul className="flex flex-wrap gap-x-5 gap-y-3 text-sm text-muted-foreground">
                       {supportServicesMenu.map((item) => (
                         <li key={item}>
-                          <Link
-                            to={`/services/${getServiceSlug(item)}`}
-                            className="transition-colors hover:text-primary hover:underline"
-                          >
-                            {item}
+                          <Link to={`/services/${toSlug(item)}`} className="transition-colors hover:text-primary hover:underline">
+                            {navLabel(`${toSlug(item)}-label`, item)}
                           </Link>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="relative">
-              <button
-                type="button"
-                className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                onClick={() =>
-                  setOpenMenu((current) => (current === "compliances" ? null : "compliances"))
-                }
-                aria-expanded={openMenu === "compliances"}
-                aria-controls="compliances-menu"
-              >
-                Compliances
-                <ChevronDown
-                  className={`h-4 w-4 text-muted-foreground/70 transition-transform ${
-                    openMenu === "compliances" ? "rotate-180" : ""
-                  }`}
-                />
+              <button type="button" className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary" onClick={() => setOpenMenu((current) => (current === "compliances" ? null : "compliances"))} aria-expanded={openMenu === "compliances"}>
+                {navLabel("compliances-link", "Compliances")}
+                <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === "compliances" ? "rotate-180" : ""}`} />
               </button>
-              <div
-                id="compliances-menu"
-                className={`absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4 ${
-                  openMenu === "compliances" ? "block" : "hidden"
-                }`}
-              >
-                <div className="pointer-events-auto w-fit max-w-[92vw] rounded-2xl border border-border bg-white px-5 py-4 shadow-lg">
-                  <div className="space-y-3">
+              {openMenu === "compliances" && (
+                <div className="absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4">
+                  <div className="pointer-events-auto w-fit max-w-[92vw] rounded-2xl border border-border bg-white px-5 py-4 shadow-lg">
                     <ul className="flex flex-nowrap items-center gap-5 overflow-x-auto pb-1 text-sm text-muted-foreground whitespace-nowrap">
                       {compliancesMenu.map((item) => (
                         <li key={item} className="shrink-0">
-                          <Link
-                            to={`/services/${getServiceSlug(item)}`}
-                            className="transition-colors hover:text-primary hover:underline"
-                          >
-                            {item}
+                          <Link to={`/services/${toSlug(item)}`} className="transition-colors hover:text-primary hover:underline">
+                            {navLabel(`${toSlug(item)}-label`, item)}
                           </Link>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="relative">
-              <button
-                type="button"
-                className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                onClick={() => setOpenMenu((current) => (current === "funding" ? null : "funding"))}
-                aria-expanded={openMenu === "funding"}
-                aria-controls="funding-menu"
-              >
-                Funding
-                <ChevronDown
-                  className={`h-4 w-4 text-muted-foreground/70 transition-transform ${
-                    openMenu === "funding" ? "rotate-180" : ""
-                  }`}
-                />
+              <button type="button" className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary" onClick={() => setOpenMenu((current) => (current === "funding" ? null : "funding"))} aria-expanded={openMenu === "funding"}>
+                {navLabel("funding-link", "Funding")}
+                <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === "funding" ? "rotate-180" : ""}`} />
               </button>
-              <div
-                id="funding-menu"
-                className={`absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4 ${
-                  openMenu === "funding" ? "block" : "hidden"
-                }`}
-              >
-                <div className="pointer-events-auto w-[min(92vw,56rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
-                  <div className="space-y-3">
+              {openMenu === "funding" && (
+                <div className="absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4">
+                  <div className="pointer-events-auto w-[min(92vw,56rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
                     <ul className="flex flex-wrap gap-x-5 gap-y-3 text-sm text-muted-foreground">
                       {fundingMenu.map((item) => (
                         <li key={item}>
-                          <Link
-                            to={`/services/${getServiceSlug(item)}`}
-                            className="transition-colors hover:text-primary hover:underline"
-                          >
-                            {item}
+                          <Link to={`/services/${toSlug(item)}`} className="transition-colors hover:text-primary hover:underline">
+                            {navLabel(`${toSlug(item)}-label`, item)}
                           </Link>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="relative">
-              <button
-                type="button"
-                className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                onClick={() => setOpenMenu((current) => (current === "audits" ? null : "audits"))}
-                aria-expanded={openMenu === "audits"}
-                aria-controls="audits-menu"
-              >
-                Audits
-                <ChevronDown
-                  className={`h-4 w-4 text-muted-foreground/70 transition-transform ${
-                    openMenu === "audits" ? "rotate-180" : ""
-                  }`}
-                />
+              <button type="button" className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary" onClick={() => setOpenMenu((current) => (current === "audits" ? null : "audits"))} aria-expanded={openMenu === "audits"}>
+                {navLabel("audits-link", "Audits")}
+                <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === "audits" ? "rotate-180" : ""}`} />
               </button>
-              <div
-                id="audits-menu"
-                className={`absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4 ${
-                  openMenu === "audits" ? "block" : "hidden"
-                }`}
-              >
-                <div className="pointer-events-auto w-[min(92vw,64rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
-                  <div className="space-y-3">
+              {openMenu === "audits" && (
+                <div className="absolute left-1/2 top-full z-40 -translate-x-1/2 pt-4">
+                  <div className="pointer-events-auto w-[min(92vw,64rem)] rounded-2xl border border-border bg-white p-6 shadow-lg">
                     <ul className="flex flex-nowrap items-center gap-5 text-sm text-muted-foreground whitespace-nowrap">
                       {auditsMenu.map((item) => (
                         <li key={item} className="shrink-0">
-                          <Link
-                            to={`/services/${toSlug(item)}`}
-                            className="transition-colors hover:text-primary hover:underline"
-                          >
-                            {item}
+                          <Link to={`/services/${toSlug(item)}`} className="transition-colors hover:text-primary hover:underline">
+                            {navLabel(`${toSlug(item)}-label`, item)}
                           </Link>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
-            {navigation.map((item) => (
-              <Link
-                key={item.target}
-                to={item.target}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-              >
+            {desktopNavItems.map((item) => (
+              <Link key={item.target} to={item.target} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                 {item.label}
               </Link>
             ))}
           </div>
 
           <div className="hidden lg:flex">
-            <Link
-              to="/contact"
-              className="btn-primary"
-            >
-              Get Started
+            <Link to="/contact" className="btn-primary">
+              {navLabel("cta", "Get Started")}
             </Link>
           </div>
 
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-md p-2.5 text-foreground lg:hidden"
-            onClick={() =>
-              setMobileMenuOpen((open) => {
-                const next = !open;
-                if (!next) {
-                  setMobileOpenMenu(null);
-                }
-                return next;
-              })
-            }
+            onClick={() => setMobileMenuOpen((open) => !open)}
           >
             <span className="sr-only">Toggle menu</span>
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" aria-hidden="true" />
-            ) : (
-              <Menu className="h-6 w-6" aria-hidden="true" />
-            )}
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-border py-4">
+          <div className="border-t border-border py-4 lg:hidden">
             <div className="flex flex-col space-y-3">
-              {mobileMenuSections.map((section) => {
+              {mobileSections.map((section) => {
                 const isOpen = mobileOpenMenu === section.key;
-
                 return (
                   <div key={section.key} className="rounded-xl border border-border/60 bg-background">
                     <button
                       type="button"
                       className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:text-primary"
-                      onClick={() => toggleMobileMenu(section.key)}
-                      aria-expanded={isOpen}
+                      onClick={() => setMobileOpenMenu((current) => (current === section.key ? null : section.key))}
                     >
                       {section.label}
-                      <ChevronDown
-                        className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
-                      />
+                      <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                     </button>
-                    {isOpen ? (
+                    {isOpen && (
                       <div className="border-t border-border/60 px-4 py-3">
                         <ul className="space-y-2">
                           {section.items.map((item) => (
                             <li key={item}>
                               <Link
-                                to={`/services/${section.key === "starting-business" ? toSlug(item) : getServiceSlug(item)}`}
+                                to={`/services/${section.key === "starting-business" ? toSlug(item) : toSlug(item)}`}
                                 className="block text-sm text-muted-foreground transition-colors hover:text-primary"
                                 onClick={() => setMobileMenuOpen(false)}
                               >
-                                {item}
+                                {navLabel(`${toSlug(item)}-label`, item)}
                               </Link>
                             </li>
                           ))}
                         </ul>
                       </div>
-                    ) : null}
+                    )}
                   </div>
                 );
               })}
 
-              {navigation.map((item) => (
+              {desktopNavItems.map((item) => (
                 <Link
                   key={item.target}
                   to={item.target}
@@ -464,12 +304,9 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
-              <Link
-                to="/contact"
-                className="btn-primary text-center"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Get Started
+
+              <Link to="/contact" className="btn-primary text-center" onClick={() => setMobileMenuOpen(false)}>
+                {navLabel("cta", "Get Started")}
               </Link>
             </div>
           </div>
@@ -478,5 +315,3 @@ export function Header() {
     </header>
   );
 }
-
-

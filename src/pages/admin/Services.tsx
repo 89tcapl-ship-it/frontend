@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ImageUpload } from '@/components/shared/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +17,25 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import api from '@/lib/api';
 import { Service, ServiceFormData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { ImageUpload } from '@/components/shared/ImageUpload';
+
+const emptyForm: ServiceFormData = {
+    title: '',
+    shortDescription: '',
+    description: '',
+    features: [],
+    keyBenefits: [],
+    support: [],
+    limitations: [],
+    nonComplianceRisks: [],
+    offers: [],
+    image: '',
+    isActive: true,
+    order: 0,
+};
+
+const toLines = (value?: string[]) => (value || []).join('\n');
+const fromLines = (value: string) => value.split('\n').map((line) => line.trim()).filter(Boolean);
 
 const Services = () => {
     const [services, setServices] = useState<Service[]>([]);
@@ -26,15 +44,7 @@ const Services = () => {
     const [editingService, setEditingService] = useState<Service | null>(null);
     const { toast } = useToast();
 
-    const [formData, setFormData] = useState<ServiceFormData>({
-        title: '',
-        shortDescription: '',
-        description: '',
-        features: [],
-        image: '',
-        isActive: true,
-        order: 0,
-    });
+    const [formData, setFormData] = useState<ServiceFormData>(emptyForm);
 
     const fetchServices = async () => {
         try {
@@ -56,15 +66,49 @@ const Services = () => {
         fetchServices();
     }, []);
 
+    const resetForm = () => {
+        setEditingService(null);
+        setFormData(emptyForm);
+    };
+
+    const handleEdit = (service: Service) => {
+        setEditingService(service);
+        setFormData({
+            title: service.title,
+            shortDescription: service.shortDescription,
+            description: service.description,
+            features: service.features || [],
+            keyBenefits: service.keyBenefits || [],
+            support: service.support || [],
+            limitations: service.limitations || [],
+            nonComplianceRisks: service.nonComplianceRisks || [],
+            offers: service.offers || [],
+            image: service.image,
+            isActive: service.isActive,
+            order: service.order,
+        });
+        setDialogOpen(true);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        const payload: ServiceFormData = {
+            ...formData,
+            features: formData.features || [],
+            keyBenefits: formData.keyBenefits || [],
+            support: formData.support || [],
+            limitations: formData.limitations || [],
+            nonComplianceRisks: formData.nonComplianceRisks || [],
+            offers: formData.offers || [],
+        };
+
         try {
             if (editingService) {
-                await api.put(`/services/${editingService._id}`, formData);
+                await api.put(`/services/${editingService._id}`, payload);
                 toast({ title: 'Success', description: 'Service updated successfully' });
             } else {
-                await api.post('/services', formData);
+                await api.post('/services', payload);
                 toast({ title: 'Success', description: 'Service created successfully' });
             }
             setDialogOpen(false);
@@ -95,46 +139,8 @@ const Services = () => {
         }
     };
 
-    const handleEdit = (service: Service) => {
-        setEditingService(service);
-        setFormData({
-            title: service.title,
-            shortDescription: service.shortDescription,
-            description: service.description,
-            features: service.features,
-            image: service.image,
-            isActive: service.isActive,
-            order: service.order,
-        });
-        setDialogOpen(true);
-    };
-
-    const resetForm = () => {
-        setEditingService(null);
-        setFormData({
-            title: '',
-            shortDescription: '',
-            description: '',
-            features: [],
-            image: '',
-            isActive: true,
-            order: 0,
-        });
-    };
-
-    const addFeature = () => {
-        setFormData({ ...formData, features: [...formData.features, ''] });
-    };
-
-    const updateFeature = (index: number, value: string) => {
-        const newFeatures = [...formData.features];
-        newFeatures[index] = value;
-        setFormData({ ...formData, features: newFeatures });
-    };
-
-    const removeFeature = (index: number) => {
-        const newFeatures = formData.features.filter((_, i) => i !== index);
-        setFormData({ ...formData, features: newFeatures });
+    const updateTextList = (field: keyof Pick<ServiceFormData, 'features' | 'keyBenefits' | 'support' | 'limitations' | 'nonComplianceRisks' | 'offers'>, value: string) => {
+        setFormData({ ...formData, [field]: fromLines(value) });
     };
 
     return (
@@ -142,7 +148,7 @@ const Services = () => {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold">Services</h1>
-                    <p className="text-muted-foreground">Manage your service offerings</p>
+                    <p className="text-muted-foreground">Manage your service offerings and detailed content</p>
                 </div>
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
@@ -151,7 +157,7 @@ const Services = () => {
                             Add Service
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>{editingService ? 'Edit Service' : 'Add New Service'}</DialogTitle>
                             <DialogDescription>
@@ -170,15 +176,7 @@ const Services = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <Label>Service Image</Label>
-                                <ImageUpload
-                                    value={formData.image || ''}
-                                    onChange={(url) => setFormData({ ...formData, image: url })}
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="shortDescription">Short Description (for cards) *</Label>
+                                <Label htmlFor="shortDescription">Short Description *</Label>
                                 <Textarea
                                     id="shortDescription"
                                     required
@@ -189,60 +187,99 @@ const Services = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="description">Detailed Content (Markdown Supported) *</Label>
+                                <Label htmlFor="description">Detailed Description *</Label>
                                 <Textarea
                                     id="description"
                                     required
-                                    rows={8}
+                                    rows={7}
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <Label>Features</Label>
-                                    <Button type="button" variant="outline" size="sm" onClick={addFeature}>
-                                        <Plus className="h-3 w-3 mr-1" />
-                                        Add Feature
-                                    </Button>
+                                <Label>Service Image</Label>
+                                <ImageUpload
+                                    value={formData.image || ''}
+                                    onChange={(url) => setFormData({ ...formData, image: url })}
+                                />
+                            </div>
+
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="features">Features (one per line)</Label>
+                                    <Textarea
+                                        id="features"
+                                        rows={5}
+                                        value={toLines(formData.features)}
+                                        onChange={(e) => updateTextList('features', e.target.value)}
+                                    />
                                 </div>
-                                {formData.features.map((feature, index) => (
-                                    <div key={index} className="flex gap-2">
-                                        <Input
-                                            value={feature}
-                                            onChange={(e) => updateFeature(index, e.target.value)}
-                                            placeholder="Feature description"
-                                        />
-                                        <Button
-                                            type="button"
-                                            variant="destructive"
-                                            size="icon"
-                                            onClick={() => removeFeature(index)}
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                ))}
+                                <div className="space-y-2">
+                                    <Label htmlFor="offers">Highlights / Offers (one per line)</Label>
+                                    <Textarea
+                                        id="offers"
+                                        rows={5}
+                                        value={toLines(formData.offers)}
+                                        onChange={(e) => updateTextList('offers', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="keyBenefits">Key Benefits (one per line)</Label>
+                                    <Textarea
+                                        id="keyBenefits"
+                                        rows={5}
+                                        value={toLines(formData.keyBenefits)}
+                                        onChange={(e) => updateTextList('keyBenefits', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="support">Support Steps (one per line)</Label>
+                                    <Textarea
+                                        id="support"
+                                        rows={5}
+                                        value={toLines(formData.support)}
+                                        onChange={(e) => updateTextList('support', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="limitations">Limitations (one per line)</Label>
+                                    <Textarea
+                                        id="limitations"
+                                        rows={5}
+                                        value={toLines(formData.limitations)}
+                                        onChange={(e) => updateTextList('limitations', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="nonComplianceRisks">Non-Compliance Risks (one per line)</Label>
+                                    <Textarea
+                                        id="nonComplianceRisks"
+                                        rows={5}
+                                        value={toLines(formData.nonComplianceRisks)}
+                                        onChange={(e) => updateTextList('nonComplianceRisks', e.target.value)}
+                                    />
+                                </div>
                             </div>
 
-                            <div className="flex items-center space-x-2">
-                                <Switch
-                                    id="isActive"
-                                    checked={formData.isActive}
-                                    onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
-                                />
-                                <Label htmlFor="isActive">Active</Label>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="order">Display Order</Label>
-                                <Input
-                                    id="order"
-                                    type="number"
-                                    value={formData.order}
-                                    onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
-                                />
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="order">Display Order</Label>
+                                    <Input
+                                        id="order"
+                                        type="number"
+                                        value={formData.order}
+                                        onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value || '0', 10) })}
+                                    />
+                                </div>
+                                <div className="flex items-center space-x-2 pt-8">
+                                    <Switch
+                                        id="isActive"
+                                        checked={formData.isActive}
+                                        onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                                    />
+                                    <Label htmlFor="isActive">Active</Label>
+                                </div>
                             </div>
 
                             <div className="flex gap-2 justify-end">
@@ -271,10 +308,9 @@ const Services = () => {
                     </CardContent>
                 </Card>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {services.map((service) => (
                         <Card key={service._id}>
-
                             <CardHeader className="relative p-0 pt-0">
                                 <div className="aspect-video w-full rounded-t-xl overflow-hidden bg-muted">
                                     {service.image ? (
@@ -286,35 +322,27 @@ const Services = () => {
                                     )}
                                 </div>
                                 <div className="flex items-start justify-between p-6">
-                                    <CardTitle className="text-lg">{service.title}</CardTitle>
+                                    <div>
+                                        <CardTitle className="text-lg">{service.title}</CardTitle>
+                                        <p className="text-sm text-muted-foreground mt-1">{service.shortDescription}</p>
+                                    </div>
                                     <div className="flex gap-2">
                                         <Button variant="ghost" size="icon" onClick={() => handleEdit(service)}>
                                             <Edit className="h-4 w-4" />
                                         </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => handleDelete(service._id)}
-                                        >
+                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(service._id)}>
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>
                                 </div>
                             </CardHeader>
-                            <CardContent>
-                                <p className="text-sm text-muted-foreground mb-4">{service.shortDescription}</p>
-                                {service.features.length > 0 && (
-                                    <div className="space-y-2">
-                                        <p className="text-sm font-medium">Features:</p>
-                                        <ul className="text-sm text-muted-foreground list-disc list-inside">
-                                            {service.features.map((feature, index) => (
-                                                <li key={index}>{feature}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
-                                <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+                            <CardContent className="space-y-3">
+                                <div className="text-sm text-muted-foreground line-clamp-4 whitespace-pre-line">
+                                    {service.description}
+                                </div>
+                                <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                                     <span>Order: {service.order}</span>
+                                    <span>•</span>
                                     <span className={service.isActive ? 'text-green-600' : 'text-red-600'}>
                                         {service.isActive ? 'Active' : 'Inactive'}
                                     </span>

@@ -65,9 +65,17 @@ const ContentManagement = () => {
     });
 
     const pages = [
+        { value: 'header', label: 'Header / Navigation' },
+        { value: 'footer', label: 'Footer' },
         { value: 'home', label: 'Home Page' },
         { value: 'about', label: 'About Page' },
         { value: 'contact', label: 'Contact Page' },
+        { value: 'services', label: 'Services Page' },
+        { value: 'starting-business', label: 'Starting Business Page' },
+        { value: 'support-services', label: 'Support Services Page' },
+        { value: 'compliances', label: 'Compliances Page' },
+        { value: 'funding', label: 'Funding Page' },
+        { value: 'audits', label: 'Audits Page' },
     ];
 
     const fetchPageContent = async (page: string) => {

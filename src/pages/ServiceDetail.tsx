@@ -4,10 +4,12 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
 import serviceData, { type ServiceDetailData } from "@/data/serviceDetailData";
+import { useServicesCatalog } from "@/hooks/useServicesCatalog";
 
 const defaultService: ServiceDetailData = {
   title: "Service Detail",
-  description: "Professional advisory and compliance support tailored to your business requirements.",
+  description:
+    "Professional advisory and compliance support tailored to your business requirements.",
   offers: [
     "Requirement assessment and scoping",
     "Dedicated engagement support",
@@ -40,11 +42,7 @@ const consultationSidebar = (
         aria-label="Chat with us on WhatsApp"
         title="Chat with us on WhatsApp"
       >
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          className="h-4 w-4 shrink-0 fill-current"
-        >
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 shrink-0 fill-current">
           <path d="M20.5 11.9a8.5 8.5 0 0 1-12.7 7.4l-4.1 1.1 1.1-4A8.5 8.5 0 1 1 20.5 11.9Zm-8.5-6.7a6.7 6.7 0 0 0-5.7 10.3l-.7 2.6 2.7-.7a6.7 6.7 0 1 0 3.7-12.2Zm3.9 8.6c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1l-.8 1c-.1.1-.3.2-.5.1a5.5 5.5 0 0 1-2.4-1.8 5.7 5.7 0 0 1-1.3-2.5c0-.2 0-.4.1-.5l.6-.7c.1-.1.1-.3 0-.5l-.6-1.5c-.1-.3-.3-.3-.4-.3h-.4c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.1 0 1.2.9 2.4 1 2.6.1.2 1.7 2.7 4.1 3.8.6.3 1 .4 1.4.5.6.2 1.1.2 1.5.2.5 0 1.4-.6 1.6-1.2.2-.6.2-1.1.1-1.2-.1-.1-.2-.1-.4-.2Z" />
         </svg>
         WhatsApp
@@ -73,20 +71,39 @@ const renderBullets = (items: string[], emptyMessage: string) => {
 const ServiceDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [expandedDescription, setExpandedDescription] = useState(false);
+  const { getServiceBySlug } = useServicesCatalog();
 
   const service = useMemo(() => {
     if (!slug) return defaultService;
 
-    return (
-      serviceData[slug] ?? {
-        ...defaultService,
-        title: slug
-          .split("-")
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" "),
-      }
-    );
-  }, [slug]);
+    const apiService = getServiceBySlug(slug);
+    const localService = serviceData[slug];
+
+    const title =
+      apiService?.title ||
+      localService?.title ||
+      slug
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+
+    const description =
+      apiService?.description ||
+      apiService?.shortDescription ||
+      localService?.description ||
+      defaultService.description;
+
+    const support = apiService?.features?.length ? apiService.features : localService?.support;
+
+    return {
+      ...defaultService,
+      ...(localService || {}),
+      title,
+      description,
+      support,
+      offers: apiService?.features?.length ? apiService.features : localService?.offers,
+    } satisfies ServiceDetailData;
+  }, [getServiceBySlug, slug]);
 
   const hasKeyBenefits = Boolean(service.keyBenefits && service.keyBenefits.length > 0);
   const hasLimitations = Boolean(service.limitations && service.limitations.length > 0);
@@ -213,6 +230,17 @@ const ServiceDetail = () => {
                     ) : null}
                   </>
                 )}
+
+                {service.offers && service.offers.length > 0 ? (
+                  <div className={sectionCardStyles}>
+                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-400 to-indigo-500" />
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-2xl font-semibold tracking-tight text-foreground">Highlights</h2>
+                      <span className="rounded-full bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-700">Editable</span>
+                    </div>
+                    {renderBullets(service.offers, "No highlights provided in the current service copy.")}
+                  </div>
+                ) : null}
               </div>
             </div>
 

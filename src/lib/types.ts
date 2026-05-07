@@ -40,6 +40,11 @@ export interface Service {
     description: string;
     image: string;
     features: string[];
+    keyBenefits?: string[];
+    support?: string[];
+    limitations?: string[];
+    nonComplianceRisks?: string[];
+    offers?: string[];
     isActive: boolean;
     order: number;
     createdAt: string;
@@ -53,6 +58,11 @@ export interface ServiceFormData {
     description: string;
     image?: string;
     features: string[];
+    keyBenefits?: string[];
+    support?: string[];
+    limitations?: string[];
+    nonComplianceRisks?: string[];
+    offers?: string[];
     isActive?: boolean;
     order?: number;
 }

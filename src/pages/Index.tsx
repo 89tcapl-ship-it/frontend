@@ -1,6 +1,8 @@
-﻿import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
+import { usePageContent } from "@/hooks/usePageContent";
+import { useServicesCatalog } from "@/hooks/useServicesCatalog";
 import {
   Building2,
   FileCheck,
@@ -14,69 +16,82 @@ import {
 
 const startingBusiness = [
   {
-    title: "Private Limited Company",
-    description: "Structured incorporation with clear documentation.",
+    slug: "private-limited-company",
+    fallbackTitle: "Private Limited Company",
+    fallbackDescription: "Structured incorporation with clear documentation.",
     icon: Building2,
   },
   {
-    title: "LLP Registration",
-    description: "Flexible entity setup with compliance support.",
+    slug: "llp",
+    fallbackTitle: "LLP Registration",
+    fallbackDescription: "Flexible entity setup with compliance support.",
     icon: Briefcase,
   },
   {
-    title: "Partnership Firm",
-    description: "Simple partnership registration and advisory.",
+    slug: "partnership",
+    fallbackTitle: "Partnership Firm",
+    fallbackDescription: "Simple partnership registration and advisory.",
     icon: Users,
   },
   {
-    title: "OPC Registration",
-    description: "One-person company incorporation assistance.",
+    slug: "opc-registration",
+    fallbackTitle: "OPC Registration",
+    fallbackDescription: "One-person company incorporation assistance.",
     icon: BadgeCheck,
   },
 ];
 
 const taxCompliance = [
   {
-    title: "GST",
-    description: "Registration, filings, and compliance guidance.",
+    slug: "gst",
+    fallbackTitle: "GST",
+    fallbackDescription: "Registration, filings, and compliance guidance.",
     icon: FileCheck,
   },
   {
-    title: "Income Tax Filing",
-    description: "Accurate returns for individuals and businesses.",
+    slug: "itr-and-tds",
+    fallbackTitle: "Income Tax Filing",
+    fallbackDescription: "Accurate returns for individuals and businesses.",
     icon: Receipt,
   },
   {
-    title: "TDS Filing",
-    description: "Timely deductions and quarterly filings.",
+    slug: "tds-filing",
+    fallbackTitle: "TDS Filing",
+    fallbackDescription: "Timely deductions and quarterly filings.",
     icon: ClipboardList,
   },
   {
-    title: "MCA Compliance",
-    description: "ROC filings and statutory compliance tracking.",
+    slug: "mca",
+    fallbackTitle: "MCA Compliance",
+    fallbackDescription: "ROC filings and statutory compliance tracking.",
     icon: Building2,
   },
 ];
 
 const businessSupport = [
   {
-    title: "Virtual Accountant",
-    description: "Dedicated remote accounting support for books, reconciliations, and reporting.",
+    slug: "virtual-accountant",
+    fallbackTitle: "Virtual Accountant",
+    fallbackDescription:
+      "Dedicated remote accounting support for books, reconciliations, and reporting.",
     icon: Calculator,
   },
   {
-    title: "Book Keeping",
-    description: "Monthly accounting with clean records.",
+    slug: "book-keeping",
+    fallbackTitle: "Book Keeping",
+    fallbackDescription: "Monthly accounting with clean records.",
     icon: Calculator,
   },
   {
-    title: "Payroll",
-    description: "Salary processing and compliance support.",
+    slug: "payroll",
+    fallbackTitle: "Payroll",
+    fallbackDescription: "Salary processing and compliance support.",
     icon: Users,
   },
   {
-    title: "Virtual CFO",
-    description: "Financial oversight and strategic guidance.",
+    slug: "virtual-cfo",
+    fallbackTitle: "Virtual CFO",
+    fallbackDescription: "Financial oversight and strategic guidance.",
     icon: Briefcase,
   },
 ];
@@ -100,22 +115,94 @@ const whyChooseUs = [
   },
 ];
 
-const serviceSlugs: Record<string, string> = {
-  "Private Limited Company": "private-limited-company",
-  "LLP Registration": "llp",
-  "Partnership Firm": "partnership",
-  "OPC Registration": "opc-registration",
-  "Income Tax Filing": "itr-and-tds-compliance",
-  "TDS Filing": "itr-and-tds-compliance",
-  "GST": "gst",
-  "MCA Compliance": "mca-compliance",
-  "Book Keeping": "book-keeping",
-  "Virtual Accountant": "virtual-accountant",
-  "Payroll": "payroll",
-  "Virtual CFO": "virtual-cfo",
-};
+const sectionValue = (
+  getSectionValue: ReturnType<typeof usePageContent>["getSectionValue"],
+  sectionId: string,
+  field: "title" | "subtitle" | "content" | "buttonText" | "buttonLink" | "imageUrl",
+  defaultValue: string
+) => getSectionValue(sectionId, field, defaultValue) as string;
 
 const Index = () => {
+  const { getSectionValue } = usePageContent("home");
+  const { getServiceBySlug } = useServicesCatalog();
+
+  const heroTitle = sectionValue(
+    getSectionValue,
+    "hero",
+    "title",
+    "End-to-End Finance and Compliance Support for Growing Businesses"
+  );
+  const heroSubtitle = sectionValue(
+    getSectionValue,
+    "hero",
+    "subtitle",
+    "Led by seasoned Chartered Accountants, 89TCA delivers structured solutions that empower businesses to operate efficiently and scale with confidence."
+  );
+  const heroContent = sectionValue(
+    getSectionValue,
+    "hero",
+    "content",
+    "Trusted Chartered Accountants • 10 Years Experience • Serving Startups, SMEs & Enterprises Across India"
+  );
+  const heroButtonText = sectionValue(getSectionValue, "hero", "buttonText", "Get Started");
+  const heroButtonLink = sectionValue(getSectionValue, "hero", "buttonLink", "/contact");
+
+  const servicesTitle = sectionValue(getSectionValue, "services-intro", "title", "Our Services");
+  const servicesIntro = sectionValue(
+    getSectionValue,
+    "services-intro",
+    "content",
+    "Explore tailored services across incorporation, compliance, and business support."
+  );
+
+  const aboutTitle = sectionValue(getSectionValue, "about", "title", "About 89TCA");
+  const aboutContent = sectionValue(
+    getSectionValue,
+    "about",
+    "content",
+    "Backed by 40+ years of combined experience, we provide expert advisory, audit, taxation, and compliance services."
+  );
+
+  const whyChooseTitle = sectionValue(getSectionValue, "why-choose-us", "title", "Why Choose Us");
+
+  const ctaTitle = sectionValue(
+    getSectionValue,
+    "cta",
+    "title",
+    "Need help with your business compliance?"
+  );
+  const ctaContent = sectionValue(
+    getSectionValue,
+    "cta",
+    "content",
+    "Our team is ready to guide you through the next steps."
+  );
+  const ctaButtonText = sectionValue(getSectionValue, "cta", "buttonText", "Contact Now");
+  const ctaButtonLink = sectionValue(getSectionValue, "cta", "buttonLink", "/contact");
+
+  const renderServiceCard = (item: typeof startingBusiness[number]) => {
+    const service = getServiceBySlug(item.slug);
+    const title = service?.title || item.fallbackTitle;
+    const description = service?.shortDescription || item.fallbackDescription;
+    return (
+      <Link
+        key={item.slug}
+        to={`/services/${item.slug}`}
+        className="card-hover group p-4"
+      >
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+          <item.icon className="h-5 w-5 text-primary" />
+        </div>
+        <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
+          {title}
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          {description}
+        </p>
+      </Link>
+    );
+  };
+
   return (
     <Layout>
       <SEO
@@ -129,25 +216,24 @@ const Index = () => {
           <div className="mx-auto max-w-[1200px] text-center">
             <div className="mx-auto max-w-[1100px] pt-4 sm:pt-6 lg:pt-8">
               <h1 className="mx-auto max-w-[980px] text-3xl font-bold leading-[1.08] tracking-tight text-foreground md:text-4xl lg:text-[2.75rem] xl:text-[2.9rem]">
-                <span className="block">End-to-End Finance and Compliance</span>
-                <span className="block">Support for Growing Businesses</span>
+                {heroTitle}
               </h1>
               <p className="mx-auto mt-6 max-w-[980px] text-base leading-[1.6] text-muted-foreground md:text-lg">
-                Led by seasoned Chartered Accountants, 89TCA delivers structured solutions that empower businesses to operate efficiently and scale with confidence.
+                {heroSubtitle}
               </p>
 
               <div className="mx-auto mt-7 max-w-[1400px] rounded-full border border-slate-200 bg-[#f8fafc] px-6 py-4 text-center shadow-[0_1px_5px_rgba(15,23,42,0.04)]">
                 <p className="text-sm font-medium text-slate-700 md:text-base lg:text-[1.02rem]">
-                  Trusted Chartered Accountants • 10 Years Experience • Serving Startups, SMEs &amp; Enterprises Across India
+                  {heroContent}
                 </p>
               </div>
 
               <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-4">
                 <Link
-                  to="/contact"
+                  to={heroButtonLink}
                   className="btn-primary h-12 min-w-[168px] inline-flex items-center justify-center text-center transition-transform hover:-translate-y-0.5"
                 >
-                  Get Started
+                  {heroButtonText}
                 </Link>
                 <Link
                   to="/contact"
@@ -164,91 +250,85 @@ const Index = () => {
       <section className="section-padding bg-secondary/30">
         <div className="container-custom">
           <div>
-            <h2 className="mt-3 text-3xl font-semibold text-foreground">Our Services</h2>
-            <p className="mt-3 text-muted-foreground">
-              Explore tailored services across incorporation, compliance, and business support.
-            </p>
+            <h2 className="mt-3 text-3xl font-semibold text-foreground">{servicesTitle}</h2>
+            <p className="mt-3 text-muted-foreground">{servicesIntro}</p>
           </div>
 
           <div className="mt-10 space-y-10">
             <div>
               <h3 className="text-lg font-semibold text-foreground">Starting a Business</h3>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {startingBusiness.map((item) => (
-                  <Link
-                    key={item.title}
-                    to={`/services/${serviceSlugs[item.title] ?? item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
-                    className="card-hover group p-4"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-                      <item.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
-                      {item.title}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {item.description}
-                    </p>
-                  </Link>
-                ))}
+                {startingBusiness.map(renderServiceCard)}
               </div>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold text-foreground">Tax & Compliance</h3>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {taxCompliance.map((item) => (
-                  <Link
-                    key={item.title}
-                    to={`/services/${serviceSlugs[item.title] ?? item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
-                    className="card-hover group p-4"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-                      <item.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
-                      {item.title}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {item.description}
-                    </p>
-                  </Link>
-                ))}
+                {taxCompliance.map((item) => {
+                  const service = getServiceBySlug(item.slug);
+                  const title = service?.title || item.fallbackTitle;
+                  const description = service?.shortDescription || item.fallbackDescription;
+                  return (
+                    <Link
+                      key={item.slug}
+                      to={`/services/${item.slug}`}
+                      className="card-hover group p-4"
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                        <item.icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
+                        {title}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {description}
+                      </p>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold text-foreground">Business Support</h3>
               <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
-                Our flagship remote accounting service is built to help businesses stay financially organized without the overhead of a full-time hire.
+                {sectionValue(
+                  getSectionValue,
+                  "business-support",
+                  "content",
+                  "Our flagship remote accounting service is built to help businesses stay financially organized without the overhead of a full-time hire."
+                )}
               </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {businessSupport.map((item) => (
-                  <Link
-                    key={item.title}
-                    to={`/services/${serviceSlugs[item.title] ?? item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
-                    className={`card-hover group p-4 ${item.title === "Virtual Accountant" ? "ring-1 ring-primary/20 bg-primary/5 shadow-[0_8px_30px_rgba(37,99,235,0.08)]" : ""}`}
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-                      <item.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
-                      {item.title}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {item.description}
-                    </p>
-                  </Link>
-                ))}
+                {businessSupport.map((item) => {
+                  const service = getServiceBySlug(item.slug);
+                  const title = service?.title || item.fallbackTitle;
+                  const description = service?.shortDescription || item.fallbackDescription;
+                  return (
+                    <Link
+                      key={item.slug}
+                      to={`/services/${item.slug}`}
+                      className={`card-hover group p-4 ${item.slug === "virtual-accountant" ? "ring-1 ring-primary/20 bg-primary/5 shadow-[0_8px_30px_rgba(37,99,235,0.08)]" : ""}`}
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                        <item.icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
+                        {title}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {description}
+                      </p>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>
 
           <div className="mt-10">
-            <Link
-              to="/services"
-              className="btn-outline inline-flex"
-            >
+            <Link to="/services" className="btn-outline inline-flex">
               Explore All Services
             </Link>
           </div>
@@ -260,17 +340,11 @@ const Index = () => {
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="text-sm font-semibold text-primary">About 89TCA</p>
-              <h2 className="mt-3 text-3xl font-semibold text-foreground">About 89TCA</h2>
-              <p className="mt-4 text-muted-foreground">
-                Backed by 40+ years of combined experience, we provide expert advisory,
-                audit, taxation, and compliance services.
-              </p>
+              <h2 className="mt-3 text-3xl font-semibold text-foreground">{aboutTitle}</h2>
+              <p className="mt-4 text-muted-foreground">{aboutContent}</p>
             </div>
             <div className="flex justify-start lg:justify-end">
-              <Link
-                to="/about"
-                className="btn-outline"
-              >
+              <Link to="/about" className="btn-outline">
                 Learn More
               </Link>
             </div>
@@ -282,14 +356,11 @@ const Index = () => {
         <div className="container-custom">
           <div>
             <p className="text-sm font-semibold text-primary">Why Choose Us</p>
-            <h2 className="mt-3 text-3xl font-semibold text-foreground">Why Choose Us</h2>
+            <h2 className="mt-3 text-3xl font-semibold text-foreground">{whyChooseTitle}</h2>
           </div>
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {whyChooseUs.map((item) => (
-              <div
-                key={item.title}
-                className="card-hover p-6 text-sm"
-              >
+              <div key={item.title} className="card-hover p-6 text-sm">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                   <item.icon className="h-5 w-5 text-primary" />
                 </div>
@@ -305,17 +376,14 @@ const Index = () => {
           <div className="card-soft p-8 md:flex md:items-center md:justify-between">
             <div>
               <h3 className="text-2xl font-semibold text-foreground">
-                Need help with your business compliance?
+                {ctaTitle}
               </h3>
               <p className="mt-2 text-sm text-muted-foreground text-justify">
-                Our team is ready to guide you through the next steps.
+                {ctaContent}
               </p>
             </div>
-            <Link
-              to="/contact"
-              className="btn-primary mt-6 inline-flex md:mt-0"
-            >
-              Contact Now
+            <Link to={ctaButtonLink} className="btn-primary mt-6 inline-flex md:mt-0">
+              {ctaButtonText}
             </Link>
           </div>
         </div>
@@ -325,5 +393,3 @@ const Index = () => {
 };
 
 export default Index;
-
-

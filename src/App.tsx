@@ -16,8 +16,6 @@ import SupportServices from "./pages/SupportServices";
 import Compliances from "./pages/Compliances";
 import Funding from "./pages/Funding";
 import Audits from "./pages/Audits";
-import Blog from "./pages/Blog";
-import BlogDetail from "./pages/BlogDetail";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
@@ -34,7 +32,6 @@ import Dashboard from "./pages/admin/Dashboard";
 import Inbox from "./pages/admin/Inbox";
 import ContentManagement from "./pages/admin/ContentManagement";
 import ServicesAdmin from "./pages/admin/Services";
-import BlogManagement from "./pages/admin/BlogManagement";
 import SettingsAdmin from "./pages/admin/Settings";
 import Users from "./pages/admin/Users";
 import ScrollToTop from "./components/shared/ScrollToTop";
@@ -60,8 +57,6 @@ const App = () => (
             <Route path="/compliances" element={<Compliances />} />
             <Route path="/funding" element={<Funding />} />
             <Route path="/audits" element={<Audits />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/contact" element={<Contact />} />
 
             {/* Auth routes */}
@@ -82,7 +77,6 @@ const App = () => (
               <Route path="inbox" element={<Inbox />} />
               <Route path="content" element={<ContentManagement />} />
               <Route path="services" element={<ServicesAdmin />} />
-              <Route path="blog" element={<BlogManagement />} />
               <Route path="settings" element={<SettingsAdmin />} />
               <Route path="users" element={
                 <ProtectedRoute requireSuperAdmin>

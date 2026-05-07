@@ -19,13 +19,13 @@ import api from '@/lib/api';
 import { Service, ServiceFormData } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { defaultServiceSeed } from '@/data/defaultServiceSeed';
+import serviceDetailData from '@/data/serviceDetailData';
 
 const emptyForm: ServiceFormData = {
     title: '',
     slug: '',
     shortDescription: '',
     description: '',
-    features: [],
     keyBenefits: [],
     support: [],
     limitations: [],
@@ -86,7 +86,6 @@ const toSlug = (value: string) =>
 const normalizeSeed = (seed: ServiceFormData): ServiceFormData => ({
     ...seed,
     slug: seed.slug || toSlug(seed.title),
-    features: seed.features || [],
     keyBenefits: seed.keyBenefits || [],
     support: seed.support || [],
     limitations: seed.limitations || [],
@@ -98,13 +97,47 @@ const normalizeSeed = (seed: ServiceFormData): ServiceFormData => ({
 });
 
 const contentBlocks = [
-    { key: 'features', label: 'Features' },
     { key: 'keyBenefits', label: 'Key Benefits' },
     { key: 'support', label: 'Support Steps' },
     { key: 'limitations', label: 'Limitations' },
     { key: 'nonComplianceRisks', label: 'Non-Compliance Risks' },
     { key: 'offers', label: 'Highlights / Offers' },
 ] as const;
+
+const detailAliases: Record<string, string> = {
+    'epf-and-esi': 'epf-esi',
+    'itr-and-tds': 'itr-and-tds-compliance',
+    'tds-filing': 'itr-and-tds-compliance',
+    'income-tax-filing': 'itr-and-tds-compliance',
+    'mca': 'mca-compliance',
+    'opc': 'opc-registration',
+    'one-person-company': 'opc-registration',
+    'llp-registration': 'llp',
+    'shops-and-establishments-labour': 'shops-establishments',
+};
+
+const getDetailData = (slug: string) => {
+    const detailSlug = detailAliases[slug] || slug;
+    return (serviceDetailData as Record<string, any>)[detailSlug] || null;
+};
+
+const getDetailSeed = (seed: ServiceFormData) => {
+    const detail = getDetailData(seed.slug || toSlug(seed.title));
+    return {
+        title: detail?.title || seed.title,
+        slug: seed.slug || toSlug(seed.title),
+        shortDescription: seed.shortDescription,
+        description: detail?.description || seed.description,
+        keyBenefits: detail?.keyBenefits || [],
+        support: detail?.support || [],
+        limitations: detail?.limitations || [],
+        nonComplianceRisks: detail?.nonComplianceRisks || [],
+        offers: detail?.offers || [],
+        image: '',
+        isActive: seed.isActive ?? true,
+        order: seed.order ?? 0,
+    } satisfies Service;
+};
 
 const Services = () => {
     const [services, setServices] = useState<Service[]>([]);
@@ -141,25 +174,19 @@ const Services = () => {
         return defaultServiceSeed.map((seed) => {
             const normalizedSeed = normalizeSeed(seed);
             const backendService = backendBySlug.get(normalizedSeed.slug || toSlug(normalizedSeed.title));
+            const detailSeed = getDetailSeed(normalizedSeed);
 
-            return backendService || ({
-                _id: `seed-${normalizedSeed.slug || toSlug(normalizedSeed.title)}`,
-                title: normalizedSeed.title,
-                slug: normalizedSeed.slug || toSlug(normalizedSeed.title),
-                shortDescription: normalizedSeed.shortDescription,
-                description: normalizedSeed.description,
-                image: normalizedSeed.image || '',
-                features: normalizedSeed.features || [],
-                keyBenefits: normalizedSeed.keyBenefits || [],
-                support: normalizedSeed.support || [],
-                limitations: normalizedSeed.limitations || [],
-                nonComplianceRisks: normalizedSeed.nonComplianceRisks || [],
-                offers: normalizedSeed.offers || [],
-                isActive: normalizedSeed.isActive ?? true,
-                order: normalizedSeed.order ?? 0,
-                createdAt: '',
-                updatedAt: '',
-            } satisfies Service);
+            return backendService
+                ? {
+                      ...detailSeed,
+                      ...backendService,
+                  }
+                : ({
+                      _id: `seed-${normalizedSeed.slug || toSlug(normalizedSeed.title)}`,
+                      ...detailSeed,
+                      createdAt: '',
+                      updatedAt: '',
+                  } satisfies Service);
         });
     }, [services]);
 
@@ -192,7 +219,6 @@ const Services = () => {
             slug: service.slug,
             shortDescription: service.shortDescription,
             description: service.description,
-            features: service.features || [],
             keyBenefits: service.keyBenefits || [],
             support: service.support || [],
             limitations: service.limitations || [],
@@ -211,7 +237,6 @@ const Services = () => {
         const payload: ServiceFormData = {
             ...formData,
             slug: formData.slug || toSlug(formData.title),
-            features: formData.features || [],
             keyBenefits: formData.keyBenefits || [],
             support: formData.support || [],
             limitations: formData.limitations || [],
@@ -277,7 +302,7 @@ const Services = () => {
 
         for (const service of missing) {
             try {
-                await api.post('/services', service);
+                await api.post('/services', getDetailSeed(service));
             } catch {
                 failures.push(service.title);
             }
@@ -292,7 +317,7 @@ const Services = () => {
         });
     };
 
-    const updateTextList = (field: keyof Pick<ServiceFormData, 'features' | 'keyBenefits' | 'support' | 'limitations' | 'nonComplianceRisks' | 'offers'>, value: string) => {
+    const updateTextList = (field: keyof Pick<ServiceFormData, 'keyBenefits' | 'support' | 'limitations' | 'nonComplianceRisks' | 'offers'>, value: string) => {
         setFormData({ ...formData, [field]: fromLines(value) });
     };
 
@@ -395,15 +420,6 @@ const Services = () => {
 
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <div className="space-y-2">
-                                        <Label htmlFor="features">Features (one per line)</Label>
-                                        <Textarea
-                                            id="features"
-                                            rows={5}
-                                            value={toLines(formData.features)}
-                                            onChange={(e) => updateTextList('features', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
                                         <Label htmlFor="offers">Highlights / Offers (one per line)</Label>
                                         <Textarea
                                             id="offers"
@@ -484,7 +500,7 @@ const Services = () => {
 
             <Card>
                 <CardContent className="py-4 text-sm text-muted-foreground">
-                    The 5 groups below match the frontend navigation. Each service card shows all editable content in one place.
+                    The 5 groups below match the frontend navigation. Each service card mirrors the exact frontend detail sections for that service.
                 </CardContent>
             </Card>
 
@@ -511,6 +527,7 @@ const Services = () => {
                                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                                     {group.services.map((service) => {
                                         const editable = Boolean(services.find((item) => item.slug === service.slug));
+                                        const detail = getDetailData(service.slug);
                                         return (
                                             <Card key={service.slug} className="overflow-hidden">
                                                 <CardHeader className="p-0">
@@ -557,7 +574,7 @@ const Services = () => {
                                                             <div>
                                                                 <p className="text-sm font-semibold text-foreground">Description</p>
                                                                 <p className="mt-2 text-sm leading-6 text-muted-foreground whitespace-pre-line text-justify">
-                                                                    {service.description}
+                                                                    {detail?.description || service.description}
                                                                 </p>
                                                             </div>
 

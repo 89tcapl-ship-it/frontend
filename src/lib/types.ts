@@ -39,7 +39,7 @@ export interface Service {
     shortDescription: string;
     description: string;
     image: string;
-    features: string[];
+    features?: string[];
     keyBenefits?: string[];
     support?: string[];
     limitations?: string[];
@@ -57,7 +57,7 @@ export interface ServiceFormData {
     shortDescription: string;
     description: string;
     image?: string;
-    features: string[];
+    features?: string[];
     keyBenefits?: string[];
     support?: string[];
     limitations?: string[];

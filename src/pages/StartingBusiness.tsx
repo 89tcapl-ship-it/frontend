@@ -21,7 +21,7 @@ const entityFormation = [
   { title: "Private Limited Company", description: "Limited liability structure with stronger credibility for funding and growth.", icon: Building2, slug: "private-limited-company" },
   { title: "Partnership", description: "Shared ownership model with flexible management and pooled resources.", icon: Users, slug: "partnership" },
   { title: "LLP", description: "Partnership flexibility with limited liability and separate legal status.", icon: Briefcase, slug: "llp" },
-  { title: "OPC Registration", description: "Single-owner company format with limited liability protection.", icon: Landmark, slug: "opc-registration" },
+  { title: "OPC", description: "Single-owner company format with limited liability protection.", icon: Landmark, slug: "opc-registration" },
   { title: "Sole Proprietor", description: "Simple setup for individual-owned businesses with full control and minimal formalities.", icon: Users, slug: "sole-proprietor" },
   { title: "Foreign Company Subsidiary", description: "Indian subsidiary setup for foreign businesses entering India.", icon: Globe, slug: "foreign-company-subsidiary" },
   { title: "NBFC", description: "Regulated financial entity for lending and financial services.", icon: ShieldCheck, slug: "nbfc" },
@@ -31,13 +31,13 @@ const entityFormation = [
 
 const alliedRegistrations = [
   { title: "GST", description: "Registration, filing, and compliance support.", icon: FileBadge, slug: "gst" },
-  { title: "Shops & Establishments", description: "State-level labor compliance for offices and shops.", icon: Store, slug: "shops-establishments" },
+  { title: "Shops & Establishments (Labour)", description: "State-level labor compliance for offices and shops.", icon: Store, slug: "shops-establishments" },
   { title: "EPF & ESI", description: "Employee welfare registrations and filings.", icon: BadgeCheck, slug: "epf-and-esi" },
   { title: "PT", description: "Professional tax registration and remittance.", icon: ClipboardList, slug: "pt" },
   { title: "Trade License", description: "Municipal approval to operate a business.", icon: Store, slug: "trade-license" },
   { title: "FSSAI", description: "Food safety license for food businesses.", icon: BadgeCheck, slug: "fssai" },
   { title: "IEC", description: "Import-export registration for global trade.", icon: Factory, slug: "iec" },
-  { title: "MSME / UDYAM", description: "Udyam registration for MSME benefits.", icon: FileBadge, slug: "msme-udyam" },
+  { title: "MSME/UDYAM", description: "Udyam registration for MSME benefits.", icon: FileBadge, slug: "msme-udyam" },
   { title: "DPIIT / StartUp India Registration", description: "Recognition under the Startup India initiative for eligible startups with tax, regulatory, and funding benefits.", icon: BadgeCheck, slug: "dpiit-startup-india" },
 ];
 

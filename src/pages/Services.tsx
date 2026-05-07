@@ -48,7 +48,7 @@ const sections = [
       { label: "Private Limited Company", description: "Incorporation with ROC support and documentation.", icon: Building2 },
       { label: "Partnership", description: "Simple setup for partnership businesses.", icon: Users },
       { label: "LLP", description: "Flexible structure for professionals and founders.", icon: Briefcase },
-      { label: "OPC Registration", description: "Single-owner company registration assistance.", icon: Building2 },
+      { label: "OPC", slug: "opc-registration", description: "Single-owner company registration assistance.", icon: Building2 },
       { label: "Sole Proprietor", description: "Simple setup for individual-owned businesses with full control and minimal formalities.", icon: Users },
       { label: "Foreign Company Subsidiary", description: "India entry setup and regulatory guidance.", icon: Briefcase },
       { label: "NBFC", description: "Registration and compliance for NBFCs.", icon: Building2 },
@@ -109,12 +109,13 @@ const Services = () => {
 
   const renderItems = (sectionTitle: string, items: typeof sections[number]["items"]) =>
     items.map((item) => {
-      const service = getServiceBySlug(toSlug(item.label));
+      const slug = (item as typeof item & { slug?: string }).slug || toSlug(item.label);
+      const service = getServiceBySlug(slug);
       const Icon = item.icon;
       return (
         <Link
           key={item.label}
-          to={`/services/${toSlug(item.label)}`}
+          to={`/services/${slug}`}
           className={serviceCardClass}
         >
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">

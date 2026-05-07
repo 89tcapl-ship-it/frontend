@@ -35,7 +35,7 @@ const startingBusiness = [
   },
   {
     slug: "opc-registration",
-    fallbackTitle: "OPC Registration",
+    fallbackTitle: "OPC",
     fallbackDescription: "One-person company incorporation assistance.",
     icon: BadgeCheck,
   },

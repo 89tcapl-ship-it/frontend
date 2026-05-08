@@ -63,7 +63,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, []);
 
     const login = async (email: string, password: string, turnstileToken?: string) => {
-        const response = await api.post('/auth/login', { email, password, turnstileToken }) as any;
+        const payload = {
+            email,
+            password,
+            ...(turnstileToken ? { turnstileToken } : {}),
+        };
+        const response = await api.post('/auth/login', payload) as any;
 
         if (response.success && response.data) {
             const { user, token } = response.data;

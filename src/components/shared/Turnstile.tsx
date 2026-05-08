@@ -6,7 +6,11 @@ interface TurnstileProps {
 }
 
 export const TurnstileWidget: React.FC<TurnstileProps> = ({ onVerify, onError }) => {
-    const siteKey = import.meta.env.VITE_CLOUDFLARE_SITE_KEY || 'YOUR_SITE_KEY';
+    const siteKey = import.meta.env.VITE_CLOUDFLARE_SITE_KEY;
+
+    if (!siteKey || siteKey === 'YOUR_SITE_KEY') {
+        return null;
+    }
 
     return (
         <div className="flex justify-center my-4">

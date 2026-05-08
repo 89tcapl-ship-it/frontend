@@ -114,6 +114,16 @@ const mergeSectionWithSeed = (page: string, section: PageSection): PageSection =
     };
 };
 
+const uniqueSectionsById = (sections: PageSection[]) => {
+    const sectionsMap = new Map<string, PageSection>();
+
+    for (const section of sections) {
+        sectionsMap.set(section.sectionId, section);
+    }
+
+    return Array.from(sectionsMap.values());
+};
+
 const getSectionSortRank = (page: string, section: PageSection) => {
     const templateOrder = pageTemplates[page] || [];
     const templateIndex = templateOrder.indexOf(section.sectionId);
@@ -195,7 +205,7 @@ const ContentManagement = () => {
     }, [formData.sectionId, selectedPage]);
     const visibleSections = useMemo(() => {
         const hidden = hiddenSectionIds[selectedPage] || new Set<string>();
-        return (pageContent?.sections || [])
+        return uniqueSectionsById(pageContent?.sections || [])
             .map((section) => mergeSectionWithSeed(selectedPage, section))
             .filter((section) => {
                 if (hidden.has(section.sectionId)) return false;

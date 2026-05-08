@@ -57,6 +57,17 @@ const pageTemplates: Record<string, string[]> = {
     contact: ['contact-overline', 'header', 'contact-email', 'contact-phone', 'contact-address', 'form', 'form-name', 'form-email', 'form-phone', 'form-service', 'form-message', 'map'],
 };
 
+const homeTemplateGroups = [
+    { title: 'Hero', items: ['hero', 'hero-secondary-cta'] },
+    { title: 'Services Intro', items: ['services-intro'] },
+    { title: 'Starting a Business', items: ['starting-business-heading'] },
+    { title: 'Tax & Compliance', items: ['tax-compliance-heading'] },
+    { title: 'Business Support', items: ['business-support-heading', 'business-support'] },
+    { title: 'About', items: ['about', 'about-overline'] },
+    { title: 'Why Choose Us', items: ['why-choose-us-item-1', 'why-choose-us-item-2', 'why-choose-us-item-3', 'why-choose-us-item-4', 'why-choose-us-overline', 'why-choose-us'] },
+    { title: 'CTA', items: ['cta', 'home-services-cta'] },
+] as const;
+
 const hiddenSectionIds: Record<string, Set<string>> = {
     home: new Set(['hero-badge']),
     about: new Set(['founder-photo-label']),
@@ -580,20 +591,44 @@ const ContentManagement = () => {
                 <CardContent>
                     <div className="rounded-xl border border-dashed border-border bg-muted/30 p-4">
                         <p className="text-sm font-medium text-foreground">Expected section IDs</p>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                            {(pageTemplates[selectedPage] || []).map((sectionId) => (
-                                <button
-                                    key={sectionId}
-                                    type="button"
-                                    onClick={() => handleTemplateClick(sectionId)}
-                                    className="inline-flex"
-                                >
-                                    <Badge variant="outline" className="cursor-pointer text-xs transition-colors hover:border-primary hover:bg-primary/5">
-                                        {sectionId}
-                                    </Badge>
-                                </button>
-                            ))}
-                        </div>
+                        {selectedPage === 'home' ? (
+                            <div className="mt-4 grid gap-4">
+                                {homeTemplateGroups.map((group) => (
+                                    <div key={group.title} className="rounded-xl border border-border/70 bg-background p-4">
+                                        <p className="text-sm font-semibold text-foreground">{group.title}</p>
+                                        <div className="mt-3 flex flex-wrap gap-2">
+                                            {group.items.map((sectionId) => (
+                                                <button
+                                                    key={sectionId}
+                                                    type="button"
+                                                    onClick={() => handleTemplateClick(sectionId)}
+                                                    className="inline-flex"
+                                                >
+                                                    <Badge variant="outline" className="cursor-pointer text-xs transition-colors hover:border-primary hover:bg-primary/5">
+                                                        {sectionId}
+                                                    </Badge>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                {(pageTemplates[selectedPage] || []).map((sectionId) => (
+                                    <button
+                                        key={sectionId}
+                                        type="button"
+                                        onClick={() => handleTemplateClick(sectionId)}
+                                        className="inline-flex"
+                                    >
+                                        <Badge variant="outline" className="cursor-pointer text-xs transition-colors hover:border-primary hover:bg-primary/5">
+                                            {sectionId}
+                                        </Badge>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                         <p className="mt-3 text-xs text-muted-foreground">
                             Only the Home, About, and Contact page sections are managed here.
                         </p>

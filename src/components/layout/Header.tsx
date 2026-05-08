@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
+import api from "@/lib/api";
+
+interface Settings {
+  headerCtaText?: string;
+  headerCtaLink?: string;
+}
 
 const toSlug = (label: string) =>
   label
@@ -49,6 +55,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileOpenMenu, setMobileOpenMenu] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [settings, setSettings] = useState<Settings | null>(null);
   const desktopNavRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -61,6 +68,44 @@ export function Header() {
     document.addEventListener("mousedown", handlePointerDown);
     return () => document.removeEventListener("mousedown", handlePointerDown);
   }, []);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response: any = await api.get("/settings");
+        setSettings(response.data);
+      } catch (error) {
+        console.error("Failed to fetch settings:", error);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
+  const headerCtaText = settings?.headerCtaText || "+918958889589";
+  const headerCtaLink = settings?.headerCtaLink || "/contact";
+  const headerCtaIsInternal = headerCtaLink.startsWith("/");
+
+  const renderHeaderCta = (className: string, onClick?: () => void) => {
+    const sharedProps = {
+      className,
+      onClick,
+    };
+
+    if (headerCtaIsInternal) {
+      return (
+        <Link to={headerCtaLink} {...sharedProps}>
+          {headerCtaText}
+        </Link>
+      );
+    }
+
+    return (
+      <a href={headerCtaLink} target="_blank" rel="noreferrer" {...sharedProps}>
+        {headerCtaText}
+      </a>
+    );
+  };
 
   const mobileSections = [
     { key: "starting-business", label: "Starting a Business", items: startingBusinessMenu.flatMap((s) => s.items) },
@@ -215,9 +260,7 @@ export function Header() {
           </div>
 
           <div className="hidden lg:flex">
-            <Link to="/contact" className="btn-primary">
-              +918958889589
-            </Link>
+            {renderHeaderCta("btn-primary")}
           </div>
 
           <button
@@ -274,9 +317,7 @@ export function Header() {
                 About
               </Link>
 
-              <Link to="/contact" className="btn-primary text-center" onClick={() => setMobileMenuOpen(false)}>
-                Get Started
-              </Link>
+              {renderHeaderCta("btn-primary text-center", () => setMobileMenuOpen(false))}
             </div>
           </div>
         )}

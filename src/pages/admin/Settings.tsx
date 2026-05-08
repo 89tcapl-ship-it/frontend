@@ -18,6 +18,8 @@ const Settings = () => {
     const [formData, setFormData] = useState<SettingsFormData>({
         siteName: '',
         siteDescription: '',
+        headerCtaText: '',
+        headerCtaLink: '',
         contactEmail: '',
         contactPhone: '',
         address: '',
@@ -53,6 +55,8 @@ const Settings = () => {
             setFormData({
                 siteName: response.data.siteName,
                 siteDescription: response.data.siteDescription,
+                headerCtaText: response.data.headerCtaText || '',
+                headerCtaLink: response.data.headerCtaLink || '',
                 contactEmail: response.data.contactEmail,
                 contactPhone: response.data.contactPhone,
                 address: response.data.address,
@@ -155,6 +159,28 @@ const Settings = () => {
                                 value={formData.siteDescription}
                                 onChange={(e) => setFormData({ ...formData, siteDescription: e.target.value })}
                             />
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <div className="space-y-2">
+                                <Label htmlFor="headerCtaText">Header CTA Text</Label>
+                                <Input
+                                    id="headerCtaText"
+                                    value={formData.headerCtaText}
+                                    onChange={(e) => setFormData({ ...formData, headerCtaText: e.target.value })}
+                                    placeholder="+918958889589"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="headerCtaLink">Header CTA Link</Label>
+                                <Input
+                                    id="headerCtaLink"
+                                    value={formData.headerCtaLink}
+                                    onChange={(e) => setFormData({ ...formData, headerCtaLink: e.target.value })}
+                                    placeholder="/contact"
+                                />
+                            </div>
                         </div>
                     </CardContent>
                 </Card>

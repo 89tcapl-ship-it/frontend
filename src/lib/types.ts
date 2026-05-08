@@ -114,6 +114,8 @@ export interface Settings {
     _id: string;
     siteName: string;
     siteDescription: string;
+    headerCtaText?: string;
+    headerCtaLink?: string;
     contactEmail: string;
     contactPhone: string;
     address: string;
@@ -145,6 +147,8 @@ export interface Settings {
 export interface SettingsFormData {
     siteName?: string;
     siteDescription?: string;
+    headerCtaText?: string;
+    headerCtaLink?: string;
     contactEmail?: string;
     contactPhone?: string;
     address?: string;

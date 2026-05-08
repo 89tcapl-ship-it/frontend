@@ -1,6 +1,7 @@
-﻿import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
+import { usePageContent } from "@/hooks/usePageContent";
 import {
   Building2,
   FileCheck,
@@ -116,6 +117,27 @@ const serviceSlugs: Record<string, string> = {
 };
 
 const Index = () => {
+  const { getSectionValue } = usePageContent("home");
+
+  const heroTitle = getSectionValue("hero", "title", "End-to-End Finance and Compliance Support for Growing Businesses");
+  const heroSubtitle = getSectionValue("hero", "subtitle", "Led by seasoned Chartered Accountants, 89TCA delivers structured solutions that empower businesses to operate efficiently and scale with confidence.");
+  const heroContent = getSectionValue("hero", "content", "Trusted Chartered Accountants ? 10 Years Experience ? Serving Startups, SMEs & Enterprises Across India");
+  const heroButtonText = getSectionValue("hero", "buttonText", "Get Started");
+  const heroButtonLink = getSectionValue("hero", "buttonLink", "/contact");
+
+  const servicesIntroTitle = getSectionValue("services-intro", "title", "Our Services");
+  const servicesIntroContent = getSectionValue("services-intro", "content", "Explore tailored services across incorporation, compliance, and business support.");
+  const businessSupportIntro = getSectionValue("business-support", "content", "Our flagship remote accounting service is built to help businesses stay financially organized without the overhead of a full-time hire.");
+  const aboutTitle = getSectionValue("about", "title", "About 89TCA");
+  const aboutContent = getSectionValue("about", "content", "Backed by 40+ years of combined experience, we provide expert advisory, audit, taxation, and compliance services.");
+  const whyChooseUsTitle = getSectionValue("why-choose-us", "title", "Why Choose Us");
+  const whyChooseUsSubtitle = getSectionValue("why-choose-us", "subtitle", "");
+  const whyChooseUsContent = getSectionValue("why-choose-us", "content", "");
+  const ctaTitle = getSectionValue("cta", "title", "Need help with your business compliance?");
+  const ctaContent = getSectionValue("cta", "content", "Our team is ready to guide you through the next steps.");
+  const ctaButtonText = getSectionValue("cta", "buttonText", "Contact Now");
+  const ctaButtonLink = getSectionValue("cta", "buttonLink", "/contact");
+
   return (
     <Layout>
       <SEO
@@ -138,16 +160,16 @@ const Index = () => {
 
               <div className="mx-auto mt-10 max-w-[1400px] rounded-full border border-slate-200 bg-[#f8fafc] px-8 py-4 text-center shadow-[0_1px_5px_rgba(15,23,42,0.04)]">
                 <p className="text-sm font-medium text-slate-700 md:text-base lg:text-[1.02rem]">
-                  Trusted Chartered Accountants • 10 Years Experience • Serving Startups, SMEs &amp; Enterprises Across India
+                  {heroContent}
                 </p>
               </div>
 
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
                 <Link
-                  to="/contact"
+                  to={heroButtonLink}
                   className="btn-primary h-12 min-w-[168px] inline-flex items-center justify-center text-center transition-transform hover:-translate-y-0.5"
                 >
-                  Get Started
+                  {heroButtonText}
                 </Link>
                 <Link
                   to="/contact"
@@ -164,9 +186,9 @@ const Index = () => {
       <section className="section-padding bg-secondary/30">
         <div className="container-custom">
           <div>
-            <h2 className="mt-3 text-3xl font-semibold text-foreground">Our Services</h2>
+            <h2 className="mt-3 text-3xl font-semibold text-foreground">{servicesIntroTitle}</h2>
             <p className="mt-3 text-muted-foreground">
-              Explore tailored services across incorporation, compliance, and business support.
+              {servicesIntroContent}
             </p>
           </div>
 
@@ -220,7 +242,7 @@ const Index = () => {
             <div>
               <h3 className="text-lg font-semibold text-foreground">Business Support</h3>
               <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
-                Our flagship remote accounting service is built to help businesses stay financially organized without the overhead of a full-time hire.
+                {businessSupportIntro}
               </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {businessSupport.map((item) => (
@@ -260,10 +282,9 @@ const Index = () => {
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="text-sm font-semibold text-primary">About 89TCA</p>
-              <h2 className="mt-3 text-3xl font-semibold text-foreground">About 89TCA</h2>
+              <h2 className="mt-3 text-3xl font-semibold text-foreground">{aboutTitle}</h2>
               <p className="mt-4 text-muted-foreground">
-                Backed by 40+ years of combined experience, we provide expert advisory,
-                audit, taxation, and compliance services.
+                {aboutContent}
               </p>
             </div>
             <div className="flex justify-start lg:justify-end">
@@ -282,8 +303,10 @@ const Index = () => {
         <div className="container-custom">
           <div>
             <p className="text-sm font-semibold text-primary">Why Choose Us</p>
-            <h2 className="mt-3 text-3xl font-semibold text-foreground">Why Choose Us</h2>
+            <h2 className="mt-3 text-3xl font-semibold text-foreground">{whyChooseUsTitle}</h2>
           </div>
+          {whyChooseUsSubtitle ? <p className="mt-3 max-w-3xl text-sm text-muted-foreground">{whyChooseUsSubtitle}</p> : null}
+          {whyChooseUsContent ? <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{whyChooseUsContent}</p> : null}
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {whyChooseUs.map((item) => (
               <div
@@ -305,17 +328,17 @@ const Index = () => {
           <div className="card-soft p-8 md:flex md:items-center md:justify-between">
             <div>
               <h3 className="text-2xl font-semibold text-foreground">
-                Need help with your business compliance?
+                {ctaTitle}
               </h3>
               <p className="mt-2 text-sm text-muted-foreground text-justify">
-                Our team is ready to guide you through the next steps.
+                {ctaContent}
               </p>
             </div>
             <Link
-              to="/contact"
+              to={ctaButtonLink}
               className="btn-primary mt-6 inline-flex md:mt-0"
             >
-              Contact Now
+              {ctaButtonText}
             </Link>
           </div>
         </div>

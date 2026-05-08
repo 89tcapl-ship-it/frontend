@@ -1,41 +1,61 @@
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/hooks/useSEO";
+import { usePageContent } from "@/hooks/usePageContent";
 
-const founders = [
+const founderDefaults = [
   {
+    id: "founder-mahitha",
     name: "CA Mahitha N, ACA",
     brief:
       "Focused on direct taxation, litigation support, transfer pricing audits, and tax planning for corporates and HNIs. Her experience includes hands-on exposure to assessment proceedings and tax advisory.",
   },
   {
+    id: "founder-diwakar",
     name: "CA Diwakar Reddy D, FCA, DISA",
     brief:
       "A seasoned advisor over a decade of experience in financial consulting and business strategy. His expertise spans business advisory, startup structuring, investment planning, and FDI regulatory advisory. He has worked closely with founders and growth-stage businesses on capital structuring and long-term financial strategy.",
   },
   {
+    id: "founder-surendranath",
     name: "CA Surendranath Reddy M, FCA, DISA",
     brief:
       "Brings strong experience in statutory audits, bank audits, corporate governance, and internal control systems. His background includes working with banks and corporates on compliance frameworks and risk-based audit environments.",
   },
   {
+    id: "founder-lokesh",
     name: "CA MSS Lokesh, FCA, DISA",
     brief:
       "Specialist in indirect taxation and regulatory compliance, with significant exposure to GST, customs, and business structuring advisory. He has advised businesses on optimizing tax structures while ensuring regulatory adherence.",
   },
   {
+    id: "founder-jyothi",
     name: "CA Jyothi K, FCA",
     brief:
       "Experienced in SOX compliance, internal controls, risk assessment, and financial reporting. She has worked with leading MNCs including Grant Thornton, AIG, Accenture, and State Street, bringing global compliance exposure into advisory practice.",
   },
 ];
 
-const approachPoints = [
-  "Strategic thinking with regulatory precision",
-  "Big-firm exposure with partner-level involvement",
-  "Compliance discipline with commercial practicality",
-];
-
 const About = () => {
+  const { getSectionValue } = usePageContent("about");
+
+  const introTitle = getSectionValue("intro", "title", "About Us");
+  const introSubtitle = getSectionValue("intro", "subtitle", "The promoters collectively bring over four decades of combined experience across financial consulting, compliance, risk management, and strategic advisory.");
+  const introContent = getSectionValue("intro", "content", "Built on deep professional expertise and extensive industry experience, 89TCA offers comprehensive services across advisory, audit, taxation, and regulatory consulting. Backed by a team of seasoned Chartered Accountants, the approach combines institutional knowledge with entrepreneurial agility to deliver practical, business-focused solutions.");
+  const foundersHeading = getSectionValue("founders-heading", "title", "Founders' Background");
+  const approachCombineLabel = getSectionValue("approach-combine-label", "content", "We combine:");
+  const approachTitle = getSectionValue("approach", "title", "Our Approach");
+  const approachContent = getSectionValue("approach", "content", "The firm is driven by the belief that sound financial structuring and proactive compliance are critical to sustainable growth. Every engagement is led with accountability, technical depth, and long-term perspective.");
+  const approachPoints = [
+    getSectionValue("approach-point-1", "content", "Strategic thinking with regulatory precision"),
+    getSectionValue("approach-point-2", "content", "Big-firm exposure with partner-level involvement"),
+    getSectionValue("approach-point-3", "content", "Compliance discipline with commercial practicality"),
+  ].filter(Boolean);
+
+  const founders = founderDefaults.map((founder) => ({
+    name: getSectionValue(founder.id, "title", founder.name),
+    brief: getSectionValue(founder.id, "content", founder.brief),
+  }));
+
   return (
     <Layout>
       <SEO
@@ -48,19 +68,13 @@ const About = () => {
         <div className="container-custom">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
-              About Us
+              {introTitle}
             </h1>
             <p className="mt-6 text-justify text-base leading-7 text-muted-foreground md:text-lg">
-              Built on deep professional expertise and extensive industry experience,
-              89TCA offers comprehensive services across advisory, audit, taxation, and
-              regulatory consulting. Backed by a team of seasoned Chartered
-              Accountants, the approach combines institutional knowledge with
-              entrepreneurial agility to deliver practical, business-focused solutions.
+              {introContent}
             </p>
             <p className="mt-4 text-justify text-base leading-7 text-muted-foreground md:text-lg">
-              The promoters collectively bring over four decades of combined experience
-              across financial consulting, compliance, risk management, and strategic
-              advisory.
+              {introSubtitle}
             </p>
           </div>
         </div>
@@ -71,7 +85,7 @@ const About = () => {
           <div className="mx-auto max-w-4xl">
             <div>
               <h2 className="mt-0 text-3xl font-semibold tracking-tight text-foreground">
-                Founders' Background
+                {foundersHeading}
               </h2>
             </div>
 
@@ -107,11 +121,11 @@ const About = () => {
         <div className="container-custom">
           <div className="mx-auto max-w-4xl">
             <h2 className="mt-0 text-3xl font-semibold tracking-tight text-foreground">
-              Our Approach
+              {approachTitle}
             </h2>
 
             <div className="mt-4 rounded-[30px] border border-border bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.06)] sm:p-8">
-              <p className="text-sm font-semibold text-foreground">We combine:</p>
+              <p className="text-sm font-semibold text-foreground">{approachCombineLabel}</p>
               <ul className="mt-4 space-y-4">
                 {approachPoints.map((point) => (
                   <li key={point} className="flex gap-3 text-sm leading-6 text-slate-600 md:text-base">
@@ -123,9 +137,7 @@ const About = () => {
             </div>
 
             <p className="mt-4 text-justify text-base leading-7 text-muted-foreground md:text-lg">
-              The firm is driven by the belief that sound financial structuring and
-              proactive compliance are critical to sustainable growth. Every engagement
-              is led with accountability, technical depth, and long-term perspective.
+              {approachContent}
             </p>
           </div>
         </div>

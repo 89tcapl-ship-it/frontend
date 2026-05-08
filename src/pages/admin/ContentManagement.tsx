@@ -101,16 +101,16 @@ const mergeSectionWithSeed = (page: string, section: PageSection): PageSection =
     }
 
     return {
-        ...seed,
         ...section,
-        title: section.title || seed.title,
-        subtitle: section.subtitle || seed.subtitle,
-        content: section.content || seed.content,
-        buttonText: section.buttonText || seed.buttonText,
-        buttonLink: section.buttonLink || seed.buttonLink,
-        imageUrl: section.imageUrl || seed.imageUrl,
-        order: section.order ?? seed.order,
-        isActive: section.isActive ?? seed.isActive,
+        ...seed,
+        title: seed.title ?? section.title,
+        subtitle: seed.subtitle ?? section.subtitle,
+        content: seed.content ?? section.content,
+        buttonText: seed.buttonText ?? section.buttonText,
+        buttonLink: seed.buttonLink ?? section.buttonLink,
+        imageUrl: seed.imageUrl ?? section.imageUrl,
+        order: seed.order ?? section.order,
+        isActive: seed.isActive ?? section.isActive,
     };
 };
 

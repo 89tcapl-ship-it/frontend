@@ -114,8 +114,28 @@ export interface Settings {
     _id: string;
     siteName: string;
     siteDescription: string;
-    headerCtaText?: string;
-    headerCtaLink?: string;
+    navbar?: {
+        siteName?: string;
+        startingBusinessLabel?: string;
+        supportServicesLabel?: string;
+        compliancesLabel?: string;
+        fundingLabel?: string;
+        auditsLabel?: string;
+        aboutLabel?: string;
+        entityFormationHeading?: string;
+        alliedRegistrationsHeading?: string;
+        viewAllServicesLabel?: string;
+        headerCtaText?: string;
+        headerCtaLink?: string;
+    };
+    footer?: {
+        description?: string;
+        tagline?: string;
+        registeredOfficeLabel?: string;
+        emailLabel?: string;
+        phoneLabel?: string;
+        disclaimer?: string;
+    };
     contactEmail: string;
     contactPhone: string;
     address: string;
@@ -147,8 +167,28 @@ export interface Settings {
 export interface SettingsFormData {
     siteName?: string;
     siteDescription?: string;
-    headerCtaText?: string;
-    headerCtaLink?: string;
+    navbar?: {
+        siteName?: string;
+        startingBusinessLabel?: string;
+        supportServicesLabel?: string;
+        compliancesLabel?: string;
+        fundingLabel?: string;
+        auditsLabel?: string;
+        aboutLabel?: string;
+        entityFormationHeading?: string;
+        alliedRegistrationsHeading?: string;
+        viewAllServicesLabel?: string;
+        headerCtaText?: string;
+        headerCtaLink?: string;
+    };
+    footer?: {
+        description?: string;
+        tagline?: string;
+        registeredOfficeLabel?: string;
+        emailLabel?: string;
+        phoneLabel?: string;
+        disclaimer?: string;
+    };
     contactEmail?: string;
     contactPhone?: string;
     address?: string;

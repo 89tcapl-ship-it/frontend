@@ -2,11 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import api from "@/lib/api";
-
-interface Settings {
-  headerCtaText?: string;
-  headerCtaLink?: string;
-}
+import { Settings as SettingsType } from "@/lib/types";
 
 const toSlug = (label: string) =>
   label
@@ -55,7 +51,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileOpenMenu, setMobileOpenMenu] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [settings, setSettings] = useState<Settings | null>(null);
+  const [settings, setSettings] = useState<SettingsType | null>(null);
   const desktopNavRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -82,8 +78,9 @@ export function Header() {
     fetchSettings();
   }, []);
 
-  const headerCtaText = settings?.headerCtaText || "+918958889589";
-  const headerCtaLink = settings?.headerCtaLink || "/contact";
+  const navbarSettings = settings?.navbar;
+  const headerCtaText = navbarSettings?.headerCtaText || "+918958889589";
+  const headerCtaLink = navbarSettings?.headerCtaLink || "/contact";
   const headerCtaIsInternal = headerCtaLink.startsWith("/");
 
   const renderHeaderCta = (className: string, onClick?: () => void) => {
@@ -108,11 +105,11 @@ export function Header() {
   };
 
   const mobileSections = [
-    { key: "starting-business", label: "Starting a Business", items: startingBusinessMenu.flatMap((s) => s.items) },
-    { key: "support-services", label: "Support Services", items: supportServicesMenu },
-    { key: "compliances", label: "Compliances", items: compliancesMenu },
-    { key: "funding", label: "Funding", items: fundingMenu },
-    { key: "audits", label: "Audits", items: auditsMenu },
+    { key: "starting-business", label: navbarSettings?.startingBusinessLabel || "Starting a Business", items: startingBusinessMenu.flatMap((s) => s.items) },
+    { key: "support-services", label: navbarSettings?.supportServicesLabel || "Support Services", items: supportServicesMenu },
+    { key: "compliances", label: navbarSettings?.compliancesLabel || "Compliances", items: compliancesMenu },
+    { key: "funding", label: navbarSettings?.fundingLabel || "Funding", items: fundingMenu },
+    { key: "audits", label: navbarSettings?.auditsLabel || "Audits", items: auditsMenu },
   ];
 
   return (
@@ -131,7 +128,7 @@ export function Header() {
                 onClick={() => setOpenMenu((current) => (current === "starting-business" ? null : "starting-business"))}
                 aria-expanded={openMenu === "starting-business"}
               >
-                Starting a Business
+                {navbarSettings?.startingBusinessLabel || "Starting a Business"}
                 <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === "starting-business" ? "rotate-180" : ""}`} />
               </button>
               {openMenu === "starting-business" && (
@@ -143,7 +140,11 @@ export function Header() {
                           key={section.heading}
                           className={`space-y-3 ${index === 0 ? "pl-6 sm:pl-10" : "pl-2 sm:pl-4"}`}
                         >
-                          <p className="text-sm font-semibold text-foreground">{section.heading}</p>
+                          <p className="text-sm font-semibold text-foreground">
+                            {section.heading === "Entity Formation"
+                              ? navbarSettings?.entityFormationHeading || section.heading
+                              : navbarSettings?.alliedRegistrationsHeading || section.heading}
+                          </p>
                           <ul className={`space-y-2.5 text-sm text-muted-foreground ${index === 0 ? "pl-4 sm:pl-8" : "pl-3 sm:pl-6"}`}>
                             {section.items.map((item) => (
                               <li key={item}>
@@ -158,7 +159,7 @@ export function Header() {
                     </div>
                     <div className="mt-6 border-t border-border pt-4">
                       <Link to="/starting-business" className="text-sm font-semibold text-primary hover:underline">
-                        View All Services &rarr;
+                        {navbarSettings?.viewAllServicesLabel || "View All Services"} &rarr;
                       </Link>
                     </div>
                   </div>
@@ -168,7 +169,7 @@ export function Header() {
 
             <div className="relative">
               <button type="button" className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary" onClick={() => setOpenMenu((current) => (current === "support-services" ? null : "support-services"))} aria-expanded={openMenu === "support-services"}>
-                Support Services
+                {navbarSettings?.supportServicesLabel || "Support Services"}
                 <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === "support-services" ? "rotate-180" : ""}`} />
               </button>
               {openMenu === "support-services" && (
@@ -190,7 +191,7 @@ export function Header() {
 
             <div className="relative">
               <button type="button" className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary" onClick={() => setOpenMenu((current) => (current === "compliances" ? null : "compliances"))} aria-expanded={openMenu === "compliances"}>
-                Compliances
+                {navbarSettings?.compliancesLabel || "Compliances"}
                 <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === "compliances" ? "rotate-180" : ""}`} />
               </button>
               {openMenu === "compliances" && (
@@ -212,7 +213,7 @@ export function Header() {
 
             <div className="relative">
               <button type="button" className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary" onClick={() => setOpenMenu((current) => (current === "funding" ? null : "funding"))} aria-expanded={openMenu === "funding"}>
-                Funding
+                {navbarSettings?.fundingLabel || "Funding"}
                 <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === "funding" ? "rotate-180" : ""}`} />
               </button>
               {openMenu === "funding" && (
@@ -234,7 +235,7 @@ export function Header() {
 
             <div className="relative">
               <button type="button" className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary" onClick={() => setOpenMenu((current) => (current === "audits" ? null : "audits"))} aria-expanded={openMenu === "audits"}>
-                Audits
+                {navbarSettings?.auditsLabel || "Audits"}
                 <ChevronDown className={`h-4 w-4 transition-transform ${openMenu === "audits" ? "rotate-180" : ""}`} />
               </button>
               {openMenu === "audits" && (
@@ -255,7 +256,7 @@ export function Header() {
             </div>
 
             <Link to="/about" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-              About
+            {navbarSettings?.aboutLabel || "About"}
             </Link>
           </div>
 
@@ -314,7 +315,7 @@ export function Header() {
                 className="rounded-xl border border-border/60 bg-background px-4 py-3 text-sm font-medium text-foreground transition-colors hover:text-primary"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                About
+                {navbarSettings?.aboutLabel || "About"}
               </Link>
 
               {renderHeaderCta("btn-primary text-center", () => setMobileMenuOpen(false))}

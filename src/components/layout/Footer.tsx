@@ -1,26 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Linkedin, Youtube } from "lucide-react";
-
-interface Settings {
-  siteName: string;
-  siteDescription: string;
-  address: string;
-  contactEmail: string;
-  contactPhone: string;
-  socialLinks?: {
-    facebook?: string;
-    twitter?: string;
-    linkedin?: string;
-    instagram?: string;
-    youtube?: string;
-    whatsapp?: string;
-    showFacebook?: boolean;
-    showLinkedin?: boolean;
-    showYoutube?: boolean;
-    showWhatsapp?: boolean;
-  };
-}
+import api from "@/lib/api";
+import { Settings as SettingsType } from "@/lib/types";
 
 const WhatsAppIcon = ({ className = "h-5 w-5" }: { className?: string }) => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
@@ -29,12 +11,11 @@ const WhatsAppIcon = ({ className = "h-5 w-5" }: { className?: string }) => (
 );
 
 export function Footer() {
-  const [settings, setSettings] = useState<Settings | null>(null);
+  const [settings, setSettings] = useState<SettingsType | null>(null);
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const api = (await import("@/lib/api")).default;
         const response: any = await api.get("/settings");
         setSettings(response.data);
       } catch (error) {
@@ -45,6 +26,7 @@ export function Footer() {
     fetchSettings();
   }, []);
 
+  const footerSettings = settings?.footer;
   const whatsappUrl =
     settings?.socialLinks?.whatsapp ||
     `https://wa.me/${(settings?.contactPhone || "+917019557994").replace(/[^0-9]/g, "")}`;
@@ -63,21 +45,22 @@ export function Footer() {
           <div className="flex flex-col items-center">
             <Link to="/" className="mb-4 inline-block" aria-label="89TCA home">
               <span className="text-sm font-extrabold tracking-[0.34em] text-cyan-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)] md:text-base">
-                {settings?.siteName || "89TCA"}
+                {settings?.navbar?.siteName || settings?.siteName || "89TCA"}
               </span>
             </Link>
             <p className="mb-2 text-lg font-semibold tracking-wide text-background/95 md:text-xl">
-              {settings?.siteName || "89T Corporate Advisors Private Limited"}
+              {settings?.navbar?.siteName || settings?.siteName || "89T Corporate Advisors Private Limited"}
             </p>
             <p className="mb-4 text-sm italic font-semibold text-slate-400 md:text-[15px]">
-              A Compliant Business is a Confident Business
+              {footerSettings?.tagline || "A Compliant Business is a Confident Business"}
             </p>
             <p className="mb-5 text-sm leading-7 text-slate-300">
-              {settings?.siteDescription ||
+              {footerSettings?.description ||
+                settings?.siteDescription ||
                 "A compliance-focused corporate advisory firm supporting startups and growing businesses with registration, taxation, and business advisory services."}
             </p>
             <div className="space-y-2 text-sm text-slate-300">
-              <p className="font-medium text-background/80">Registered Office:</p>
+              <p className="font-medium text-background/80">{footerSettings?.registeredOfficeLabel || "Registered Office:"}</p>
               {settings?.address ? (
                 <div className="whitespace-pre-line">{settings.address}</div>
               ) : (
@@ -90,13 +73,13 @@ export function Footer() {
 
             <div className="space-y-2 text-sm text-background/70">
               <p>
-                <span className="font-medium text-background/80">Email: </span>
+                <span className="font-medium text-background/80">{footerSettings?.emailLabel || "Email:"} </span>
                 <a href={`mailto:${settings?.contactEmail || "hr@89TCA.in"}`} className="transition-colors hover:text-background">
                   {settings?.contactEmail || "hr@89TCA.in"}
                 </a>
               </p>
               <p>
-                <span className="font-medium text-background/80">Phone: </span>
+                <span className="font-medium text-background/80">{footerSettings?.phoneLabel || "Phone:"} </span>
                 <a href={`tel:${settings?.contactPhone || "+917019557994"}`} className="transition-colors hover:text-background">
                   {settings?.contactPhone || "+91 70195 57994"}
                 </a>
@@ -178,9 +161,9 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-white/10 pt-8 text-center text-sm text-slate-300">
-          <p>© 2026 {settings?.siteName || "89T Corporate Advisors Private Limited"}. All rights reserved.</p>
+          <p>(c) 2026 {settings?.siteName || "89T Corporate Advisors Private Limited"}. All rights reserved.</p>
           <p className="mt-2">
-            <span className="text-background/40">Disclaimer:</span> This website is for informational purposes only and does not constitute legal or financial advice.
+            <span className="text-background/40">Disclaimer:</span> {footerSettings?.disclaimer || "This website is for informational purposes only and does not constitute legal or financial advice."}
           </p>
         </div>
       </div>

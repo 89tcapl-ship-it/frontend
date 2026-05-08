@@ -18,8 +18,28 @@ const Settings = () => {
     const [formData, setFormData] = useState<SettingsFormData>({
         siteName: '',
         siteDescription: '',
-        headerCtaText: '',
-        headerCtaLink: '',
+        navbar: {
+            siteName: '',
+            startingBusinessLabel: '',
+            supportServicesLabel: '',
+            compliancesLabel: '',
+            fundingLabel: '',
+            auditsLabel: '',
+            aboutLabel: '',
+            entityFormationHeading: '',
+            alliedRegistrationsHeading: '',
+            viewAllServicesLabel: '',
+            headerCtaText: '',
+            headerCtaLink: '',
+        },
+        footer: {
+            description: '',
+            tagline: '',
+            registeredOfficeLabel: '',
+            emailLabel: '',
+            phoneLabel: '',
+            disclaimer: '',
+        },
         contactEmail: '',
         contactPhone: '',
         address: '',
@@ -53,13 +73,33 @@ const Settings = () => {
             const response: any = await api.get('/settings');
             setSettings(response.data);
             setFormData({
-                siteName: response.data.siteName,
-                siteDescription: response.data.siteDescription,
-                headerCtaText: response.data.headerCtaText || '',
-                headerCtaLink: response.data.headerCtaLink || '',
-                contactEmail: response.data.contactEmail,
-                contactPhone: response.data.contactPhone,
-                address: response.data.address,
+                siteName: response.data.siteName || '',
+                siteDescription: response.data.siteDescription || '',
+                navbar: {
+                    siteName: response.data.navbar?.siteName || response.data.siteName || '',
+                    startingBusinessLabel: response.data.navbar?.startingBusinessLabel || 'Starting a Business',
+                    supportServicesLabel: response.data.navbar?.supportServicesLabel || 'Support Services',
+                    compliancesLabel: response.data.navbar?.compliancesLabel || 'Compliances',
+                    fundingLabel: response.data.navbar?.fundingLabel || 'Funding',
+                    auditsLabel: response.data.navbar?.auditsLabel || 'Audits',
+                    aboutLabel: response.data.navbar?.aboutLabel || 'About',
+                    entityFormationHeading: response.data.navbar?.entityFormationHeading || 'Entity Formation',
+                    alliedRegistrationsHeading: response.data.navbar?.alliedRegistrationsHeading || 'Allied Registrations',
+                    viewAllServicesLabel: response.data.navbar?.viewAllServicesLabel || 'View All Services',
+                    headerCtaText: response.data.navbar?.headerCtaText || '+918958889589',
+                    headerCtaLink: response.data.navbar?.headerCtaLink || '/contact',
+                },
+                footer: {
+                    description: response.data.footer?.description || response.data.siteDescription || '',
+                    tagline: response.data.footer?.tagline || 'A Compliant Business is a Confident Business',
+                    registeredOfficeLabel: response.data.footer?.registeredOfficeLabel || 'Registered Office:',
+                    emailLabel: response.data.footer?.emailLabel || 'Email:',
+                    phoneLabel: response.data.footer?.phoneLabel || 'Phone:',
+                    disclaimer: response.data.footer?.disclaimer || 'This website is for informational purposes only and does not constitute legal or financial advice.',
+                },
+                contactEmail: response.data.contactEmail || '',
+                contactPhone: response.data.contactPhone || '',
+                address: response.data.address || '',
                 companyInfo: response.data.companyInfo || {
                     cin: '',
                     incorporationDate: '',
@@ -90,12 +130,39 @@ const Settings = () => {
         }
     };
 
+    const updateNavbar = (patch: Partial<NonNullable<SettingsFormData['navbar']>>) => {
+        setFormData((prev) => ({
+            ...prev,
+            navbar: { ...prev.navbar, ...patch },
+        }));
+    };
+
+    const updateFooter = (patch: Partial<NonNullable<SettingsFormData['footer']>>) => {
+        setFormData((prev) => ({
+            ...prev,
+            footer: { ...prev.footer, ...patch },
+        }));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSaving(true);
 
         try {
-            await api.put('/settings', formData);
+            const payload = {
+                siteName: formData.navbar?.siteName || formData.siteName,
+                siteDescription: formData.footer?.description || formData.siteDescription,
+                navbar: formData.navbar,
+                footer: formData.footer,
+                contactEmail: formData.contactEmail,
+                contactPhone: formData.contactPhone,
+                address: formData.address,
+                companyInfo: formData.companyInfo,
+                socialLinks: formData.socialLinks,
+                ogImage: formData.ogImage,
+            };
+
+            await api.put('/settings', payload);
             toast({
                 title: 'Success',
                 description: 'Settings updated successfully',
@@ -136,38 +203,27 @@ const Settings = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-                {/* General Settings */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>General Information</CardTitle>
+                        <CardTitle>Navbar Settings</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="siteName">Site Name</Label>
-                            <Input
-                                id="siteName"
-                                value={formData.siteName}
-                                onChange={(e) => setFormData({ ...formData, siteName: e.target.value })}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="siteDescription">Site Description</Label>
-                            <Textarea
-                                id="siteDescription"
-                                rows={3}
-                                value={formData.siteDescription}
-                                onChange={(e) => setFormData({ ...formData, siteDescription: e.target.value })}
-                            />
-                        </div>
-
+                    <CardContent className="space-y-6">
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <div className="space-y-2">
+                                <Label htmlFor="navbarSiteName">Brand Name</Label>
+                                <Input
+                                    id="navbarSiteName"
+                                    value={formData.navbar?.siteName}
+                                    onChange={(e) => updateNavbar({ siteName: e.target.value })}
+                                />
+                            </div>
+
                             <div className="space-y-2">
                                 <Label htmlFor="headerCtaText">Header CTA Text</Label>
                                 <Input
                                     id="headerCtaText"
-                                    value={formData.headerCtaText}
-                                    onChange={(e) => setFormData({ ...formData, headerCtaText: e.target.value })}
+                                    value={formData.navbar?.headerCtaText}
+                                    onChange={(e) => updateNavbar({ headerCtaText: e.target.value })}
                                     placeholder="+918958889589"
                                 />
                             </div>
@@ -176,16 +232,162 @@ const Settings = () => {
                                 <Label htmlFor="headerCtaLink">Header CTA Link</Label>
                                 <Input
                                     id="headerCtaLink"
-                                    value={formData.headerCtaLink}
-                                    onChange={(e) => setFormData({ ...formData, headerCtaLink: e.target.value })}
+                                    value={formData.navbar?.headerCtaLink}
+                                    onChange={(e) => updateNavbar({ headerCtaLink: e.target.value })}
                                     placeholder="/contact"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="rounded-xl border border-border/70 p-4">
+                            <p className="text-sm font-semibold text-foreground">Navigation Labels</p>
+                            <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="startingBusinessLabel">Starting a Business</Label>
+                                    <Input
+                                        id="startingBusinessLabel"
+                                        value={formData.navbar?.startingBusinessLabel}
+                                        onChange={(e) => updateNavbar({ startingBusinessLabel: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="supportServicesLabel">Support Services</Label>
+                                    <Input
+                                        id="supportServicesLabel"
+                                        value={formData.navbar?.supportServicesLabel}
+                                        onChange={(e) => updateNavbar({ supportServicesLabel: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="compliancesLabel">Compliances</Label>
+                                    <Input
+                                        id="compliancesLabel"
+                                        value={formData.navbar?.compliancesLabel}
+                                        onChange={(e) => updateNavbar({ compliancesLabel: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="fundingLabel">Funding</Label>
+                                    <Input
+                                        id="fundingLabel"
+                                        value={formData.navbar?.fundingLabel}
+                                        onChange={(e) => updateNavbar({ fundingLabel: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="auditsLabel">Audits</Label>
+                                    <Input
+                                        id="auditsLabel"
+                                        value={formData.navbar?.auditsLabel}
+                                        onChange={(e) => updateNavbar({ auditsLabel: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="aboutLabel">About</Label>
+                                    <Input
+                                        id="aboutLabel"
+                                        value={formData.navbar?.aboutLabel}
+                                        onChange={(e) => updateNavbar({ aboutLabel: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="rounded-xl border border-border/70 p-4">
+                            <p className="text-sm font-semibold text-foreground">Dropdown Labels</p>
+                            <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="entityFormationHeading">Entity Formation</Label>
+                                    <Input
+                                        id="entityFormationHeading"
+                                        value={formData.navbar?.entityFormationHeading}
+                                        onChange={(e) => updateNavbar({ entityFormationHeading: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="alliedRegistrationsHeading">Allied Registrations</Label>
+                                    <Input
+                                        id="alliedRegistrationsHeading"
+                                        value={formData.navbar?.alliedRegistrationsHeading}
+                                        onChange={(e) => updateNavbar({ alliedRegistrationsHeading: e.target.value })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="viewAllServicesLabel">View All Services Button</Label>
+                                    <Input
+                                        id="viewAllServicesLabel"
+                                        value={formData.navbar?.viewAllServicesLabel}
+                                        onChange={(e) => updateNavbar({ viewAllServicesLabel: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Footer Settings</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="footerTagline">Footer Tagline</Label>
+                            <Input
+                                id="footerTagline"
+                                value={formData.footer?.tagline}
+                                onChange={(e) => updateFooter({ tagline: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="footerDescription">Footer Description</Label>
+                            <Textarea
+                                id="footerDescription"
+                                rows={3}
+                                value={formData.footer?.description}
+                                onChange={(e) => updateFooter({ description: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="footerDisclaimer">Footer Disclaimer</Label>
+                            <Textarea
+                                id="footerDisclaimer"
+                                rows={3}
+                                value={formData.footer?.disclaimer}
+                                onChange={(e) => updateFooter({ disclaimer: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                            <div className="space-y-2">
+                                <Label htmlFor="registeredOfficeLabel">Registered Office Label</Label>
+                                <Input
+                                    id="registeredOfficeLabel"
+                                    value={formData.footer?.registeredOfficeLabel}
+                                    onChange={(e) => updateFooter({ registeredOfficeLabel: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="footerEmailLabel">Email Label</Label>
+                                <Input
+                                    id="footerEmailLabel"
+                                    value={formData.footer?.emailLabel}
+                                    onChange={(e) => updateFooter({ emailLabel: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="footerPhoneLabel">Phone Label</Label>
+                                <Input
+                                    id="footerPhoneLabel"
+                                    value={formData.footer?.phoneLabel}
+                                    onChange={(e) => updateFooter({ phoneLabel: e.target.value })}
                                 />
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                {/* Contact Information */}
                 <Card>
                     <CardHeader>
                         <CardTitle>Contact Information</CardTitle>
@@ -223,7 +425,6 @@ const Settings = () => {
                     </CardContent>
                 </Card>
 
-                {/* Social Media Links */}
                 <Card>
                     <CardHeader>
                         <CardTitle>Social Media Links</CardTitle>

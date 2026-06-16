@@ -8,7 +8,7 @@ export function ConsultationWidget() {
       {open && (
         <div className="card-soft w-[min(90vw,22rem)] p-4 shadow-md transition-all duration-200">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold text-foreground">Available Free CA Consultation</p>
+            <p className="text-sm font-semibold text-foreground">Avail Free CA Consultation</p>
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -72,7 +72,7 @@ export function ConsultationWidget() {
         className="min-w-[14rem] rounded-full bg-primary px-4 py-3 text-[11px] font-semibold text-primary-foreground shadow-md transition-transform hover:-translate-y-0.5"
         aria-expanded={open}
       >
-        Available Free CA Consultation
+        Avail Free CA Consultation
       </button>
     </div>
   );

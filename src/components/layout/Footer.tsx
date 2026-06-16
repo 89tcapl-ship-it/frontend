@@ -32,7 +32,7 @@ export function Footer() {
         <div className="mx-auto max-w-[600px] text-center">
           <div className="flex flex-col items-center">
             <p className="mb-2 text-lg font-semibold tracking-wide text-background/95 md:text-xl">
-              {settings?.navbar?.siteName || settings?.siteName || "89T Corporate Advisors Private Limited"}
+              89T Corporate Advisors Private Limited
             </p>
             <p className="mb-4 text-sm italic font-semibold text-slate-400 md:text-[15px]">
               {footerSettings?.tagline || "A Compliant Business is a Confident Business"}
@@ -112,7 +112,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-white/10 pt-8 text-center text-sm text-slate-300">
-          <p>(c) 2026 {settings?.siteName || "89T Corporate Advisors Private Limited"}. All rights reserved.</p>
+          <p>(c) 2026 89T Corporate Advisors Private Limited. All rights reserved.</p>
           <p className="mt-2">
             <span className="text-background/40">Disclaimer:</span> {footerSettings?.disclaimer || "This website is for informational purposes only and does not constitute legal or financial advice."}
           </p>

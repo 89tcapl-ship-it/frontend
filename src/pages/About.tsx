@@ -6,30 +6,35 @@ const founderDefaults = [
   {
     id: "founder-mahitha",
     name: "CA Mahitha N, ACA",
+    imageUrl: "/founders/mahitha.jpeg",
     brief:
       "Focused on direct taxation, litigation support, transfer pricing audits, and tax planning for corporates and HNIs. Her experience includes hands-on exposure to assessment proceedings and tax advisory.",
   },
   {
     id: "founder-diwakar",
     name: "CA Diwakar Reddy D, FCA, DISA",
+    imageUrl: "/founders/diwakar.png",
     brief:
       "A seasoned advisor over a decade of experience in financial consulting and business strategy. His expertise spans business advisory, startup structuring, investment planning, and FDI regulatory advisory. He has worked closely with founders and growth-stage businesses on capital structuring and long-term financial strategy.",
   },
   {
     id: "founder-surendranath",
     name: "CA Surendranath Reddy M, FCA, DISA",
+    imageUrl: "/founders/surendra.png",
     brief:
       "Brings strong experience in statutory audits, bank audits, corporate governance, and internal control systems. His background includes working with banks and corporates on compliance frameworks and risk-based audit environments.",
   },
   {
     id: "founder-lokesh",
     name: "CA MSS Lokesh, FCA, DISA",
+    imageUrl: "/founders/lokesh.jpeg",
     brief:
       "Specialist in indirect taxation and regulatory compliance, with significant exposure to GST, customs, and business structuring advisory. He has advised businesses on optimizing tax structures while ensuring regulatory adherence.",
   },
   {
     id: "founder-jyothi",
     name: "CA Jyothi K, FCA",
+    imageUrl: "/founders/jyothi.png",
     brief:
       "Experienced in SOX compliance, internal controls, risk assessment, and financial reporting. She has worked with leading MNCs including Grant Thornton, AIG, Accenture, and State Street, bringing global compliance exposure into advisory practice.",
   },
@@ -54,6 +59,7 @@ const About = () => {
   const founders = founderDefaults.map((founder) => ({
     name: getSectionValue(founder.id, "title", founder.name),
     brief: getSectionValue(founder.id, "content", founder.brief),
+    imageUrl: getSectionValue(founder.id, "imageUrl", founder.imageUrl),
   }));
 
   return (
@@ -96,9 +102,20 @@ const About = () => {
                   className="overflow-hidden rounded-[30px] border border-border bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)]"
                 >
                   <div className="grid gap-0 lg:grid-cols-[280px_minmax(0,1fr)]">
-                    <div className="flex min-h-[220px] items-center justify-center border-b border-border bg-gradient-to-br from-slate-50 via-white to-slate-100 p-6 lg:border-b-0 lg:border-r">
-                      <div className="flex h-full min-h-[180px] w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/70 text-lg font-medium text-slate-500">
-                        Photo
+                    <div className="border-b border-border bg-gradient-to-br from-slate-50 via-white to-slate-100 p-4 lg:border-b-0 lg:border-r lg:p-6">
+                      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                        {founder.imageUrl ? (
+                          <img
+                            src={founder.imageUrl}
+                            alt={founder.name}
+                            className="h-full w-full min-h-[220px] object-cover object-top"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="flex min-h-[220px] items-center justify-center text-lg font-medium text-slate-500">
+                            Photo
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="p-6 sm:p-8">

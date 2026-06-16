@@ -121,7 +121,7 @@ const Index = () => {
 
   const heroTitle = getSectionValue("hero", "title", "End-to-End Finance and Compliance Support for Growing Businesses");
   const heroSubtitle = getSectionValue("hero", "subtitle", "Led by seasoned Chartered Accountants, 89TCA delivers structured solutions that empower businesses to operate efficiently and scale with confidence.");
-  const heroContent = getSectionValue("hero", "content", "Trusted Chartered Accountants ? 10 Years Experience ? Serving Startups, SMEs & Enterprises Across India");
+  const heroContent = getSectionValue("hero", "content", "Trusted Chartered Accountants • 10 Years Experience • Serving Startups, SMEs & Enterprises Across India");
   const heroButtonText = getSectionValue("hero", "buttonText", "Get Started");
   const heroButtonLink = getSectionValue("hero", "buttonLink", "/contact");
 

@@ -8,7 +8,7 @@ export function ConsultationWidget() {
       {open && (
         <div className="card-soft w-[min(90vw,22rem)] p-4 shadow-md transition-all duration-200">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold text-foreground">Free CA Consultation</p>
+            <p className="text-sm font-semibold text-foreground">Available Free CA Consultation</p>
             <button
               type="button"
               onClick={() => setOpen(false)}

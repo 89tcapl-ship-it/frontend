@@ -8,35 +8,35 @@ const founderDefaults = [
     name: "CA Mahitha N, ACA",
     imageUrl: "/founders/mahitha.jpeg",
     brief:
-      "Focused on direct taxation, litigation support, transfer pricing audits, and tax planning for corporates and HNIs. Her experience includes hands-on exposure to assessment proceedings and tax advisory.",
+      "Focused on direct taxation, litigation support, transfer pricing audits, and tax planning for corporates and HNIs. Her experience includes hands-on exposure to assessment proceedings, tax advisory, and regulatory compliance matters. She has assisted clients in responding to departmental notices, managing tax scrutiny proceedings, and implementing effective tax planning strategies. With a practical and solution-oriented approach, she helps businesses and individuals navigate complex tax regulations while ensuring compliance and long-term tax efficiency.",
   },
   {
     id: "founder-diwakar",
     name: "CA Diwakar Reddy D, FCA, DISA",
     imageUrl: "/founders/diwakar.png",
     brief:
-      "A seasoned advisor over a decade of experience in financial consulting and business strategy. His expertise spans business advisory, startup structuring, investment planning, and FDI regulatory advisory. He has worked closely with founders and growth-stage businesses on capital structuring and long-term financial strategy.",
+      "A seasoned advisor with over a decade of experience in financial consulting and business strategy. His expertise spans business advisory, startup structuring, investment planning, and FDI regulatory advisory. He has worked closely with founders and growth-stage businesses on capital structuring and long-term financial strategy. He also advises businesses on governance, scalability, and strategic decision-making to support sustainable growth.",
   },
   {
     id: "founder-surendranath",
     name: "CA Surendranath Reddy M, FCA, DISA",
     imageUrl: "/founders/surendra.png",
     brief:
-      "Brings strong experience in statutory audits, bank audits, corporate governance, and internal control systems. His background includes working with banks and corporates on compliance frameworks and risk-based audit environments.",
+      "Brings strong experience in statutory audits, bank audits, corporate governance, and internal control systems. His background includes working with banks and corporates on compliance frameworks and risk-based audit environments. He has been involved in evaluating internal financial controls, strengthening governance processes, and supporting organizations in enhancing operational efficiency and regulatory compliance. His practical understanding of audit and risk management enables clients to build robust control frameworks and sustainable business practices.",
   },
   {
     id: "founder-lokesh",
     name: "CA MSS Lokesh, FCA, DISA",
     imageUrl: "/founders/lokesh.jpeg",
     brief:
-      "Specialist in indirect taxation and regulatory compliance, with significant exposure to GST, customs, and business structuring advisory. He has advised businesses on optimizing tax structures while ensuring regulatory adherence.",
+      "Specialist in indirect taxation and regulatory compliance, with significant exposure to GST, customs, and business structuring advisory. He has advised businesses on optimizing tax structures while ensuring regulatory adherence. His experience includes handling GST audits, assessments, and compliance reviews across diverse industries. He works closely with clients to address evolving indirect tax challenges and implement practical compliance frameworks.",
   },
   {
     id: "founder-jyothi",
     name: "CA Jyothi K, FCA",
     imageUrl: "/founders/jyothi.png",
     brief:
-      "Experienced in SOX compliance, internal controls, risk assessment, and financial reporting. She has worked with leading MNCs including Grant Thornton, AIG, Accenture, and State Street, bringing global compliance exposure into advisory practice.",
+      "Experienced in SOX compliance, internal controls, risk assessment, and financial reporting. She has worked with leading MNCs including Grant Thornton, AIG, Accenture, and State Street, bringing global compliance exposure into advisory practice. Her expertise includes designing and evaluating internal control frameworks, process reviews, and risk management initiatives aligned with global governance standards. She has supported organizations in strengthening compliance processes, enhancing operational effectiveness, and meeting evolving regulatory requirements across complex business environments.",
   },
 ];
 
@@ -99,9 +99,9 @@ const About = () => {
               {founders.map((founder) => (
                 <div
                   key={founder.name}
-                  className="overflow-hidden rounded-[30px] border border-border bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)]"
+                  className="overflow-hidden rounded-[30px] border border-border bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)] lg:min-h-[280px]"
                 >
-                  <div className="grid gap-0 lg:grid-cols-[280px_minmax(0,1fr)]">
+                  <div className="grid h-full gap-0 lg:grid-cols-[280px_minmax(0,1fr)]">
                     <div className="border-b border-border bg-gradient-to-br from-slate-50 via-white to-slate-100 p-4 lg:border-b-0 lg:border-r lg:p-6">
                       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                         {founder.imageUrl ? (
@@ -118,11 +118,11 @@ const About = () => {
                         )}
                       </div>
                     </div>
-                    <div className="p-6 sm:p-8">
+                    <div className="flex h-full flex-col items-center justify-center p-6 text-center sm:p-8">
                       <p className="text-lg font-semibold tracking-tight text-foreground">
                         {founder.name}
                       </p>
-                      <p className="mt-3 text-justify text-sm leading-7 text-muted-foreground md:text-base">
+                      <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base">
                         {founder.brief}
                       </p>
                     </div>
